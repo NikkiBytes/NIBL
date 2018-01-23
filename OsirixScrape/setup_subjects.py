@@ -17,7 +17,7 @@ import zipfile
 
 
 def parse_command_line():
-    directory_path = '/home/mint/Documents/OsirixScrape'
+    directory_path = '/home/mint/Documents/NIBL/OsirixScrape'
     parser = argparse.ArgumentParser(description='setup_subject')
     # parser.add_argument('integers', metavar='N', type=int, nargs='+',help='an integer for the accumulator')
     # set up boolean flags
