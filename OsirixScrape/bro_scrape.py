@@ -37,19 +37,22 @@ file = open("BRO_subs.txt", "w")
 
 
 for id in patient_tag_ids:
-    subject= id.text.split(" ")[0]
-    if "BRO" in subject:
-        ids.append(subject)
-        file.write(str(subject) + "\n")
-        print "WROTE TO FILE...........SUBJECT: " + str(subject)
+    
+    sub= id.text
+    if "BRO" in sub and "bro_012" not in sub:
+        print str(id.text)
+        #ids.append(sub)   
+        #file.write(str(sub) + "," + str(id.text.split(" ")[1]) + "\n")
+        file.write(str(sub) + "\n")
+        print "WROTE TO FILE...........SUBJECT: " + str(sub)
 
-    elif "bro" in subject:
-        ids.append(subject)
-        file.write(str(subject) + "\n")
-        print "WROTE TO FILE...........SUBJECT: " + str(subject)
+    elif "bro" in sub and "bro_012" not in sub:
+        print str(id.text)
+        #ids.append(sub)
+        #file.write(str(sub) + "," + str(id.text.split(" ")[1]) + "\n")
+        file.write(str(sub)+ "\n")
+        print "WROTE TO FILE...........SUBJECT: " + str(sub)
 
-	else:
-		print "PASSING.............................."
 
 
 
