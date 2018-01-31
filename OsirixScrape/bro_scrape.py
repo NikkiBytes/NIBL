@@ -18,9 +18,9 @@ session.visit(url_base)
 print "LOGGING IN....................................."
 
 x = session.at_xpath('//*[@name="username"]')
-x.set("nibl")
+x.set("USERNAME")
 x = session.at_xpath('//*[@name="password"]')
-x.set("eatthisnotthat")
+x.set("PASSWORD")
 login = session.at_xpath('//*[@name="login"]')
 login.click()
 
