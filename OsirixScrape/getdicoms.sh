@@ -7,7 +7,7 @@ do
     echo "COMPLETED SUBJECT GRAB --------> MOVING TO BRO DATA...................."
     cd BRO_data
     echo "MOVING TO HPC..........................."
-    sshpass -p 'sweetbbcs' scp -r -p . nbytes@ht3.renci.org:/projects/niblab/bids_projects/Data/BRO_data
+    sshpass -p PASSWORD scp -r -p . nbytes@ht3.renci.org:/projects/niblab/bids_projects/Data/BRO_data
     echo "DIRECTORY BEFORE............................"
     ls /$col1/raw
     ls
