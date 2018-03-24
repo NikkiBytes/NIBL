@@ -3,7 +3,7 @@
 while IFS=" " read -r col1 col2
 do
     echo "RUNNING SETUP SUBJECTS..........................."
-    python setup_subjects.py --getdata --keepdata --osirix_username nibl --osirix_password eatthisnotthat --osirix_subjName $col1 --studyname BRO_data -s "$col1 $col2" -o
+    python setup_subjects.py --getdata --keepdata --osirix_username nibl --osirix_password PASSWORD --osirix_subjName $col1 --studyname BRO_data -s "$col1 $col2" -o
     echo "COMPLETED SUBJECT GRAB --------> MOVING TO BRO DATA...................."
     cd BRO_data
     echo "MOVING TO HPC..........................."
