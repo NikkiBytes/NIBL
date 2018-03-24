@@ -12,6 +12,6 @@
 while IFS=',' read -r col1 col2
 do
 
-    python setup_subjects.py --getdata --keepdata --osirix_username nibl --osirix_password eatthisnotthat --osirix_subjName "$col1" --studyname BreakfastClub -s "$col2" -o
+    python setup_subjects.py --getdata --keepdata --osirix_username nibl --osirix_password YOUR_PASSWORD_HERE --osirix_subjName "$col1" --studyname BreakfastClub -s "$col2" -o
 
 done < BF_subjectIDS.txt
