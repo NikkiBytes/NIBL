@@ -11,9 +11,11 @@ session = dryscrape.Session()
 session.visit(url_base)
 
 x = session.at_xpath('//*[@name="username"]')
-x.set("nibl")
+#put username in here
+x.set("")
 x = session.at_xpath('//*[@name="password"]')
-x.set("eatthisnotthat")
+#put password in here
+x.set("")
 login = session.at_xpath('//*[@name="login"]')
 login.click()
 
