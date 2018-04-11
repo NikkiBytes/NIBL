@@ -11,7 +11,7 @@ To run Singularity Containers:
 
 
 BIDS Validator
-Image --> ~/Singularity_Containers/bids_validator.simg
+  Image --> ~/Singularity_Containers/bids_validator.simg
 
     I. Log into RENCI
 
@@ -31,7 +31,6 @@ Image --> ~/Singularity_Containers/bids_validator.simg
 
 
 fMRI Prep
-
   Image --> ~/Singularity_Containers/fmriprep_container.simg
 
       I. Log into RENCI
@@ -39,14 +38,15 @@ fMRI Prep
 
           $ cd /projects/niblab/bids_projects/Singularity_Containers
           $ sinteractive
-          $ singularity shell -B /projects/niblab/bids_projects:/mydirectory /projects/niblab/bids_projects/Singularity_Containers/fmriprep_container.simg
-          $ cd /mydirectory/Experiments/EricData
-          $ fmriprep /mydirectory/Experiments/EricData/EricData/ses-wave4 fmriprep_run \
+          $ singularity shell -B /projects/niblab/bids_projects:/mydirectory \
+           /projects/niblab/bids_projects/Singularity_Containers/fmriprep_container.simg
+          $ cd /mydirectory
+          $ fmriprep Experiments/EricData/EricData/ses-wave4 fmriprep_run \
               participant  \
               --participant-label 001 002 -t milkshakeA \
-              --fs-license-file /mydirectory/freesurfer/license.txt \
+              --fs-license-file freesurfer/license.txt \
               --ignore slicetiming --output-space T1w --template MNI152NLin2009cAsym \
-              --debug
+              --debug --anat-only --nthreads 3
 
 
 
