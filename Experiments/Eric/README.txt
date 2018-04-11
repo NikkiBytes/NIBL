@@ -22,8 +22,9 @@ To run Singularity Containers:
               participant  \
               --participant-label 001 002 \
               --fs-license-file /mydirectory/freesurfer/license.txt \
-              --ignore slicetiming \
-              --nthreads 4
+              --ignore slicetiming --t2s-coreg --output-space T1w --template {MNI152NLin2009cAsym} \
+              --debug
+
 
 
 
