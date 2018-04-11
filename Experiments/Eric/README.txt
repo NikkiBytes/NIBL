@@ -16,12 +16,12 @@ To run Singularity Containers:
 
           $ cd /projects/niblab/bids_projects/Singularity_Containers
           $ sinteractive
-          $ singularity shell -B /projects/niblab/bids_projects:/mydirectory fmriprep_container.simg
+          $ singularity shell -B /projects/niblab/bids_projects:/mydirectory Singularity_Containers/fmriprep_container.simg
           $ cd /mydirectory/Experiments/EricData
           $ fmriprep EricData/ses-wave4 fmriprep_files \
               participant  \
-              --participant-label 001
-              --fs-license-file /Applications/freesurfer/license.txt
+              --participant-label 001 \
+              --fs-license-file /mydirectory/freesurfer/license.txt
 
 
 
