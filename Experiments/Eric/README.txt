@@ -45,9 +45,11 @@ fMRI Prep
               participant  \
               --participant-label 001 -t milkshakeA \
               --fs-license-file freesurfer/license.txt \
-              --ignore slicetiming --t2s-coreg --bold2t1w-dof 12 \
+              --nthreads 8 --omp-nthreads 16 --low-mem \
+              --ignore slicetiming \
               --output-space T1w --template MNI152NLin2009cAsym \
-              --debug --anat-only --nthreads 
+              --fs-no-reconall --debug --anat-only \
+              -w intermediate_results --resource-monitor --write-graph --stop-on-first-crash
 
 
 
