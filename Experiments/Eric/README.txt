@@ -9,7 +9,30 @@ To view Eric Data:
 
 To run Singularity Containers:
 
--->fmriprep_container.simg
+
+BIDS Validator
+Image --> ~/Singularity_Containers/bids_validator.simg
+
+    I. Log into RENCI
+
+    II. Open Image
+      $ cd /projects/niblab/bids_projects
+      $ sinteractive
+      $ singularity shell -B /projects/niblab/bids_projects:/test \
+        Singularity_Containers/bids_validator.simg
+    III. Go to Data You want verified
+        -- for Eric Data we will eventually test all entire study with all
+        -- waves, for now we are testing one session, follow below:
+      $ cd /test/Experiments/EricData/EricData
+    IV. Run bids-validator to test
+      $ bids-validator ses-wave4
+
+
+
+
+fMRI Prep
+
+  Image --> ~/Singularity_Containers/fmriprep_container.simg
 
       I. Log into RENCI
       II. Run commands to change to the directory and run the fmriprep singularity Containers
@@ -20,9 +43,9 @@ To run Singularity Containers:
           $ cd /mydirectory/Experiments/EricData
           $ fmriprep /mydirectory/Experiments/EricData/EricData/ses-wave4 fmriprep_run \
               participant  \
-              --participant-label 001 002 \
+              --participant-label 001 002 -t milkshakeA \
               --fs-license-file /mydirectory/freesurfer/license.txt \
-              --ignore slicetiming --t2s-coreg --output-space T1w --template MNI152NLin2009cAsym \
+              --ignore slicetiming --output-space T1w --template MNI152NLin2009cAsym \
               --debug
 
 
