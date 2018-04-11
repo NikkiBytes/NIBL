@@ -2,12 +2,30 @@
 
 
 
+To view Eric Data:
+    $ cd /projects/niblab/bids_projects/Experiments/EricData
+    $ ls
+
+
 To run Singularity Containers:
 
-    I. Log into RENCI
-    II. Change to the following Directory
+-->fmriprep_container.simg
+
+      I. Log into RENCI
+      II. Run commands to change to the directory and run the fmriprep singularity Containers
+
           $ cd /projects/niblab/bids_projects/Singularity_Containers
-To view Eric Data:
+          $ sinteractive
+          $ singularity shell -B /projects/niblab/bids_projects:/mydirectory fmriprep_container.simg
+          $ cd /mydirectory/Experiments/EricData
+          $ fmriprep EricData/ses-wave4 fmriprep_files \
+              participant  \
+              --participant-label 001
+              --fs-license-file /Applications/freesurfer/license.txt
+
+
+
+
 
 ************************************************
 
