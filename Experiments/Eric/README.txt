@@ -1,11 +1,8 @@
-
-
-
+Information for Eric Data BIDS Conversion and fmriprep 
 
 To view Eric Data:
-    $ cd /projects/niblab/bids_projects/Experiments/EricData
+    $ cd /projects/niblab/bids_projects/Experiments/EricData 
     $ ls
-
 
 To run Singularity Containers:
 
@@ -62,29 +59,33 @@ fMRI Prep
 ************************************************
 
 Eric Data BIDS Directory
+Currently ~
 
+[ *Note 
+    -- for task files, under ~/func there are 2 files for each task,
+                the original file, e.g. 'sub-001_task-milkshake_A.json',
+                and the motion corrected file identified with [_physio], e.g. 'sub-001_task-milkshake_A_physio.json' ]
+                
+               
 /EricData
-  /sub-001
-    /ses-wave1
+  /ses-wave4
+    /sub-001
       /fmap
-          /sub-01_phasediff
-          /sub-01_magnitude
+          /sub-001_phasediff.json{nii.gz}
+          /sub-001_magnitude1.json{nii.gz}
+          /sub-001_magnitude2.json{nii.gz}
       /func
-          --> ep2d_pace_moco_milkshake_A
-          --> ep2d_pace_moco_milkshake_B
-          --> ep2d_pace_moco_milkshake_C
-          --> ep2d_pace_moco_milkshake_D
-          --> ep2d_pace_moco_Go_NoGo2
-          --> ep2d_pace_moco_Go_NoGo1
-          --> ep2d_pace_moco_imagine
-
+          /sub-001_task-milkshake_A[_physio].json{nii.gz}
+          /sub-001_task-milkshake_B[_physio].json{nii.gz}
+          /sub-001_task-milkshake_C[_physio].json{nii.gz}
+          /sub-001_task-milkshake_D[_physio].json{nii.gz}
+          /sub-001_task-imagine[_physio].json{nii.gz}
+          /sub-001_task-Go_NoGo2[_physio].json{nii.gz}
+          /sub-001_task-Go_NoGo1[_physio].json{nii.gz}
       /anat
-          --> t1_mprage_tra_NEW!!
-            /sub-01_T1w.nii.gz
-            /sub-01_T1w.json
-    /ses-wave2
-    /ses-wave3
-    /ses-wave4
+          /sub-01_T1w.json{nii.gz}
+       
+
 
 *************************************************
 
@@ -92,8 +93,9 @@ Eric Data BIDS Directory
 WAVE4 Misc. Info
 
   Logs - 111
-  Dicoms - 99
-
+  Dicoms - 98
+  Available Tasks - GoNo1, GoNo2, imagine, milkshakeA, milkshakeB, milkshakeC, milkshakeD 
+  
   Subject IDS:
 
   001  008  018  033  043  049  056  062  071  079  088  094  101  107  116  122  131
