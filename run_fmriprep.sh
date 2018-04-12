@@ -1,5 +1,10 @@
-cd /projects/niblab/bids_projects/Singularity_Containers
-sinteractive
+
+sinteractive -m 24000
+singularity shell -B /projects/niblab/bids_projects:/mydirectory \
+ /projects/niblab/bids_projects/Singularity_Containers/fmriprep_container.simg
+
+cd /projects/niblab/bids_proj
+
 singularity shell -B /projects/niblab/bids_projects:/mydirectory \
 /projects/niblab/bids_projects/Singularity_Containers/fmriprep_container.simg
 cd /mydirectory
