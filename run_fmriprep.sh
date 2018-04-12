@@ -10,7 +10,7 @@ singularity shell -B /projects/niblab/bids_projects:/mydirectory \
 cd /mydirectory
 fmriprep Experiments/EricData/EricData/ses-wave4 fmriprep_run \
     participant  \
-    --participant-label 001 -t milkshakeA \
+    --participant-label 001  \
     --fs-license-file freesurfer/license.txt \
     --nthreads 8 --omp-nthreads 16 --low-mem \
     --ignore slicetiming  \
