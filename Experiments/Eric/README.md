@@ -2,6 +2,8 @@
 
 This study contains 4 waves(sessions).
 
+For information on the preprocessing steps please refer to the README_containers.md file
+
 ### LOCATION: /projects/niblab/bids_projects/Experiments/EricData
 
 ### SESSION INFO:

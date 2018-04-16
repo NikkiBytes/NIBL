@@ -1,8 +1,11 @@
+### Eric Data Preprocessing Steps and Singularity Containers
+
+
 
 To run Singularity Containers:
 
 BIDS Validator
-  Image --> ~/Singularity_Containers/bids_validator.simg
+  Image --> ~Singularity_Containers/bids_validator.simg
 
     I. Log into RENCI
 
