@@ -1,8 +1,8 @@
-## Eric Data
+##Eric Data
 
 This study contains 4 waves(sessions).
 
-### SLOCATION: /projects/niblab/bids_projects/Experiments/EricData
+###LOCATION: /projects/niblab/bids_projects/Experiments/EricData
 
 ### DATA DIRECTORY:
 
