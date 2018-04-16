@@ -2,7 +2,7 @@
 
 This study contains 4 waves(sessions).
 
-###LOCATION: /projects/niblab/bids_projects/Experiments/EricData
+### LOCATION: /projects/niblab/bids_projects/Experiments/EricData
 
 ### DATA DIRECTORY:
 
