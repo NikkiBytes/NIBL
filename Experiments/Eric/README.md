@@ -19,6 +19,7 @@ This study contains 4 waves(sessions).
       006  014  030  041  047  054  060  066  077  084  092  098  105  114  120  128
       007  017  032  042  048  055  061  068  078  085  093  099  106  115  121  130
 
+#### *******************************************************************************************************************************
 ### DATA DIRECTORY:
 
 *Note
@@ -28,9 +29,15 @@ This study contains 4 waves(sessions).
 
 
 
-        __~/Experiments__
+        ~/Experiments
             /EricData
                 /fmriprep_run
+                  /sub-001
+                    /fmriprep
+                      /logs
+                      /sub-001
+                        /anat
+                        /figures
                 /EricData
                   /ses-wave4
                     /sub-001
