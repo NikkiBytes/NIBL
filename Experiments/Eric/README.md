@@ -28,7 +28,7 @@ This study contains 4 waves(sessions).
 
 
 
-        **~/Experiments**
+        __~/Experiments__
             /EricData
                 /fmriprep_run
                 /EricData
