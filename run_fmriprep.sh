@@ -1,6 +1,6 @@
 cd Experiments/EricData/EricData/ses-wave4
 subject_id=(sub*)
-subject_id=({*-07*,*-08*,*-09*,*10*,*11*,*12*,*13*,*15*})
+subject_id=({*10*,*11*,*12*,*13*,*15*})
 cd /mydirectory
 
 sinteractive -m 24000
@@ -19,7 +19,6 @@ fmriprep Experiments/EricData/EricData/ses-wave4 Experiments/EricData/fmriprep_r
     --output-space T1w --template MNI152NLin2009cAsym \
     --fs-no-reconall --debug --anat-only \
     -w intermediate_results --resource-monitor --write-graph --stop-on-first-crash
-
 
 echo "...................................................finished fmriprep for subject $i"
 echo "********************************************************************************************"
