@@ -1,4 +1,4 @@
-##Eric Data
+## Eric Data
 
 This study contains 4 waves(sessions).
 
