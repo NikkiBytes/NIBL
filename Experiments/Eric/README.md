@@ -22,13 +22,13 @@ This study contains 4 waves(sessions).
 ### DATA DIRECTORY:
 
 *Note
-    -- for task files, under ~/func there are 2 files for each task,
+    -- for task files, under ~/func, there are 2 files for each task,
                 the original file, e.g. 'sub-001_task-milkshake_A.json',
                 and the motion corrected file, identified with [_physio], e.g. 'sub-001_task-milkshake_A_physio.json'
 
 
 
-        ~/Experiments
+        <b>~/Experiments</b>
             /EricData
                 /fmriprep_run
                 /EricData
