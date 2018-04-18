@@ -1,5 +1,5 @@
 ### Eric Data Preprocessing Steps and Singularity Containers
-
+Below are detailed steps to pre-processing Eric Data with the containers.
 
 
 To run Singularity Containers:
