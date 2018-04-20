@@ -1,8 +1,8 @@
 ## BIDS Validator
 
-Workflow:
-    I. Log into RENCI
-    II. Start Singularity shell
+### Workflow: <br>
+    I. Log into RENCI <br>
+    II. Start Singularity shell <br>
     III. Validate BIDS dataset
 
     BIDS-validator command:
