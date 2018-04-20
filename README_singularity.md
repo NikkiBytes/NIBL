@@ -1,10 +1,10 @@
 ### Running Singularity Containers
-This README contains details for the currently available Singularity containers for fMRI data prep. 
+This README contains details for the currently available Singularity containers for fMRI data prep.
 
-Log into RENCI
+Log into RENCI:
 
         $ ssh -XY your_account@ht4.renci.org
-        $ > {your_password}
+        $ {your_password}
 
 
 Access the Singularity Containers:
@@ -14,15 +14,15 @@ Access the Singularity Containers:
 
 To run Singularity Containers:
 
-BIDS Validator
+*BIDS Validator* <br>
   Image: bids_validator.simg
 
       START THE INTERACTIVE SHELL:
               $ sinteractive
-      START THE SINGULARITY IMAGE(FROM WITHIN **~/bids_projects** directory)
+      START THE SINGULARITY IMAGE(FROM WITHIN __~/bids_projects__ directory)
               $ singularity shell -B /projects/niblab/bids_projects:/test Singularity_Containers/bids_validator.simg
 
-      $ cd /test/Experiments/EricData/EricData
+              $ cd /test/Experiments/EricData/EricData
     IV. Run bids-validator to test
       $ bids-validator ses-wave4
 
