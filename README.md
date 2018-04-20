@@ -13,7 +13,7 @@ The **/Experiments** folder contains the labs, and their unique workflows, with 
 The **/Osirix_Scrape** folder contains scripts used to grab all subjects from an experiment and transfer them to RENCI.
 
 Currently Available Singularity Containers: <br>
-~/bids_projects/Singularity_Containers <br>
+Location: ~/bids_projects/Singularity_Containers <br>
     - heudiconv.simg <br>
     - bids_validator.simg <br>
     - fmriprep_container.simg
