@@ -1,6 +1,6 @@
 # Neuropsychology of Ingestive Behavior Lab (NIBL) @  UNC Chapel Hill
 
-This repository contains the workflows for the various studies done at the lab will hold any future processes.
+This repository contains the workflows for the various studies done at the lab.
 
 ## Location of BIDS data:
           ERIC DATA: /projects/niblab/bids_projects/Experiments/EricData
