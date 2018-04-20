@@ -1,6 +1,5 @@
-### Eric Data Preprocessing Steps and Singularity Containers
-Below are detailed steps to pre-processing Eric Data with the containers.
-
+### Running Singularity Containers
+This README contains details for the currently available Singularity containers for fMRI data prep. 
 
 Log into RENCI
 
