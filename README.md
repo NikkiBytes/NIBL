@@ -3,14 +3,17 @@
 This repository contains the workflows for the various studies done at the lab will hold any future processes.
 
 ## Location of BIDS data:
-        /projects/niblab/bids_projects/Experiments
+          ERIC DATA: /projects/niblab/bids_projects/Experiments/EricData
 
-The **/Experiments** folder contains the labs, and their unique workflows, with README files. *This is where you will find detailed explanations for the Singularity containers.*
+
+
+The **/Experiments** folder contains the labs, and their unique workflows, with README files.
+
 
 The **/Osirix_Scrape** folder contains scripts used to grab all subjects from an experiment and transfer them to RENCI.
 
-Currentlyg Available Singularity Containers:
+Currently Available Singularity Containers:
 ~/bids_projects/Singularity_Containers
-- heudiconv.simg
-- bids_validator.simg
-- fmriprep_container.simg
+    - heudiconv.simg
+    - bids_validator.simg
+    - fmriprep_container.simg
