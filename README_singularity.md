@@ -38,9 +38,7 @@ To run Singularity Containers:
 
 Examples:
 
-
-
-BIDS Converter with Heudiconv:
+BIDS Converter with Heudiconv <br>
   Image: heudiconv.simg
 
           $ cd /projects/niblab/bids_projects
@@ -60,7 +58,7 @@ BIDS Validator <br>
 
 
 
-fMRI Prep
+fMRI Prep<br>
   Image: fmriprep_container.simg
 
           $ cd /projects/niblab/bids_projects
