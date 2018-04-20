@@ -14,7 +14,8 @@ Singularity Containers are located in the ~/Singularity_Containers folder:
 
 To run Singularity Containers:
 
-      There are various ways to run the singularity container, for the labs purpose I've currently been using an interactive shell, this gives us access to the environment within the container we have created and flexibility in testing and executing our commands.
+      There are various ways to run the singularity container, for the labs purpose I've currently been using an interactive shell,<br>
+      this gives us access to the environment within the container we have created and flexibility in testing and executing our commands.
 
 
 
@@ -23,7 +24,9 @@ To run Singularity Containers:
           $ sinteractive
 
 
-      Here is the main template of running the singularity shell. See how we use the '-B' flag to bind our data directory to the containers directory. Without this we will not have access to our directories. Note that the container directory has been defined during the containers development and is unique for each container.  
+      Here is the main template of running the singularity shell. See how we use the '-B' flag to bind our data directory to the containers directory.<br>
+      Without this we will not have access to our directories. Note that the container directory has been defined during the containers development and <br>
+      is unique for each container.  
 
           $ singularity shell -B {our_directory}:{container_directory} {image}
 
