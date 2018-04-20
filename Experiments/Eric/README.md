@@ -7,7 +7,6 @@ For information on the preprocessing steps please refer to the README_containers
 ### LOCATION: /projects/niblab/bids_projects/Experiments/EricData
 
 
-#### *******************************************************************************************************************************
 
 ### DATA DIRECTORY:
 
@@ -47,7 +46,6 @@ For information on the preprocessing steps please refer to the README_containers
                       /anat
                            /sub-01_T1w.json{nii.gz}
 
-#### *******************************************************************************************************************************
 
 
 ### SESSION INFO:
@@ -65,4 +63,4 @@ For information on the preprocessing steps please refer to the README_containers
       006  014  030  041  047  054  060  066  077  084  092  098  105  114  120  128
       007  017  032  042  048  055  061  068  078  085  093  099  106  115  121  130
 
-#### *******************************************************************************************************************************
+#### *********************************************************************************************************************
