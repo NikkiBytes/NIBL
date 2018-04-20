@@ -7,6 +7,7 @@ This repository contains the workflows for the various studies done at the lab.
           ERIC DATA:      /projects/niblab/bids_projects/Experiments/EricData
 
 
+The **/Cointainers** folder contains the Singularity containers and information on running containers.
 
 The **/Experiments** folder contains the labs, and their unique workflows, with README files.
 
