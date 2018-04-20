@@ -3,7 +3,8 @@
 This repository contains the workflows for the various studies done at the lab.
 
 ## Location of BIDS data:
-          ERIC DATA: /projects/niblab/bids_projects/Experiments/EricData
+          MAIN:           /projects/niblab/bids_projects/Experiments
+          ERIC DATA:      /projects/niblab/bids_projects/Experiments/EricData
 
 
 
