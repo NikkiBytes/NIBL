@@ -21,7 +21,7 @@ There are various ways to run the singularity container, for the labs purpose I'
 
           $ sinteractive 
           
-          --for large processeses increase memory size 
+          --for large processes increase memory size 
           $ sinteractive -m 2400 
 
 
