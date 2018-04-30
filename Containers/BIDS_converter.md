@@ -15,15 +15,15 @@ Log into RENCI --> Start Singularity shell --> Run commands
           Example:
           --getting the dicominfo.tsv file
 
-          $ heudiconv -d Data/{subject}/{session}/Dicoms/dicoms/*/*dcm -s Eric_Data\
+          $ heudiconv -d Data/{subject}/{session}/Dicoms/dicoms/*/*dcm -s Eric_Data
           -ss wave2 -f convertall.py -c none -o /output/EricData/pre-bids_files
 
 
 
 
           * Notes:
-                  -- heuristic_file: Unique file of keys we must provide that tells\
-                    how the files are to be converted. We use the information from our\
+                  -- heuristic_file: Unique file of keys we must provide that tells
+                    how the files are to be converted. We use the information from our
                     dicominfo.txt to fill in our keys.  
 
 Example:
