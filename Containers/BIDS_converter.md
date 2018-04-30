@@ -45,4 +45,4 @@ Log into RENCI --> Start Singularity shell --> Run commands
           $ cd /test
           $ bash scripts/SugarMama_BIDS_conversion.sh
 
-Refer to ,<i>SugarMama_BIDS_conversion.sh</i>, for further explanation. 
+Refer to, <i>SugarMama_BIDS_conversion.sh</i>, for a template and further explanation of converting multiple subjects.
