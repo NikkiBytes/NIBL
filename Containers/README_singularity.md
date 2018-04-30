@@ -19,7 +19,10 @@ There are various ways to run the singularity container, for the labs purpose I'
 
       Before running any singularity commands we have to run the sinteractive shell:
 
-          $ sinteractive
+          $ sinteractive 
+          
+          --for large processes increase memory size 
+          $ sinteractive -m 2400 
 
 
 Here is the main template of running the singularity shell. See how we use the '-B' flag to bind our data directory to the <br> containers directory. Without this we will not have access to our directories. Note that the container directory has been defined during the containers development and is unique for each container.  
