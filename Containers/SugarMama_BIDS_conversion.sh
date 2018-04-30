@@ -20,8 +20,7 @@ subs2=${subjects[@]:$((${#subjects[@]} / 2 ))}
 
 cd /test
 
-numA=0
-numB=
+
 for f in ${subs1[@]};do
 num=$(($num+1))
 echo "STARTING BIDS CONVERSION ON SUBJECT: $f ................................................................"
