@@ -22,9 +22,9 @@ Log into RENCI --> Start Singularity shell --> Run commands
 
 
 
-  * Notes:
-    -- heuristic_file: Unique file of keys we must provide that tells
-                       how the files are to be converted. We use the information from our
+  * Notes:\
+    -- heuristic_file: Unique file of keys we must provide that tells <br>  
+                       how the files are to be converted. We use the information from our  
                        dicominfo.txt to fill in our keys.  
 
 Example:
