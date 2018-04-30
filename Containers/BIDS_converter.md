@@ -9,7 +9,8 @@ Log into RENCI --> Start Singularity shell --> Run commands
 
 
     heudiconv command:
-          $ heudiconv -b -d {input_directory} -s {SUBJECT} -ss {SESSION} -f {heuristic_file} -c dcm2niix -b  -o {output_directory}
+          $ heudiconv -b -d {input_directory} -s {SUBJECT} -ss {SESSION} -f {heuristic_file}
+          -c dcm2niix -b  -o {output_directory}
 
 
           Example:
@@ -21,10 +22,10 @@ Log into RENCI --> Start Singularity shell --> Run commands
 
 
 
-          * Notes:
-                  -- heuristic_file: Unique file of keys we must provide that tells
-                    how the files are to be converted. We use the information from our
-                    dicominfo.txt to fill in our keys.  
+  * Notes:
+    -- heuristic_file: Unique file of keys we must provide that tells
+                       how the files are to be converted. We use the information from our
+                       dicominfo.txt to fill in our keys.  
 
 Example:
 
