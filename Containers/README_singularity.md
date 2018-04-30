@@ -44,7 +44,7 @@ BIDS Converter with Heudiconv <br>
           $ sinteractive
           $ singularity shell -B /projects/niblab/bids_projects:/test Singularity_Containers/heudiconv.simg
           $ cd /test
-
+          $ ls
 
 
 BIDS Validator <br>
@@ -54,7 +54,7 @@ BIDS Validator <br>
           $ sinteractive
           $ singularity shell -B /projects/niblab/bids_projects:/test Singularity_Containers/bids_validator.simg
           $ cd /test
-
+          $ ls
 
 
 fMRI Prep<br>
@@ -64,3 +64,4 @@ fMRI Prep<br>
           $ sinteractive
           $ singularity shell -B /projects/niblab/bids_projects:/mydirectory Singularity_Containers/fmriprep_container.simg
           $ cd /mydirectory
+          $ ls

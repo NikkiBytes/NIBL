@@ -1,9 +1,9 @@
 ## BIDS Validator
 
+Image: bids_validator.simg
+
 ### Workflow: <br>
-I. Log into RENCI <br>
-II. Start Singularity shell <br>
-III. Validate BIDS dataset
+Log into RENCI --> Start Singularity shell --> Validate BIDS dataset
 
     BIDS-validator command:
           $ bids-validator {data_directory}
@@ -11,7 +11,7 @@ III. Validate BIDS dataset
 
 Example:
 
-    Testing Eric Data:
+    Validate Eric Data:
           $ cd /projects/niblab/bids_projects
           $ sinteractive
           $ singularity shell -B /projects/niblab/bids_projects:/test Singularity_Containers/bids_validator.simg
