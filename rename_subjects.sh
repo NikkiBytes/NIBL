@@ -3,7 +3,6 @@
 # This script changes subject names to "sub-XXX" while recording the original.
 
 
-read -p "Experiment Name: " experiment
 read -p "Enter path: " path # get input path
 
 
@@ -20,6 +19,7 @@ else
   echo "Starting Program:"
   cd $path # go to input path
 
+  read -p "Enter Experiment Name: " experiment
 
   read -p "Enter subject keyword: " keyword
 
