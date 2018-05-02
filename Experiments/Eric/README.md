@@ -5,9 +5,9 @@ This study contains 4 waves(sessions).
 For information on the preprocessing steps please refer to the README_containers.md file
 
 ### LOCATION:
-  <b>Main Directory:</b> /projects/niblab/bids_projects/Experiments/EricData
-  <b>fMRIprep Data:</b>
-    (session 4)/projects/niblab/bids_projects/Experiments/EricData/fmriprep_session_4
+  <b>Main Directory:</b> /projects/niblab/bids_projects/Experiments/EricData <br>
+  <b>fMRIprep Data:</b> <br>
+    (session 4)/projects/niblab/bids_projects/Experiments/EricData/fmriprep_session_4 <br>
   <b>BIDS Data:</b> /projects/niblab/bids_projects/Experiments/EricData/EricData
 
 
