@@ -65,8 +65,10 @@ else
   done &
   for f in ${subs2[@]};do
   export f
-  heudiconv -b -d data/{subject}/${f}/raw/${f}/*/*dcm -s SugarMama -f ConversionFiles/SM_converter.py \
-  -c dcm2niix -b  -o Experiments/SugarMama/sub-${f}
+  heudiconv -b -d $dicom_path -s $study_name -f $heuristic_path \
+  -c dcm2niix -b -o "$output_directory/sub-${id}"
   echo "Finished BIDSifying subject $f"
   done &
   wait
+
+fi
