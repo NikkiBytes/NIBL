@@ -4,6 +4,7 @@ Here is where you will find detailed explanations on running the Singularity Con
 including scripts to run a BIDS conversion on your data.
 
 ### Containers:
+     Location: /projects/niblab/bids_projects/Singularity_Containers <br>
   <b>heudiconv.simg</b> <br>
   <b>bids_validator.simg</b> <br>
   <b>fmriprep_container.simg</b>
