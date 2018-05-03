@@ -25,7 +25,7 @@ There are various ways to run a singularity container. For the labs purpose I've
           $ sinteractive -m 2400
 
 
-Here is the main template of running the singularity shell. See how we use the '-B' flag to bind our data directory to the <br> containers directory. Without this we will not have access to our directories. Note that the container directory has been defined during the containers development and is unique for each container.  
+Here is the main template of running the singularity shell. See how we use the '-B' flag to bind our data directory to the containers directory. Without this we will not have access to our directories. Note that the container directory has been defined during the containers development and is unique for each container.  
 
           $ singularity shell -B {our_directory}:{container_directory} {image}
 
