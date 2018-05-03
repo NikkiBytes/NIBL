@@ -51,24 +51,7 @@ else
     echo "heuristic file path doesn't exist"
     exit
   fi
+#
 
-
-  # Begin our BIDS Conversion
-  #parallel process
-  for f in ${subs1[@]};do
-  echo "STARTING BIDS CONVERSION ON SUBJECT: $f ................................................................"
-  id=$(echo $i | cut -f2 -d-)
-  export f
-  heudiconv -b -d $dicom_path -s $study_name -f $heuristic_path \
-  -c dcm2niix -b  -o "$output_directory/sub-${id}"
-  echo "Finished BIDSifying subject $f"
-  done &
-  for f in ${subs2[@]};do
-  export f
-  heudiconv -b -d $dicom_path -s $study_name -f $heuristic_path \
-  -c dcm2niix -b -o "$output_directory/sub-${id}"
-  echo "Finished BIDSifying subject $f"
-  done &
-  wait
 
 fi
