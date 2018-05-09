@@ -6,7 +6,7 @@
 # Searches for T1w files and dwi files
 
 import os
-subject = os.environ["value"]
+subject = os.environ["id"]
 
 def create_key(template, outtype=('nii.gz',), annotation_classes=None):
     if template is None or not template:
