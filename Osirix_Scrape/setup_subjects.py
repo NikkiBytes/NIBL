@@ -254,7 +254,7 @@ if args['subdir']=='':
 args['fs_subcode']='%s_%s'%(args['studyname'],args['subdir'])
 print("fs_subcode args: " + args['fs_subcode'])
 
-print("I am here")
+print("I am here, processing, and doing the thang!")
 
 
 
@@ -275,6 +275,3 @@ if args['unzip']:
     do_unzipping(args, subdir)
 
 print("....finished do_unzipping()")
-
-
-
