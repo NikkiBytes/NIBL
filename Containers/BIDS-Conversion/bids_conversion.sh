@@ -52,13 +52,10 @@ else
     if [ ! -e "$heuristic_path" ]; then
       echo "Heurisitic path doesn't exist"
       exit
-    fi
-
-
-    
-    read -p "Enter unique dicom path: " dicom_path
-    read -p "Enter output directory path: " output_directory
-
+    else
+      read -p "Enter unique dicom path: " dicom_path
+      read -p "Enter output directory path: " output_directory
+    fi 
 
 
     # Start parallel process / Run BIDS
