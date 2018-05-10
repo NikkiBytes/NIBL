@@ -13,10 +13,10 @@ then
 fi
 
 if [ ! -e "$path" ]
-then
+thenssh
   echo "file path doesn't exist"
 else
-  echo "Starting Program:"
+  echo "Starting Program:"ls
   cd $path # go to input path
 
   read -p "Enter Experiment Name: " experiment
