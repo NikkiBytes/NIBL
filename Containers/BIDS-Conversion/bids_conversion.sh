@@ -54,8 +54,11 @@ else
       exit
     else
       read -p "Enter unique dicom path: " dicom_path
+      REPLACE="{subject}"
+      echo "After Replacement: " ${dicom_path//$study_name/$REPLACE}
+
       read -p "Enter output directory path: " output_directory
-    fi 
+    fi
 
 
     # Start parallel process / Run BIDS
