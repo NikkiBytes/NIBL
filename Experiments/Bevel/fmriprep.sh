@@ -9,11 +9,12 @@ subs2=${subjects[@]:$((${#subjects[@]} / 2 ))}
 
 cd /mydirectory
 
-
+echo "Starting fmriprep: " $(date)
+START=$(date)
 for i in ${subs1[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/Bevel/Bevel Experiments/Bevel/Bevel/$i \
+fmriprep Experiments/Bevel/Bevel Experiments/Bevel/$i \
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
@@ -32,7 +33,11 @@ done &
 for i in ${subs2[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
+<<<<<<< HEAD
 fmriprep Experiments/Bevel/Bevel Experiments/Bevel/fmriprep/$i \
+=======
+fmriprep Experiments/Bevel/Bevel Experiments/Bevel/$i \
+>>>>>>> 2ef4d4464265a53bf38ea48664c2cd507a160dbe
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
@@ -48,3 +53,7 @@ echo "...................................................finished fmriprep for s
 echo "********************************************************************************************"
 done &
 wait
+
+echo "Started fmriprep at: " $START
+echo "Finished fmriprep for Bevel at: " $(date -u)
+FINISHED=$(date -u)

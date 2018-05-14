@@ -54,8 +54,8 @@ else
       exit
     else
       read -p "Enter unique dicom path: " dicom_path
-      REPLACE="{subject}"
-      echo "After Replacement: " ${dicom_path//$study_name/$REPLACE}
+      REPLACE='{subject}'
+      dcm_path=${dicom_path//$study_name/$REPLACE}
 
       read -p "Enter output directory path: " output_directory
     fi
@@ -66,14 +66,14 @@ else
     echo "STARTING BIDS CONVERSION ON SUBJECT: $f ................................................................"
     id=$(echo $f | cut -f2 -d-)
     export id
-    heudiconv -b -d $dicom_path -s $study_name -f $heuristic_path \
+    heudiconv -b -d $dcm_path -s $study_name -f $heuristic_path \
     -c dcm2niix -b  -o "$output_directory/sub-${id}"
     echo "Finished BIDSifying subject $f"
     done &
     for f in ${subs2[@]};do
     id=$(echo $f | cut -f2 -d-)
     export id
-    heudiconv -b -d $dicom_path -s $study_name -f $heuristic_path \
+    heudiconv -b -d $dcm_path -s $study_name -f $heuristic_path \
     -c dcm2niix -b -o "$output_directory/sub-${id}"
     echo "Finished BIDSifying subject $f"
     done &
