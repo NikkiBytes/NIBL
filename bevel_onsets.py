@@ -49,30 +49,39 @@ for file in range(0, len(files)):
     task = files[file].name.split('_')[1]
     for x in files[file].readlines():
         x = x.strip()
+        x = x.strip('\t')
         new_line = x + "\t" + task
         runs[dict_key].append(new_line)
 
 
+# def sort list
+def sort_info(dict_key):
+    runs[dict_key] = sorted(runs[dict_key], key=lambda x: float(x.split()[0]))
 # Write to correct files
+
+for key in runs:
+    sort_info(key)
 
 for key, value in runs.items():
     new_key = key.split('_')[0]
+    header = "Onsets\tDuration\tParametric Modulator\tTrial_Type"
     if new_key in subs:
         # we have the BIDS folder
+        # sort values
         print("Has BIDS")
         filename = str(subs[new_key])+"_"+str(key)+'.tsv'
         print(filename)
         with open(filename, 'w') as file:
+            file.write(header + '\n')
             for line in value:
                 file.write(line + '\n')
             file.close()
-
-
     else:
         print("Needs BIDS")
-        filename = 'etc/'+str(key)+'.txt'
+        filename = str(key)+'.tsv'
         print(filename)
         with open(filename, 'w') as file:
+            file.write(header + '\n')
             for line in value:
                 file.write(line + '\n')
             file.close()
