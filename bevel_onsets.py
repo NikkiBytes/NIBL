@@ -15,7 +15,7 @@ f = glob.glob('*.txt')
 
 files = []
 subs = {}
-runs = {}
+
 for l in f:
   files.append(open(l))
 
@@ -28,22 +28,39 @@ for sub in subjects:
         sub = sub.strip()
         x = sub.split(' ')[0]
         y = sub.split(' ')[2].split('_')[0]
-        subs[y] = [x]
+        subs[y] = x
 
 
+# go through each onset file
 for file in range(0, len(files)):
+    y = files[file].name.strip()
     original_id = files[file].name.split('_')[0]
     task = files[file].name.split('_')[1]
-    run_id = files[file].name.split('_')[2].split('.')[0]
+    #run_id = files[file].name.split('_')[2].split('.')[0]
+    #runs[run_id] = [original_id, task, run_id]
 
-
-    for x in files[file].readlines():
-        info = x.strip()
 
 
     if original_id in subs:
         # we have the BIDS folder
+        print("Here")
+        filename='etc/'+str(subs[original_id])+'_'+str(y)
+        print(filename)
+        NEWFILE = open(filename, 'w')
+        for x in files[file].readlines():
+            x = x.strip()
+
+            NEWFILE.write(x, '\t', task)
+
 
     else:
-        print("there")
-    # check
+        print("There")
+        filename = 'etc/sub-XX_'+str(y)
+        NEWFILE = open(filename, 'w')
+        for x in files[file].readlines():
+            x = x.strip()
+
+            NEWFILE.write(x, '\t', task)
+
+
+## Need to correct output
