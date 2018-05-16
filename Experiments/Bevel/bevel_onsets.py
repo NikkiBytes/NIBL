@@ -64,7 +64,7 @@ for key in runs:
 
 for key, value in runs.items():
     new_key = key.split('_')[0]
-    header = "Onsets\tDuration\tParametric Modulator\tTrial_Type"
+    header = "onsets\tduration\tparametric modulator\ttrial_type"
     if new_key in subs:
         # we have the BIDS folder
         # sort values
