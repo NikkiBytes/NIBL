@@ -36,51 +36,43 @@ for sub in subjects:
 for file in range(0, len(files)):
     name = files[file].name.strip()
     original_id = files[file].name.split('_')[0]
-
     run_id = files[file].name.split('_')[2].split('.')[0]
     dict_key = str(original_id) + "_" + str(run_id)
     runs[dict_key] = []
 
 
-
+# fill dictionary with correct info
 for file in range(0, len(files)):
     original_id = files[file].name.split('_')[0]
     run_id = files[file].name.split('_')[2].split('.')[0]
     dict_key = str(original_id) + "_" + str(run_id)
     task = files[file].name.split('_')[1]
-
     for x in files[file].readlines():
         x = x.strip()
         new_line = x + "\t" + task
         runs[dict_key].append(new_line)
 
 
+# Write to correct files
 
-
-# Add run0X to the correct folder
-
-    if original_id in subs:
+for key, value in runs.items():
+    new_key = key.split('_')[0]
+    if new_key in subs:
         # we have the BIDS folder
-        print("Here")
-        filename='etc/'+str(subs[original_id])+'_'+str(name)
+        print("Has BIDS")
+        filename = str(subs[new_key])+"_"+str(key)+'.tsv'
         print(filename)
-        #NEWFILE = open(filename, 'a')
-        for x in files[file].readlines():
-            x = x.strip()
-            print()
+        with open(filename, 'w') as file:
+            for line in value:
+                file.write(line + '\n')
+            file.close()
 
-            #NEWFILE.write(x, '\t', task)
 
-        #NEWFILE.close()
     else:
-        print("There")
-        filename = 'etc/sub-XX_'+str(name)
-        #NEWFILE = open(filename, 'a')
-        for x in files[file].readlines():
-            x = x.strip()
-        #NEWFILE.close()
-
-        #    NEWFILE.write(x, '\t', task)
-
-
-## Need to correct output
+        print("Needs BIDS")
+        filename = 'etc/'+str(key)+'.txt'
+        print(filename)
+        with open(filename, 'w') as file:
+            for line in value:
+                file.write(line + '\n')
+            file.close()
