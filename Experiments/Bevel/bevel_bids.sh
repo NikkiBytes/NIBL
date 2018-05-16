@@ -9,7 +9,7 @@ cd /test
 for f in ${subs1[@]};do
 id=$(echo $f | cut -f2 -d-)
 echo "STARTING BIDS CONVERSION ON SUBJECT: $f ................................................................"
-export id
+export id20
 heudiconv -b -d Data/{subject}/$f/*dcm -s Bevel -f ConversionFiles/bevel_converter.py \
 -c dcm2niix -b  -o Experiments/Bevel/Bevel/$f
 echo "Finished BIDSifying subject $f"

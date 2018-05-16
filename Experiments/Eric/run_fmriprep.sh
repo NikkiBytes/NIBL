@@ -1,4 +1,4 @@
-cd Experiments/EricData/EricData/ses-wave4
+cd Experiments/EricData/EricData/ses-wave4ls
 subject_id=(sub*)
 subject_id=({*10*,*11*,*12*,*13*,*15*})
 cd /mydirectory
