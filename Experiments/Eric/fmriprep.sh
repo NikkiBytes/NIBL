@@ -54,7 +54,7 @@ fmriprep Experiments/EricData/EricData/ses-wave4 Experiments/EricData/fmriprep/f
 echo "...................................................finished fmriprep for subject $i"
 echo "********************************************************************************************"
 done &
-for i in ${subs2[@]}; do
+for i in ${subs3[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
 fmriprep Experiments/EricData/EricData/ses-wave4 Experiments/EricData/fmriprep/fmriprep_session_4/$i \
