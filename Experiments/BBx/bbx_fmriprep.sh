@@ -27,7 +27,7 @@ fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
     --omp-nthreads 30 --n_cpus 60 \
     --bold2t1w-dof 12 \
     --output-space T1w --template MNI152NLin2009cAsym \
-    --debug  \
+    --debug  --ignore slicetiming \
     -w Experiments/BBx/fmriprep/$i/intermediate_results \
     --resource-monitor --write-graph --stop-on-first-crash
 
@@ -45,7 +45,7 @@ fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
     --omp-nthreads 30 --n_cpus 60 \
     --bold2t1w-dof 12 \
     --output-space T1w --template MNI152NLin2009cAsym \
-    --debug  \
+    --debug --ignore slicetiming \
     -w Experiments/BBx/fmriprep/$i/intermediate_results \
     --resource-monitor --write-graph --stop-on-first-crash
 
@@ -63,7 +63,7 @@ fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
     --omp-nthreads 30 --n_cpus 60 \
     --bold2t1w-dof 12 \
     --output-space T1w --template MNI152NLin2009cAsym \
-    --debug  \
+    --debug  --ignore slicetiming \
     -w Experiments/BBx/fmriprep/$i/intermediate_results \
     --resource-monitor --write-graph --stop-on-first-crash
 
