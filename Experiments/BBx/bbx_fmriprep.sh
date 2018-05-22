@@ -19,7 +19,7 @@ START=$(date)
 for i in ${subs1[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx Experiments/BBx/fmriprep/$i \
+fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
@@ -37,7 +37,7 @@ done &
 for i in ${subs2[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx Experiments/BBx/fmriprep/$i \
+fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
@@ -55,7 +55,7 @@ done &
 for i in ${subs3[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx Experiments/BBx/fmriprep/$i \
+fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
