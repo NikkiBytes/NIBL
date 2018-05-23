@@ -28,21 +28,21 @@ def infotodict(seqinfo):
 
     # func/
 
-    milkA = create_key('func/sub-' + subject + '_task-milkshakeA' )
-    milkB = create_key('func/sub-' + subject + '_task-milkshakeB')
-    milkC = create_key('func/sub-' + subject + '_task-milkshakeC')
-    milkD = create_key('func/sub-' + subject + '_task-milkshakeD')
-    noGo1 = create_key('func/sub-' + subject + '_task-Go_NoGo1')
-    noGo2 = create_key('func/sub-' + subject + '_task-Go_NoGo2')
-    imagine = create_key('func/sub-' + subject + '_task-imagine')
+    milkA = create_key('func/sub-' + subject + '_task-milkshakeA_bold' )
+    milkB = create_key('func/sub-' + subject + '_task-milkshakeB_bold')
+    milkC = create_key('func/sub-' + subject + '_task-milkshakeC_bold')
+    milkD = create_key('func/sub-' + subject + '_task-milkshakeD_bold')
+    noGo1 = create_key('func/sub-' + subject + '_task-Go_NoGo1_bold')
+    noGo2 = create_key('func/sub-' + subject + '_task-Go_NoGo2_bold')
+    imagine = create_key('func/sub-' + subject + '_task-imagine_bold')
 
-    milkA_moco = create_key('func/sub-' + subject + '_ses-4_task-milkshakeA_physio' )
-    milkB_moco = create_key('func/sub-' + subject + '_task-milkshakeB_physio')
-    milkC_moco = create_key('func/sub-' + subject + '_task-milkshakeC_physio')
-    milkD_moco = create_key('func/sub-' + subject + '_task-milkshakeD_physio')
-    noGo1_moco = create_key('func/sub-' + subject + '_task-Go_NoGo1_physio')
-    noGo2_moco = create_key('func/sub-' + subject + '_task-Go_NoGo2_physio')
-    imagine_moco = create_key('func/sub-' + subject + '_task-imagine_physio')
+    milkA_moco = create_key('func/sub-' + subject + '_ses-4_task-milkshakeA_physio_bold' )
+    milkB_moco = create_key('func/sub-' + subject + '_task-milkshakeB_physio_bold')
+    milkC_moco = create_key('func/sub-' + subject + '_task-milkshakeC_physio_bold')
+    milkD_moco = create_key('func/sub-' + subject + '_task-milkshakeD_physio_bold')
+    noGo1_moco = create_key('func/sub-' + subject + '_task-Go_NoGo1_physio_bold')
+    noGo2_moco = create_key('func/sub-' + subject + '_task-Go_NoGo2_physio_bold')
+    imagine_moco = create_key('func/sub-' + subject + '_task-imagine_physio_bold')
 
     info = {t1: [],  fmap_phase: [], fmap_magnitude: [], milkA: [], milkB: [], milkC: [], milkD: [], noGo1: [], noGo2: [], imagine: [],
             milkA_moco: [], milkB_moco: [], milkC_moco: [], milkD_moco: [], noGo1_moco: [], noGo2_moco: [], imagine_moco: [] }
