@@ -19,7 +19,7 @@ echo "STARTING BIDS CONVERSION ON SUBJECT: $f ..................................
 id=$(echo $f | cut -f2 -d-)
 export id
 heudiconv -b -d Raw_Data/{subject}/$f/*dcm -s BBx -f ConversionFiles/bevel_converter.py \
--c dcm2niix -b  -o Experiments/Bevel/Bevel/$f
+-c dcm2niix -b  -o Experiments/Bevel/Bevell/$f
 echo "Finished BIDSifying subject $f"
 done &
 wait
