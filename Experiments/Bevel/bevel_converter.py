@@ -28,10 +28,10 @@ def infotodict(seqinfo):
 
     # func/
     rest = create_key('func/sub-' + subject + '_task-rest_bold')
-    run01 = create_key('func/sub-' + subject + '_task-prob_run01_bold')
-    run02 = create_key('func/sub-' + subject  + '_task-prob_run02_bold')
-    run03 = create_key('func/sub-' + subject + '_task-prob_run03_bold')
-    run04 = create_key('func/sub-'+ subject + '_task-prob_run04_bold')
+    run01 = create_key('func/sub-' + subject + '_task-prob_run-1_bold')
+    run02 = create_key('func/sub-' + subject  + '_task-prob_run-2_bold')
+    run03 = create_key('func/sub-' + subject + '_task-prob_run-3_bold')
+    run04 = create_key('func/sub-'+ subject + '_task-prob_run-4_bold')
 
 
 

@@ -22,13 +22,13 @@ def infotodict(seqinfo):
 
 
     # func/
-    rest = create_key('func/sub-' + subject + '_run03_task-resting_bold')
-    run01 = create_key('func/sub-' + subject + '_run01_task-training_bold')
-    run02 = create_key('func/sub-' + subject  + '_run02_task-training_bold')
-    run03 = create_key('func/sub-' + subject + '_run03_task-training_bold')
-    run04 = create_key('func/sub-'+ subject + '_run04_task-training_bold')
-    run01_rl = create_key('func/sub-'+ subject + '_run01_task-rl_bold')
-    run02_rl = create_key('func/sub-'+ subject + '_run02_task-rl_bold')
+    rest = create_key('func/sub-' + subject + '_task-resting_bold')
+    run01 = create_key('func/sub-' + subject + '_task-training_run-1_bold')
+    run02 = create_key('func/sub-' + subject  + '_task-training_run-2_bold')
+    run03 = create_key('func/sub-' + subject + '_task-training-run-3_bold')
+    run04 = create_key('func/sub-'+ subject + '_task-training_run-4_bold')
+    run01_rl = create_key('func/sub-'+ subject + '_task-rl_run-1_bold')
+    run02_rl = create_key('func/sub-'+ subject + '_task-rl_run-2_bold')
 
 
 
