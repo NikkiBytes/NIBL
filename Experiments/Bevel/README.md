@@ -4,8 +4,8 @@ For information on the preprocessing steps please refer to the < > file.
 
 Summary: <br>                  
 537 Files, 3.23GB  <br>                                         
-18 - Subjects      \                                           
-1 - Session         \                             
+18 - Subjects                                                 
+1 - Session                                      
 
 Available Tasks: prob, rest<br>
 Available Modalities: T1w, bold, fieldmap
