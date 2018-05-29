@@ -2,12 +2,13 @@
 
 For information on the preprocessing steps please refer to the < > file.
 
-Summary:                 Available Tasks:        Available Modalities:
-537 Files, 3.23GB        prob                    T1w                   
-18 - Subjects            rest                    bold                  
-1 - Session                                      fieldmap
+Summary: <br>                  
+537 Files, 3.23GB  <br>                                         
+18 - Subjects      \                                           
+1 - Session         \                             
 
-
+Available Tasks: prob, rest<br>
+Available Modalities: T1w, bold, fieldmap
 #### LOCATION:
 
   <b>Main Directory:</b>     /projects/niblab/bids_projects/Experiments/Bevel <br>
