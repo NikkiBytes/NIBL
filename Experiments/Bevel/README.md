@@ -9,6 +9,7 @@ Summary:
 
 Available Tasks: prob, rest<br>
 Available Modalities: T1w, bold, fieldmap
+
 #### LOCATION:
 
   <b>Main Directory:</b>     /projects/niblab/bids_projects/Experiments/Bevel <br>
@@ -18,7 +19,7 @@ Available Modalities: T1w, bold, fieldmap
 
 #### DATA DIRECTORY
 
-  ~/Bevel/data/:
+  /projects/niblab/bids_projects/Experiments/Bevel/data/Bevel
 
       Bevel/
         dataset_description.json
@@ -43,3 +44,41 @@ Available Modalities: T1w, bold, fieldmap
             sub-001_magnitude1.nii.gz  
             sub-001_magnitude2.nii.gz  
             sub-001_phasediff.nii.gz
+
+  /projects/niblab/bids_projects/Experiments/Bevel/data/fmriprep
+
+    fmriprep/
+      sub-001/
+        fmriprep/
+          logs/
+          sub-001/
+            anat/
+            figures/
+            func/
+          sub-001.html
+        intermediate_results/
+          fmriprep_wf/
+            d3.js  
+            graph1.json  
+            graph.dot  
+            graph.json  
+            graph.svg  
+            index.html  
+            single_subject_001_wf/
+              about/
+              bidssrc/            
+              func_preproc_task_prob_run_1_wf/
+              func_preproc_task_prob_run_2_wf/
+              func_preproc_task_prob_run_3_wf/   
+              func_preproc_task_prob_run_4_wf/
+              anat_preproc_wf/  
+              ds_report_about/    
+              func_preproc_task_rest_wf/
+              bids_info/        
+              ds_report_summary/  
+              summary/
+          reportlets/
+            fmriprep/
+              sub-001/
+                anat/
+                func/
