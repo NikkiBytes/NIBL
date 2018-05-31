@@ -17,16 +17,18 @@ import os
 def preproc(DATA,arglist, outhtml, basedir):
     print("Starting motion correction ")
     for sub in DATA:
-        #print(sub)
+        print("SUBJECT: ", sub)
         for dir in glob.glob(os.path.join(sub,'fmriprep/sub-001/func')):#path to the functional, skull stripped data
-            #print(dir)#not needed but i get crazy 
+            print("DIRECTORY: ", dir)#not needed but i get crazy 
             if not os.path.exists(os.path.join(sub,'motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
                 os.makedirs(os.path.join(sub,'motion_assessment')) #making dir if it doesn't exist
+                
+            os.chdir(os.path.join(dir))
             for input in glob.glob(os.path.join(dir,'*brainmask.nii.gz')):
                 output=input.split('.')[0]
-                #print(output)
-                
-                ###this is generating the fd confounds txt, it is using the fd metric, making a plot and putting it in the motion assessment directory we made above
+                print("OUTPUT: ", output)
+                # this is generating the fd confounds txt, it is using the fd metric,
+                # making a plot and putting it in the motion assessment directory we made above
                 os.system("fsl_motion_outliers -i %s -o motion_assessment/%s_confound.txt \
                           --nomoco  --fd --thresh=%s -p motion_assessment/fd_plot -v > \
                           motion_assessment/%s_outlier_output.txt"%(output,output,arglist['MOCO'],output))
@@ -53,11 +55,11 @@ def preproc(DATA,arglist, outhtml, basedir):
         
                
                 print(int(check))
-                if int(check)>0.9: #if the number in check is greater than num_scrub then we don't want it
-                    with open(out_bad_bold_list, "a") as myfile: #making a file that lists all the bad ones
-                        myfile.write("%s\n"%(output))
-                        print("wrote bad file")
-                    myfile.close()
+                #if int(check)>0.9: #if the number in check is greater than num_scrub then we don't want it
+                #    with open(out_bad_bold_list, "a") as myfile: #making a file that lists all the bad ones
+                 #       myfile.write("%s\n"%(output))
+                  #      print("wrote bad file")
+                   # myfile.close()
 
 def main(DATA):
     basedir='/Users/nikkibytes/Documents/testing'
@@ -67,17 +69,17 @@ def main(DATA):
     outhtml = os.path.join(writedir,'bold_motion_QA_test_%s.html'%(datestamp))
     out_bad_bold_list = os.path.join(writedir,'testing_%s.txt'%(datestamp))
 
-    print(datestamp, outhtml)
+    #print(datestamp, outhtml)
     parser=argparse.ArgumentParser(description='preprocessing')
     parser.add_argument('-task',dest='TASK',
                         default=False, help='which task are we running on?')
     parser.add_argument('-moco',dest='MOCO',
-                        default=False, help='this is using fsl_motion_outliers to preform motion correction and generate a confounds.txt as well as DVARS')
+                        default=True, help='this is using fsl_motion_outliers to preform motion correction and generate a confounds.txt as well as DVARS')
     args = parser.parse_args()
     arglist={}
     for a in args._get_kwargs():
         arglist[a[0]]=a[1]
-    print(arglist)
+    #print(arglist)
     preproc(all_data, arglist,outhtml, basedir)
 
     
