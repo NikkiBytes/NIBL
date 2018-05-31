@@ -14,7 +14,7 @@ import shutil
 import os
 #num_scrub = #some number that is ~25% of TRS
 
-def preproc(DATA,arglist, outhtml, basedir):
+def preproc(DATA, outhtml, basedir):
     print("Starting motion correction ")
     for sub in DATA:
         print("SUBJECT: ", sub)
@@ -24,14 +24,16 @@ def preproc(DATA,arglist, outhtml, basedir):
                 os.makedirs(os.path.join(sub,'motion_assessment')) #making dir if it doesn't exist
                 
             os.chdir(os.path.join(dir))
-            for input in glob.glob(os.path.join(dir,'*brainmask.nii.gz')):
-                output=input.split('.')[0]
+            for input in glob.glob(os.path.join('*brainmask.nii.gz')):
+                id=input.split('.')[0]
+                output=os.path.join(dir, 'motion_assesment/'+id)
+                print("INPUT: ", input)
                 print("OUTPUT: ", output)
                 # this is generating the fd confounds txt, it is using the fd metric,
                 # making a plot and putting it in the motion assessment directory we made above
-                os.system("fsl_motion_outliers -i %s -o motion_assessment/%s_confound.txt \
-                          --nomoco  --fd --thresh=%s -p motion_assessment/fd_plot -v > \
-                          motion_assessment/%s_outlier_output.txt"%(output,output,arglist['MOCO'],output))
+                os.system("fsl_motion_outliers -i %s -o %s_confound.txt \
+                          --nomoco  --fd --thresh=0.9 -p motion_assessment/fd_plot -v > \
+                          motion_assessment/%s_outlier_output.txt"%(input,output,output))
                 
             
                 
@@ -59,8 +61,7 @@ def preproc(DATA,arglist, outhtml, basedir):
                 #    with open(out_bad_bold_list, "a") as myfile: #making a file that lists all the bad ones
                  #       myfile.write("%s\n"%(output))
                   #      print("wrote bad file")
-                   # myfile.close()
-
+                   # myfile.close()'''
 def main(DATA):
     basedir='/Users/nikkibytes/Documents/testing'
     writedir='/Users/nikkibytes/Documents/testing'
@@ -69,21 +70,18 @@ def main(DATA):
     outhtml = os.path.join(writedir,'bold_motion_QA_test_%s.html'%(datestamp))
     out_bad_bold_list = os.path.join(writedir,'testing_%s.txt'%(datestamp))
 
-    #print(datestamp, outhtml)
-    parser=argparse.ArgumentParser(description='preprocessing')
-    parser.add_argument('-task',dest='TASK',
-                        default=False, help='which task are we running on?')
-    parser.add_argument('-moco',dest='MOCO',
-                        default=True, help='this is using fsl_motion_outliers to preform motion correction and generate a confounds.txt as well as DVARS')
-    args = parser.parse_args()
-    arglist={}
-    for a in args._get_kwargs():
-        arglist[a[0]]=a[1]
-    #print(arglist)
-    preproc(all_data, arglist,outhtml, basedir)
+    print("output:" +outhtml)
+    #parser=argparse.ArgumentParser(description='preprocessing')
+   # parser.add_argument('--moco', type=float, help='this is using fsl_motion_outliers to preform motion correction and generate a confounds.txt as well as DVARS')
+    #args = parser.parse_args('--moco', '0.9')
+  #  args.const
+    #arglist={}
+    #for a in args._get_kwargs():
+     #   arglist[a[0]]=a[1]
+      #  print(a)
+    #print(arglist['MOCO'])
+    preproc(all_data, outhtml, basedir)
 
-    
-    
 all_data=glob.glob('/Users/nikkibytes/Documents/testing/sub*')
 all_data
 main(all_data)
