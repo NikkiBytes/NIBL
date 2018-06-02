@@ -36,6 +36,8 @@ for sub in subjects:
 for file in range(0, len(files)):
     name = files[file].name.strip()
     original_id = files[file].name.split('_')[0]
+    print("NAME: ", name)
+    print("ORIGINAL ID: ", original_id)
     run_id = files[file].name.split('_')[2].split('.')[0]
     dict_key = str(original_id) + "_" + str(run_id)
     runs[dict_key] = []
@@ -45,6 +47,8 @@ for file in range(0, len(files)):
 for file in range(0, len(files)):
     original_id = files[file].name.split('_')[0]
     run_id = files[file].name.split('_')[2].split('.')[0]
+    run_id = run_id.replace('0', '-')
+    print(run_id)
     dict_key = str(original_id) + "_" + str(run_id)
     task = files[file].name.split('_')[1]
     for x in files[file].readlines():
@@ -64,18 +68,24 @@ for key in runs:
 
 for key, value in runs.items():
     new_key = key.split('_')[0]
+    run_id = key.split('_')[1]
+    run_id = run_id.replace('0','-')
+    print(run_id)
     header = "onsets\tduration\tparametric modulator\ttrial_type"
     if new_key in subs:
         # we have the BIDS folder
         # sort values
         print("Has BIDS")
-        filename = str(subs[new_key])+"_"+str(key)+'.tsv'
+        
+        #sub-001_task-prob_run-3_events
+        filename = str(subs[new_key])+"_task-prob_"+run_id+"_events.tsv")
         print(filename)
         with open(filename, 'w') as file:
             file.write(header + '\n')
             for line in value:
                 file.write(line + '\n')
             file.close()
+            
     else:
         print("Needs BIDS")
         filename = str(key)+'.tsv'
