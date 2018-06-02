@@ -39,7 +39,8 @@ def preproc(sub_dict, sub_dir, func_keyword):
             if not os.path.exists(os.path.join(dir,'motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
                 os.makedirs(os.path.join(dir,'motion_assessment')) #making dir if it doesn't exist
      
-        
+        # getting user input filename variable
+     
             for func_input in glob.glob(os.path.join(func_keyword)):
                 task = func_input.split('.')[0]
             
@@ -70,11 +71,11 @@ def preproc(sub_dict, sub_dir, func_keyword):
                 print("OUTHTML: ", outhtml)
                 
             
-           
+           # Now we're running fsl_motion_outliers 
            # this is generating the fd confounds txt, it is using the fd metric,
            # making a plot and putting it in the motion assessment directory we made above
-
-                os.system("fsl_motion_outliers -i %s  -o %s/%s_confound.txt  --fd --thresh=0.9 -p motion_assessment/fd_plot -v > %s/%s_outlier_output.txt"%(func_input, output,task,output, task))
+              
+                os.system("fsl_motion_outliers -i %s  -o %s/%s_confound.txt  --fd --thresh=0.9 -p motion_assessment/fd_plot -v > %s/%s_outlier_output.txt"%(task, output,task,output, task))
             
                 os.system("cat motion_assessment/%s_outlier_output.txt >> %s"%(task,outhtml))
                 
