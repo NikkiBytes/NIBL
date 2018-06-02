@@ -74,22 +74,24 @@ def preproc(sub_dict, sub_dir, func_keyword):
            # Now we're running fsl_motion_outliers 
            # this is generating the fd confounds txt, it is using the fd metric,
            # making a plot and putting it in the motion assessment directory we made above
-              
                 os.system("fsl_motion_outliers -i %s  -o %s/%s_confound.txt  --fd --thresh=0.9 -p motion_assessment/fd_plot -v > %s/%s_outlier_output.txt"%(task, output,task,output, task))
             
                 os.system("cat motion_assessment/%s_outlier_output.txt >> %s"%(task,outhtml))
                 
-                ###getting the full path to the plot
+           # Get the full path to the plot created by fsl_motion_outliers
                 plotz=os.path.join(output,'fd_plot.png')
             
+           # Create an html file based on plot
                 os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s WIDTH=%s></BODY></HTML>' >> %s"%(task,plotz,'100%', outhtml))
                 
                 
-                ####sometimes you have a great subject who didn't move, in this case we want to make a blank file
+           # Create a blank file 
+           # --sometimes you have a great subject who didn't move
                 if os.path.isfile("%s/%s_confound.txt"%(output,task))==False:
                     os.system("touch motion_assessment/%s_confound.txt"%(task))
-                
-                check = subprocess.check_output("grep -o 1 %s/%s_confound.txt | wc -l"%(output, task), shell=True) #how many columns are there = how many 'bad' points
+         
+           # how many columns are there = how many 'bad' points
+                check = subprocess.check_output("grep -o 1 %s/%s_confound.txt | wc -l"%(output, task), shell=True) 
             
                 num_scrub = [int(s) for s in check.split() if s.isdigit()]
                 print("NUM SCRUB: ", str(num_scrub[0]), "\n")
@@ -104,10 +106,10 @@ def preproc(sub_dict, sub_dir, func_keyword):
 def main():
     
     sub_dict ={}
-    #sub_dir = input("Enter directory path of your subjects: ")
-    sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
-    #func_keyword = input("Please enter a keyword for the files in your func folder (Please use a wildcard(*)): \n i.e. *bold.nii.gz \n Enter: ")
-    func_keyword = '*bold.nii.gz'
+    sub_dir = input("Enter directory path of your subjects: ")
+    #sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
+    func_keyword = input("Please enter a keyword for the files in your func folder (Please use a wildcard(*)): \n i.e. *bold.nii.gz \n Enter: ")
+    #func_keyword = '*bold.nii.gz'
     #initialize dict subject
     get_subjects(sub_dir, sub_dict)
     
