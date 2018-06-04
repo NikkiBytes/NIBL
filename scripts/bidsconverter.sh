@@ -72,13 +72,13 @@ if ["$CONTINUE" = true ] ; then
     exit
   else
 # if heuristic path exists get dicom path
-    read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
+read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
     # replace the subject name with the required subject expression for the heudiconv converter
     REPLACE="{subject}"
     DCMPATH=${DCMPATH//$STUDYNAME/$REPLACE}
 
 
-    # Start parallel process / Run BIDS
+    # Start parallel process, run BIDS
     for f in ${subs1[@]};do
     echo "STARTING BIDS CONVERSION ON SUBJECT: $f ................................................................"
     id=$(echo $f | cut -f2 -d-)
