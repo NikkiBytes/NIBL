@@ -44,30 +44,38 @@ read -p "Enter output directory path: " OUTPUTDIR
 cd $INPUTDIR
 # grab the subjects
 subjects=(sub*)
+
 # confirm subjects and proceed
 echo "HERE ARE THE SUBJECTS FOUND:  ${subjects[@]}"
 read -p "Proceed with conversion?(enter true):  " CONTINUE
 
-# check CONTINUE variable
+# CHECK CONTINUE VARIABLE
+
+# If true, start BIDS process --
 if ["$CONTINUE" = true ] ; then
   echo "Proceeding..........."
 
+
+# split subjects into 2 different arrays
   subs1=${subjects[@]::$((${#subjects[@]} / 2 ))}
   subs2=${subjects[@]:$((${#subjects[@]} / 2 ))}
 
+# change to main, "top level", directory
   cd $MAINDIR
 
+# get heuristic file path
   read -p "Enter heuristic file path: " HEURISTICPATH
 
+# check if heuristic file path exists -- cannot continue if unavailable
   if [ ! -e "$HEURISTICPATH" ]; then
     echo "Heurisitic path doesn't exist"
     exit
   else
-    # get dicom path
-    read -p "Enter unique dicom path (enter sub* in placement of the sub-X and *dcm/*IMA for the raw data):  " DCMPATH
+# if heuristic path exists get dicom path
+    read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
     # replace the subject name with the required subject expression for the heudiconv converter
-    REPLACE="\{subject\}"
-    dcm_path=${DCMPATH//$STUDYNAME/$REPLACE}
+    REPLACE="{subject}"
+    DCMPATH=${DCMPATH//$STUDYNAME/$REPLACE}
 
 
     # Start parallel process / Run BIDS
