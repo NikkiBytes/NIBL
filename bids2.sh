@@ -1,7 +1,6 @@
 
 
 # get start variables
-
 get_start_variables () {
 # main directory path is the 'head' directory, this must contain deeper paths to the input data, output
 # folder, and the heuristic file.
@@ -14,6 +13,12 @@ get_start_variables () {
   then
     echo "Main directory doesn't exist"
   fi
+
+  read -p "Is this a multi-session study?(Enter true): " MULTISESS
+  if [ "$MULTISESS" = true ]; then
+    read -p "Enter session: " SESSION
+  fi
+
 
 
 # the study name is the title of the experiment and must be identical to the study name found in the
@@ -62,36 +67,68 @@ get_bids_variables () {
     echo "Heurisitic path doesn't exist"
     exit
   else
-  # if heuristic path exists get dicom path
-  read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
+    if [ "$MULTISESS" = true ]; then
+      read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
+      REPLACESUB="{subject}"
+      DCMPATH=${DCMPATH//$STUDYNAME/$REPLACESUB}
+      REPLACESES="{session}"
+      DCMPATH=${DCMPATH//$SESSION/$REPLACESES}
+    else
+   # if heuristic path exists get dicom path
+      read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
       # replace the subject name with the required subject expression for the heudiconv converter
       REPLACE="{subject}"
       DCMPATH=${DCMPATH//$STUDYNAME/$REPLACE}
+    fi
+  fi
 }
 
 # Start parallel process / Run BIDS
 bids_process () {
-  for sub1 in ${subs1[@]};do
-  echo "STARTING BIDS CONVERSION ON SUBJECT: $sub1 ................................................................"
-  id=$(echo $sub1 | cut -f2 -d-)
-  export id
-  heudiconv -b -d $DCMPATH -s $STUDYNAME -f $HEURISTICPATH \
-  -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
-  echo "Finished BIDSifying subject $sub2"
-  done &
-  for sub2 in ${subs2[@]};do
-  echo "STARTING BIDS CONVERSION ON SUBJECT: $sub2 ................................................................"
-  id=$(echo $sub2 | cut -f2 -d-)
-  export id
-  heudiconv -b -d $DCMPATH -s $STUDYNAME -f $HEURISTICPATH \
-  -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
-  echo "Finished BIDSifying subject $sub2"
-  done &
-  wait
+# run multi session BIDS conversion
+  if [ "$MULTISESS" = true ] ;
+  then
+    for sub1 in ${subs1[@]};do
+      echo "STARTING BIDS CONVERSION ON SUBJECT: $sub1 ................................................................"
+      id=$(echo $sub1 | cut -f2 -d-)
+      export id
+      heudiconv -b -d $DCMPATH -s $STUDYNAME -ss $SESSION -f $HEURISTICPATH \
+      -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
+      echo "Finished BIDSifying subject $sub2"
+    done &
+    for sub2 in ${subs2[@]};do
+      echo "STARTING BIDS CONVERSION ON SUBJECT: $sub2 ................................................................"
+      id=$(echo $sub2 | cut -f2 -d-)
+      export id
+      heudiconv -b -d $DCMPATH -s $STUDYNAME -ss $SESSION -f $HEURISTICPATH  \
+      -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
+      echo "Finished BIDSifying subject $sub2"
+    done &
+    wait
+# run single session BIDS
+  else
+    for sub1 in ${subs1[@]};do
+      echo "STARTING BIDS CONVERSION ON SUBJECT: $sub1 ................................................................"
+      id=$(echo $sub1 | cut -f2 -d-)
+      export id
+      heudiconv -b -d $DCMPATH -s $STUDYNAME -f $HEURISTICPATH \
+      -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
+      echo "Finished BIDSifying subject $sub2"
+    done &
+    for sub2 in ${subs2[@]};do
+      echo "STARTING BIDS CONVERSION ON SUBJECT: $sub2 ................................................................"
+      id=$(echo $sub2 | cut -f2 -d-)
+      export id
+      heudiconv -b -d $DCMPATH -s $STUDYNAME -f $HEURISTICPATH  \
+      -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
+      echo "Finished BIDSifying subject $sub2"
+    done &
+    wait
 }
 
 main () {
   get_start_variables
+
   get_subjects $INPUTDIR
 
   if ["$CONTINUE" = true ] ; then
