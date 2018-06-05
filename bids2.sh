@@ -4,16 +4,16 @@
 get_start_variables () {
 # main directory path is the 'head' directory, this must contain deeper paths to the input data, output
 # folder, and the heuristic file.
-  read -p "Enter main directory path: " MAINDIR
-  if [ -z $MAINDIR ]
-  then
-    echo "input path is an empty string"
-  fi
-  if [ ! -e $MAINDIR]
-  then
-    echo "Main directory doesn't exist"
-  fi
-
+  #read -p "Enter main directory path: " MAINDIR
+  #if [ -z $MAINDIR ]
+  #then
+  #  echo "input path is an empty string"
+  #fi
+  #if [ ! -e $MAINDIR]
+  #then
+  #  echo "Main directory doesn't exist"
+  #fi
+  MAINDIR='/test'
   read -p "Is this a multi-session study?(Enter true): " MULTISESS
   if [ "$MULTISESS" = true ]; then
     read -p "Enter session: " SESSION
@@ -70,18 +70,18 @@ get_bids_variables () {
   else
     if [ "$MULTISESS" = true ]; then
       read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
-      REPLACESUB="{subject}"
-      DCMPATH=${DCMPATH//$STUDYNAME/$REPLACESUB}
-      REPLACESES="{session}"
-      DCMPATH=${DCMPATH//$SESSION/$REPLACESES}
-      echo $DCMPATH
+      REPLACESUB='{subject}'
+      DCMPATH="${DCMPATH//$STUDYNAME/$REPLACESUB}"
+      REPLACESES='{session}'
+      DCMPATH="${DCMPATH//$SESSION/$REPLACESES}"
+      echo "DICOM PATH: ${DCMPATH}"
     else
    # if heuristic path exists get dicom path
       read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
       # replace the subject name with the required subject expression for the heudiconv converter
-      REPLACE="{subject}"
+      REPLACE='{subject}'
       DCMPATH=${DCMPATH//$STUDYNAME/$REPLACE}
-      echo $DCMPATH
+      echo "DICOM PATH: ${DCMPATH}"
     fi
   fi
 }
@@ -94,8 +94,8 @@ bids_process () {
 # run multi session BIDS conversion
   if [ "$MULTISESS" = true ] ;
   then
-
     for sub1 in ${subs1[@]};do
+      DCMPATH=${DCMPATH//'sub*'/$sub1}
       echo "STARTING MULTI-SESS BIDS CONVERSION ON SUBJECT $sub1 ................................................................"
       id=$(echo $sub1 | cut -f2 -d-)
       export id
@@ -104,6 +104,8 @@ bids_process () {
       echo "Finished BIDSifying subject $sub2"
     done &
     for sub2 in ${subs2[@]};do
+      DCMPATH=${DCMPATH//'sub*'/$sub2}
+      echo "DCMPATH: ${DCMPATH}"
       echo "STARTING BIDS CONVERSION ON SUBJEC: $sub2 ................................................................"
       id=$(echo $sub2 | cut -f2 -d-)
       export id
@@ -115,6 +117,7 @@ bids_process () {
 # run single session BIDS
   else
     for sub1 in ${subs1[@]};do
+      DCMPATH=${DCMPATH//'sub*'/$sub1}
       echo "STARTING BIDS CONVERSION ON SUBJECT: $sub1 ................................................................"
       id=$(echo $sub1 | cut -f2 -d-)
       export id
@@ -123,6 +126,7 @@ bids_process () {
       echo "Finished BIDSifying subject $sub2"
     done &
     for sub2 in ${subs2[@]};do
+      DCMPATH=${DCMPATH//'sub*'/$sub2}
       echo "STARTING BIDS CONVERSION ON SUBJECT: $sub2 ................................................................"
       id=$(echo $sub2 | cut -f2 -d-)
       export id
