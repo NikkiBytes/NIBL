@@ -58,6 +58,7 @@ get_subjects () {
   echo "HERE ARE THE SUBJECTS FOUND:  ${subjects[@]}"
   # confirm subjects from user
   read -p "Proceed with conversion?(enter true):  " CONTINUE
+  cd $MAINDIR
 }
 
 get_bids_variables () {
@@ -73,23 +74,29 @@ get_bids_variables () {
       DCMPATH=${DCMPATH//$STUDYNAME/$REPLACESUB}
       REPLACESES="{session}"
       DCMPATH=${DCMPATH//$SESSION/$REPLACESES}
+      echo $DCMPATH
     else
    # if heuristic path exists get dicom path
       read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
       # replace the subject name with the required subject expression for the heudiconv converter
       REPLACE="{subject}"
       DCMPATH=${DCMPATH//$STUDYNAME/$REPLACE}
+      echo $DCMPATH
     fi
   fi
 }
 
 # Start parallel process / Run BIDS
 bids_process () {
+#seperate subjects for parallel processing
+  subs1=${subjects[@]::$((${#subjects[@]} / 2 ))}
+  subs2=${subjects[@]:$((${#subjects[@]} / 2 ))}
 # run multi session BIDS conversion
   if [ "$MULTISESS" = true ] ;
   then
+
     for sub1 in ${subs1[@]};do
-      echo "STARTING BIDS CONVERSION ON SUBJECT: $sub1 ................................................................"
+      echo "STARTING MULTI-SESS BIDS CONVERSION ON SUBJECT $sub1 ................................................................"
       id=$(echo $sub1 | cut -f2 -d-)
       export id
       heudiconv -b -d $DCMPATH -s $STUDYNAME -ss $SESSION -f $HEURISTICPATH \
@@ -97,7 +104,7 @@ bids_process () {
       echo "Finished BIDSifying subject $sub2"
     done &
     for sub2 in ${subs2[@]};do
-      echo "STARTING BIDS CONVERSION ON SUBJECT: $sub2 ................................................................"
+      echo "STARTING BIDS CONVERSION ON SUBJEC: $sub2 ................................................................"
       id=$(echo $sub2 | cut -f2 -d-)
       export id
       heudiconv -b -d $DCMPATH -s $STUDYNAME -ss $SESSION -f $HEURISTICPATH  \
@@ -124,6 +131,7 @@ bids_process () {
       echo "Finished BIDSifying subject $sub2"
     done &
     wait
+  fi
 }
 
 main () {
@@ -131,7 +139,8 @@ main () {
 
   get_subjects $INPUTDIR
 
-  if ["$CONTINUE" = true ] ; then
+  if [ "$CONTINUE" = true ] ; then
+    get_bids_variables
     bids_process
   else
     echo "SUBJECTS WERE DECLARED FALSE, EXITING..................................."
