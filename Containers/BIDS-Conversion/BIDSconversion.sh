@@ -1,4 +1,7 @@
+#/bin/bash
 
+# @Author: Nichollette Acosta
+# BIDS conversion automation scripts made for NIBL at Chapel Hill 
 
 # get start variables
 get_start_variables () {
@@ -26,7 +29,7 @@ get_start_variables () {
   read -p "Enter study name: " STUDYNAME
   if [ -z $STUDYNAME ]
   then
-    echo "input path is an empty string"
+    echo "INPUT IS AN EMPTY STRING"
   fi
 
 
@@ -34,11 +37,11 @@ get_start_variables () {
   read -p "Enter input data path: " INPUTDIR
   if [ -z $INPUTDIR ]
   then
-    echo "input path is an empty string"
+    echo "INPUT IS AN EMPTY STRING"
   fi
   if [ ! -e $INPUTDIR ]
   then
-    echo "INPUT IS AN EMPTY STRING"
+    echo "INPUT DIRECTORY DOES NOT EXIST"
   fi
 
 
@@ -55,9 +58,9 @@ get_subjects () {
   subjects=(sub*)
 
   # display subjects found
-  echo "HERE ARE THE SUBJECTS FOUND:  ${subjects[@]}"
+  echo -e  "HERE ARE THE SUBJECTS FOUND:  \n ${subjects[@]}"
   # confirm subjects from user
-  read -p "Proceed with conversion?(enter true):  " CONTINUE
+  read -p "Proceed with conversion?(Enter true):  " CONTINUE
   cd $MAINDIR
 }
 
@@ -69,19 +72,19 @@ get_bids_variables () {
     exit
   else
     if [ "$MULTISESS" = true ]; then
-      read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
+      read -p "$(echo -e 'Read carefully to input the dicom path. \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
       REPLACESUB='{subject}'
       DCMPATH="${DCMPATH//$STUDYNAME/$REPLACESUB}"
       REPLACESES='{session}'
       DCMPATH="${DCMPATH//$SESSION/$REPLACESES}"
-      echo "DICOM PATH: ${DCMPATH}"
+      #echo "DICOM PATH: ${DCMPATH}"
     else
    # if heuristic path exists get dicom path
       read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
       # replace the subject name with the required subject expression for the heudiconv converter
       REPLACE='{subject}'
       DCMPATH=${DCMPATH//$STUDYNAME/$REPLACE}
-      echo "DICOM PATH: ${DCMPATH}"
+      #echo "DICOM PATH: ${DCMPATH}"
     fi
   fi
 }
@@ -97,56 +100,66 @@ bids_process () {
     for sub1 in ${subs1[@]};do
       DCMPATH=${DCMPATH//'sub*'/$sub1}
       echo "STARTING MULTI-SESS BIDS CONVERSION ON SUBJECT $sub1 ................................................................"
+      echo "_____________________________________________________________________________________________________________________"
       id=$(echo $sub1 | cut -f2 -d-)
       export id
       heudiconv -b -d $DCMPATH -s $STUDYNAME -ss $SESSION -f $HEURISTICPATH \
       -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
-      echo "Finished BIDSifying subject $sub2"
+      echo "_____________________________________________________________________________________________________________________"
+      echo "COMPLETED BIDS CONVERSION FOR SUBJECT $sub1"
     done &
     for sub2 in ${subs2[@]};do
       DCMPATH=${DCMPATH//'sub*'/$sub2}
-      echo "DCMPATH: ${DCMPATH}"
-      echo "STARTING BIDS CONVERSION ON SUBJEC: $sub2 ................................................................"
+      echo "STARTING MULTI-SESS BIDS CONVERSION ON SUBJECT $sub2 ................................................................"
+      echo "_____________________________________________________________________________________________________________________"
       id=$(echo $sub2 | cut -f2 -d-)
       export id
       heudiconv -b -d $DCMPATH -s $STUDYNAME -ss $SESSION -f $HEURISTICPATH  \
       -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
-      echo "Finished BIDSifying subject $sub2"
+      echo "_____________________________________________________________________________________________________________________"
+      echo "COMPLETED BIDS CONVERSION FOR SUBJECT $sub2"
     done &
     wait
 # run single session BIDS
   else
     for sub1 in ${subs1[@]};do
       DCMPATH=${DCMPATH//'sub*'/$sub1}
-      echo "STARTING BIDS CONVERSION ON SUBJECT: $sub1 ................................................................"
+      echo "STARTING BIDS CONVERSION ON SUBJECT $sub1 ................................................................"
+      echo "__________________________________________________________________________________________________________"
       id=$(echo $sub1 | cut -f2 -d-)
       export id
       heudiconv -b -d $DCMPATH -s $STUDYNAME -f $HEURISTICPATH \
       -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
-      echo "Finished BIDSifying subject $sub2"
+      echo "__________________________________________________________________________________________________________"
+      echo "COMPLETED BIDS CONVERSION FOR SUBJECT $sub1"
     done &
     for sub2 in ${subs2[@]};do
       DCMPATH=${DCMPATH//'sub*'/$sub2}
-      echo "STARTING BIDS CONVERSION ON SUBJECT: $sub2 ................................................................"
+      echo "STARTING BIDS CONVERSION ON SUBJECT $sub2 ................................................................"
+      echo "__________________________________________________________________________________________________________"
       id=$(echo $sub2 | cut -f2 -d-)
       export id
       heudiconv -b -d $DCMPATH -s $STUDYNAME -f $HEURISTICPATH  \
       -c dcm2niix -b  -o "$OUTPUTDIR/sub-${id}"
-      echo "Finished BIDSifying subject $sub2"
+      echo "__________________________________________________________________________________________________________"
+      echo "COMPLETED BIDS CONVERSION FOR SUBJECT $sub2"
     done &
     wait
   fi
 }
 
 main () {
+  #get start variables
   get_start_variables
+  #get subjects get confirmation
+  get_subjects
 
-  get_subjects $INPUTDIR
-
+  #if subjects are confirmed continue with process/ else exit
   if [ "$CONTINUE" = true ] ; then
     get_bids_variables
     bids_process
   else
     echo "SUBJECTS WERE DECLARED FALSE, EXITING..................................."
+    exit
   fi
 }
