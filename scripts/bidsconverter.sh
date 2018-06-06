@@ -42,7 +42,7 @@ read -p "Enter output directory path: " OUTPUTDIR
 
 # move to input directory
 cd $INPUTDIR
-# grab the subjects
+# grab the subje
 subjects=(sub*)
 
 # confirm subjects and proceed
