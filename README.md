@@ -15,3 +15,4 @@ The **/Experiments** folder contains the labs, and their unique workflows.
 
 The **/Osirix_Scrape** folder contains scripts used to data scrape all subjects from an experiment being stored on OsiriX Web Interface and transfer them to your HPC.
 
+The **/BIDS_Conversion** folder contains relevant scripts for the BIDS conversion process. Here you will find an automated script for the conversion, '~/BIDSconversion.sh'. 
