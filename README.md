@@ -2,12 +2,6 @@
 
 This repository contains the workflows for the various studies done in the lab.
 
-## Directory of Experiment data:
-          MAIN:           /projects/niblab/bids_projects/Experiments
-          ERIC DATA:      /projects/niblab/bids_projects/Experiments/EricData/data
-          BEVEL DATA:     /projects/niblab/bids_projects/Experiments/Bevel/data
-          BBx:            /projects/niblab/bids_projects/Experiments/BBx/data
-
 
 The **/Containers** folder contains the Singularity containers, workflows and scripts for running containers.
 
