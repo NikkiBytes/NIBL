@@ -20,16 +20,16 @@ def prepro(basedir, args, arglist, outhtml, out_bad_bold_list,DATA):
             for nifti in glob.glob(os.path.join(sub,'func','sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
 #                print(nifti)
 #            os.chdir(os.path.join(basedir, nifti))
-#            for input in glob.glob('*bart_bold.nii.gz'):
-                output=nifti.strip('.nii.gz')
-                if os.path.exists(output+'_brain.nii.gz'):
-                    print(output+' exists, skipping')
+                for input in glob.glob('*bart_bold.nii.gz'):
+                    output=nifti.strip('.nii.gz')
+                    if os.path.exists(output+'_brain.nii.gz'):
+                        print(output+' exists, skipping')
 #                    print('')
-                else:
-                    BET_OUTPUT=output+'_brain'
-                    x=("/usr/local/fsl/bin/bet %s %s -F"%(input, BET_OUTPUT))
+                    else:
+                        BET_OUTPUT=output+'_brain'
+                        x=("/usr/local/fsl/bin/bet %s %s -F"%(input, BET_OUTPUT))
 #                    print(x)
-                    os.system(x)
+                        os.system(x)
 
 
 #bet rage

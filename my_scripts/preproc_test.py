@@ -16,15 +16,69 @@ import datetime
 
 
 
+#__________________________________________________________________________________________________________________________
+# Set (GLOBAL) directories **currently hardcoded
+
+
+def set_directories():
+    #sub_dir = input("Enter directory path of your subjects: ")
+    global sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
+    #global func_keyword = input("Please enter a keyword for the files in your func folder (Please use a wildcard(*)): \n i.e. *bold.nii.gz \n Enter: ")
+    global func_keyword = '*bold.nii.gz'
+
+
+    global basedir='/Users/gracer/Desktop/data'
+    global writedir='/Users/gracer/Desktop/data'
+
+    global datestamp=datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
+    global outhtml = os.path.join(writedir,'bold_motion_QA_%s.html'%(datestamp))
+    global out_bad_bold_list = os.path.join(writedir,'lose_gt_45_vol_scrub_%s.txt'%(datestamp))
+
 
 #__________________________________________________________________________________________________________________________
 # Get dictionary of subjects from given directory
+
+def set_parser():
+    parser.add_argument('-task',dest='TASK',
+                        default=False, help='which task are we running on?')
+    parser.add_argument('-bet',dest='STRIP',action='store_true',
+                        default=False, help='bet via fsl using defaults for functional images')
+    parser.add_argument('-betrage',dest='RAGE',action='store_true',
+                        default=False, help='bet via fsl using robust estimation for anatomical images')
+    parser.add_argument('-reorient',dest='REOR',action='store_true',
+                        default=False, help='using fslswapdim to fix orientation problems')
+    parser.add_argument('-trim',dest='TRIM',action='store_true',
+                        default=False, help='this trims extra trs, this requires the -extra and -total flags')
+    parser.add_argument('-extra',dest='EX',
+                        default=False, help='TRs to remove')
+    parser.add_argument('-total',dest='TOT',
+                        default=False, help='total TRs')
+    parser.add_argument('-moco',dest='MOCO',
+                        default=False, help='this is using fsl_motion_outliers to preform motion correction and generate a confounds.txt as well as DVARS')
+
+
+#__________________________________________________________________________________________________________________________
+# Get data
+
+#__________________________________________________________________________________________________________________________
+# Get Data
+# -- dictionary of subjects from given directory
+# currently this assumes the data is listed in the sub-XX folder of a given directory path
+# any input in the directory given containing 'sub*' will be included as a data directory
+# ----------> MODIFY FOR FLEXIBILITY/REPRODUCIBILITY
+
+
 def get_subjects(sub_dir, sub_dict):
+    #sub_dir = input("Enter directory path of your subjects: ")
+    global sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
     os.chdir(sub_dir)
     files = os.listdir('.')
     for file in files:
         if 'sub' in file:
             sub_dict[file] = None
+
+
+
 
 #__________________________________________________________________________________________________________________________
 # method to run preprocessing steps (functional bet, motion assessment)
@@ -41,6 +95,7 @@ def preproc(sub_dict, sub_dir, func_keyword):
 #        print(DATA)
 #        os.chdir(os.path.join(basedir))
         for sub in DATA:
+            # get nifti file based on TASK label passed
             for nifti in glob.glob(os.path.join(sub,'func','sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
 #                print(nifti)
 #            os.chdir(os.path.join(basedir, nifti))
@@ -143,14 +198,18 @@ def preproc(sub_dict, sub_dir, func_keyword):
 
 
 def main():
-
     sub_dict ={}
-    sub_dir = input("Enter directory path of your subjects: ")
-    #sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
-    func_keyword = input("Please enter a keyword for the files in your func folder (Please use a wildcard(*)): \n i.e. *bold.nii.gz \n Enter: ")
-    #func_keyword = '*bold.nii.gz'
-    #initialize dict subject
-    get_subjects(sub_dir, sub_dict)
+
+    set_directories()
+    set_parser()
+    args = parser.parse_args()
+    arglist={}
+    for a in args._get_kwargs():
+        arglist[a[0]]=a[1]
+    print(arglist)
+
+
+    get_subjects(sub_dict) #,sub_dir)
 
     print("SUBJECT DICTIONARY: ", sub_dict)
     #for key in sub_dict:
@@ -158,5 +217,19 @@ def main():
         #test dictionary
 
 
-    preproc(sub_dict, sub_dir, func_keyword)
-main()
+    preproc(sub_dict)
+
+#________________________________________________________________________________________________
+# Start Program
+
+# intiate with data grab and split
+get_subjects()
+B, C = split_list(all_data)
+
+
+# begin parallel process, prompt main
+if __name__ == "__main__":
+    pool = Pool(processes=2)
+    pool.map(main, [B,C])
+
+#main()
