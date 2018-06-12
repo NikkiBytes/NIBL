@@ -100,24 +100,38 @@ def preproc(DATA):
 #_______________________________________________________BET___________________________________________________
 # ----> FOCUS: functional
 
+def preproc(DATA):
+    if args.MOCO==False:
+        print("please set a threshold for the FD, a good one is 0.9")
+    else:
+        print("starting motion correction")
+
     if args.STRIP==True:
         print("starting bet")
-#        print(DATA)
-#        os.chdir(os.path.join(basedir))
+        print("PRINTING DATA: \n", DATA. "\n")
+        #os.chdir(os.path.join(basedir))
         for sub in DATA:
-            # get nifti file based on TASK label passed
-            for nifti in glob.glob(os.path.join(sub,'func','sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
-#                print(nifti)
-#            os.chdir(os.path.join(basedir, nifti))
-#            for input in glob.glob('*bart_bold.nii.gz'):
+            for nifti in glob.glob(os.path.join(sub, 'func', 'sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
+                # make our variables
                 output=nifti.strip('.nii.gz')
-                if os.path.exists(output+'_brain.nii.gz'):
-                    print(output+' exists, skipping')
+                BET_OUTPUT=output+'_brain'
+                # check if data exists already
+                if os.path.exists(BET_OUTPUT):
+                    print(BET_OUTPUT + ' exists, skipping \n')
                 else:
-                    BET_OUTPUT=output+'_brain'
-                    x=("/usr/local/fsl/bin/bet %s %s -F"%(input, BET_OUTPUT))
-#                    print(x)
-                    os.system(x)
+                    print("Running bet on ", nifti)
+                    print("BET COMMAND: ", bet_cmd, "\n")
+                    bet_cmd=("bet %s %s -F -m"%(nifti, BET_OUTPUT))
+                #    os.system(bet_cmd)
+
+        # lets check our variables
+                print("VARIABLES:")
+                print("SUB: ", sub)
+                print("NIFTI: ", nifti)
+                print("OUTPUT: ", output)
+                print("BET OUTPUT: ", BET_OUTPUT)
+                print("__________________________________________________________________________________")
+
 
 #______________________________________________________MOTION CORRECTION_________________________________________
 
@@ -208,6 +222,11 @@ def preproc(DATA):
 
 
 def main():
+
+    get_subjects()
+    B, C = split_list(all_data)
+
+
     sub_dict ={}
 
     set_directories()
@@ -222,20 +241,20 @@ def main():
      #   print(key)
         #test dictionary
 
-
-    preproc(sub_dict)
+    pool = Pool(processes=2)
+    pool.map(preproc, [B,C])
+    #preproc(DATA)
 
 #________________________________________________________________________________________________
 # Start Program
 
 # intiate with data grab and split
-get_subjects()
-B, C = split_list(all_data)
+
 
 
 # begin parallel process, prompt main
-if __name__ == "__main__":
-    pool = Pool(processes=2)
-    pool.map(main, [B,C])
+#if __name__ == "__main__":
+#    pool = Pool(processes=2)
+#    pool.map(main, [B,C])
 
 #main()
