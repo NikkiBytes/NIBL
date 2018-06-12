@@ -38,22 +38,29 @@ def preproc(sub_dict, sub_dir, func_keyword):
 
     if args.STRIP==True:
         print("starting bet")
-#        print(DATA)
-#        os.chdir(os.path.join(basedir))
+        print("PRINTING DATA: \n", DATA. "\n")
+        #os.chdir(os.path.join(basedir))
         for sub in DATA:
-            for nifti in glob.glob(os.path.join(sub,'func','sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
-#                print(nifti)
-#            os.chdir(os.path.join(basedir, nifti))
-#            for input in glob.glob('*bart_bold.nii.gz'):
+            for nifti in glob.glob(os.path.join(sub, 'func', 'sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
+                # make our variables
                 output=nifti.strip('.nii.gz')
-                if os.path.exists(output+'_brain.nii.gz'):
-                    print(output+' exists, skipping')
-#                    print('')
+                BET_OUTPUT=output+'_brain'
+                # check if data exists already
+                if os.path.exists(BET_OUTPUT):
+                    print(BET_OUTPUT + ' exists, skipping \n')
                 else:
-                    BET_OUTPUT=output+'_brain'
-                    x=("/usr/local/fsl/bin/bet %s %s -F"%(input, BET_OUTPUT))
-#                    print(x)
-                    os.system(x)
+                    print("Running bet on ", nifti)
+                    print("BET COMMAND: ", bet_cmd, "\n")
+                    bet_cmd=("bet %s %s -F -m"%(nifti, BET_OUTPUT))
+                #    os.system(bet_cmd)
+
+        # lets check our variables
+                print("VARIABLES:")
+                print("SUB: ", sub)
+                print("NIFTI: ", nifti)
+                print("OUTPUT: ", output)
+                print("BET OUTPUT: ", BET_OUTPUT)
+                print("__________________________________________________________________________________")
 
 #___________________________MOTION CORRECTION___________________________________________:
 #

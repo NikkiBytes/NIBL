@@ -34,19 +34,19 @@ def preproc(DATA):
 
     if args.STRIP==True:
         print("starting bet")
-        print("PRINTING DATA: \n", DATA)
+        print("PRINTING DATA: \n", DATA. "\n")
         #os.chdir(os.path.join(basedir))
         for sub in DATA:
             for nifti in glob.glob(os.path.join(sub, 'func', 'sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
                 # make our variables
                 output=nifti.strip('.nii.gz')
                 BET_OUTPUT=output+'_brain'
-
+                # check if data exists already
                 if os.path.exists(BET_OUTPUT):
-                    print(BET_OUTPUT + ' exists, skipping')
+                    print(BET_OUTPUT + ' exists, skipping \n')
                 else:
                     print("Running bet on ", nifti)
-                    print("BET COMMAND: ", bet_cmd)
+                    print("BET COMMAND: ", bet_cmd, "\n")
                     bet_cmd=("bet %s %s -F -m"%(nifti, BET_OUTPUT))
                 #    os.system(bet_cmd)
 
@@ -56,7 +56,6 @@ def preproc(DATA):
                 print("NIFTI: ", nifti)
                 print("OUTPUT: ", output)
                 print("BET OUTPUT: ", BET_OUTPUT)
-
                 print("__________________________________________________________________________________")
 
 def main():
