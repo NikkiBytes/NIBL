@@ -10,6 +10,7 @@ Created on Thu May 31 20:38:28 2018
 #import numpy as np
 #import matplotlib.pyplot as plt
 import glob
+import argparse
 import os
 import subprocess
 import datetime
@@ -21,31 +22,47 @@ import datetime
 
 
 def set_directories():
-    #sub_dir = input("Enter directory path of your subjects: ")
-    global sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
+    global func_keyword
+    global basedir
+    global datestamp
+    global writedir
+    global outhtml
+    global out_bad_bold_list
+
     #global func_keyword = input("Please enter a keyword for the files in your func folder (Please use a wildcard(*)): \n i.e. *bold.nii.gz \n Enter: ")
-    global func_keyword = '*bold.nii.gz'
+    func_keyword = '*bold.nii.gz'
 
 
-    global basedir='/Users/gracer/Desktop/data'
-    global writedir='/Users/gracer/Desktop/data'
+    basedir='/Users/gracer/Desktop/data'
+    writedir='/Users/gracer/Desktop/data'
 
-    global datestamp=datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
-    global outhtml = os.path.join(writedir,'bold_motion_QA_%s.html'%(datestamp))
-    global out_bad_bold_list = os.path.join(writedir,'lose_gt_45_vol_scrub_%s.txt'%(datestamp))
+    datestamp=datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
+    outhtml = os.path.join(writedir,'bold_motion_QA_%s.html'%(datestamp))
+    out_bad_bold_list = os.path.join(writedir,'lose_gt_45_vol_scrub_%s.txt'%(datestamp))
 
 
 #__________________________________________________________________________________________________________________________
 # Get dictionary of subjects from given directory
 
 def set_parser():
-    global parser=argparse.ArgumentParser(description='preprocessing')
+    global parser
+    global arglist
+    global args
+    parser=argparse.ArgumentParser(description='preprocessing')
 
     parser.add_argument('-task',dest='TASK',
                         default=False, help='which task are we running on?')
     parser.add_argument('-moco',dest='MOCO',
                         action="store_true", help='this is using fsl_motion_outliers to preform motion correction and generate a confounds.txt as well as DVARS')
+    parser.add_argument('-bet',dest='STRIP',action='store_true',
+                        default=False, help='bet via fsl using defaults for functional images')
 
+
+    args = parser.parse_args()
+    arglist={}
+    for a in args._get_kwargs():
+        arglist[a[0]]=a[1]
+    print(arglist)
 
 #__________________________________________________________________________________________________________________________
 # Get data
@@ -58,9 +75,12 @@ def set_parser():
 # ----------> MODIFY FOR FLEXIBILITY/REPRODUCIBILITY
 
 
-def get_subjects(sub_dir, sub_dict):
+def get_subjects(sub_dict):
+    global sub_dir
+
+    # Get data from input
     #sub_dir = input("Enter directory path of your subjects: ")
-    global sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
+    sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
     os.chdir(sub_dir)
     files = os.listdir('.')
     for file in files:
@@ -73,11 +93,11 @@ def get_subjects(sub_dir, sub_dict):
 #__________________________________________________________________________________________________________________________
 # method to run preprocessing steps (functional bet, motion assessment)
 
-def preproc(sub_dict, sub_dir, func_keyword):
+def preproc(DATA):
     #iterate over the subjects
 #def better(args,arglist,basedir):
 
-#___________________________BET___________________________________________:
+#_______________________________________________________BET___________________________________________________
 # ----> FOCUS: functional
 
     if args.STRIP==True:
@@ -93,17 +113,16 @@ def preproc(sub_dict, sub_dir, func_keyword):
                 output=nifti.strip('.nii.gz')
                 if os.path.exists(output+'_brain.nii.gz'):
                     print(output+' exists, skipping')
-#                    print('')
                 else:
                     BET_OUTPUT=output+'_brain'
                     x=("/usr/local/fsl/bin/bet %s %s -F"%(input, BET_OUTPUT))
 #                    print(x)
                     os.system(x)
 
-#___________________________MOTION CORRECTION___________________________________________:
+#______________________________________________________MOTION CORRECTION_________________________________________
 
     if args.MOCO==False:
-        print("please set a threshold for the FD, a good one is 0.9")
+        print("skippin motion correction")
     else:
         print("starting motion correction")
         for sub in sub_dict:
@@ -134,11 +153,8 @@ def preproc(sub_dict, sub_dir, func_keyword):
 
 
          # set input/output path
-                    datestamp=datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
-                    output = os.path.join(dir, 'motion_assessment')
+
                     fsl_input = os.path.join(dir, func_input)
-                    outhtml = os.path.join(dir,'bold_motion_QA_test_%s.html'%(datestamp))
-                    out_bad_bold_list = os.path.join(output,'testing_%s.txt'%(datestamp))
 
 
          # set comparison param
@@ -197,11 +213,6 @@ def main():
     set_directories()
 
     set_parser()
-    args = parser.parse_args()
-    arglist={}
-    for a in args._get_kwargs():
-        arglist[a[0]]=a[1]
-    print(arglist)
 
 
     get_subjects(sub_dict) #,sub_dir)

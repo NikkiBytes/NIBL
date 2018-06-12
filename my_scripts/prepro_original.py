@@ -11,7 +11,7 @@ from multiprocessing import Pool
 
 def prepro(basedir, args, arglist, outhtml, out_bad_bold_list,DATA):
 #def better(args,arglist,basedir):
-    #bet
+    #betl
     if args.STRIP==True:
         print("starting bet")
 #        print(DATA)
@@ -33,7 +33,7 @@ def prepro(basedir, args, arglist, outhtml, out_bad_bold_list,DATA):
 
 
 #bet rage
-    if args.RAGE==True:
+    if args.RAGE==True:l
         print("starting bet rage")
         for sub in DATA:
             for input in glob.glob(os.path.join(sub,'anat','*T1w.nii.gz')):
@@ -46,7 +46,6 @@ def prepro(basedir, args, arglist, outhtml, out_bad_bold_list,DATA):
                     x=("/usr/local/fsl/bin/bet %s %s -R"%(input, BET_OUTPUT))
                     print(x)
                     os.system(x)
-
 
 
 #reorienting
