@@ -14,31 +14,38 @@ import argparse
 import os
 import subprocess
 import datetime
-
+from multiprocessing import Pool
 
 
 #__________________________________________________________________________________________________________________________
 # Set (GLOBAL) directories **currently hardcoded
 
 
-def set_directories():
-    global func_keyword
-    global basedir
+
+def get_subjects()):
+    global sub_dir
+    global input_dir
+    global sub_dict
+    sub_dict = {}
+
+    # Get data from input
+    #input_dir = input("Enter directory path of your subjects: ")
+    input_dir = '/Users/nikkibytes/Documents/testing/BIDS'
+    sub_dir=glob.glob(os.path.join(input_dir, 'sub*'))
+    os.chdir(input_dir)
+    files = os.listdir('sub*')
+    for file in files:
+        if 'sub' in file:
+            sub_dict[file] = None
+
+def write_files():
     global datestamp
-    global writedir
     global outhtml
     global out_bad_bold_list
 
-    #global func_keyword = input("Please enter a keyword for the files in your func folder (Please use a wildcard(*)): \n i.e. *bold.nii.gz \n Enter: ")
-    func_keyword = '*bold.nii.gz'
-
-
-    basedir='/Users/gracer/Desktop/data'
-    writedir='/Users/gracer/Desktop/data'
-
     datestamp=datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
-    outhtml = os.path.join(writedir,'bold_motion_QA_%s.html'%(datestamp))
-    out_bad_bold_list = os.path.join(writedir,'lose_gt_45_vol_scrub_%s.txt'%(datestamp))
+    outhtml = os.path.join(input_dir,'bold_motion_QA_%s.html'%(datestamp))
+    out_bad_bold_list = os.path.join(input_dir,'TEST_%s.txt'%(datestamp))
 
 
 #__________________________________________________________________________________________________________________________
@@ -64,6 +71,9 @@ def set_parser():
         arglist[a[0]]=a[1]
     print(arglist)
 
+def split_list():
+        half = len(sub_dir)/2
+        return a_list[:int(half)], a_list[int(half):]
 #__________________________________________________________________________________________________________________________
 # Get data
 
@@ -75,41 +85,23 @@ def set_parser():
 # ----------> MODIFY FOR FLEXIBILITY/REPRODUCIBILITY
 
 
-def get_subjects(sub_dict):
-    global sub_dir
-
-    # Get data from input
-    #sub_dir = input("Enter directory path of your subjects: ")
-    sub_dir = '/Users/nikkibytes/Documents/testing/BIDS'
-    os.chdir(sub_dir)
-    files = os.listdir('.')
-    for file in files:
-        if 'sub' in file:
-            sub_dict[file] = None
 
 
 
 
-#__________________________________________________________________________________________________________________________
+# def preproc()__________________________________________________________________________________________________________________________
 # method to run preprocessing steps (functional bet, motion assessment)
+# We pass into it -  DATA (a list of our subjects)
 
 def preproc(DATA):
-    #iterate over the subjects
-#def better(args,arglist,basedir):
 
-#_______________________________________________________BET___________________________________________________
+# BET__________________________________________________________________________________________________________
 # ----> FOCUS: functional
-
-def preproc(DATA):
-    if args.MOCO==False:
-        print("please set a threshold for the FD, a good one is 0.9")
-    else:
-        print("starting motion correction")
 
     if args.STRIP==True:
         print("starting bet")
-        print("PRINTING DATA: \n", DATA. "\n")
-        #os.chdir(os.path.join(basedir))
+        print("PRINTING DATA: \n", DATA, "\n")
+
         for sub in DATA:
             for nifti in glob.glob(os.path.join(sub, 'func', 'sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
                 # make our variables
@@ -133,114 +125,87 @@ def preproc(DATA):
                 print("__________________________________________________________________________________")
 
 
-#______________________________________________________MOTION CORRECTION_________________________________________
-
     if args.MOCO==False:
         print("skippin motion correction")
     else:
-        print("starting motion correction")
+        print("---------> Starting motion correction")
         for sub in sub_dict:
-            id = sub
 
         # decide which input path is being used [fmriprep or bids],
         # --note all directories may be different and may effect this pathing
-            #fmriprep_func_path=os.path.join(sub_dir,id, 'fmriprep', id ,'func')
-            bids_func_path=os.path.join(sub_dir,id,'func')
+        # --the path here connects the pathing to get the func folder:
+        #       BIDS: { sub_dir + the sub# (sub-XX) + func }
+        #       fMRIprep: { sub_dir + the sub# (sub-XX) + fmriprep + sub# (sub-XX) + func }
 
-        # iterate over functional data
-            for dir in glob.glob(bids_func_path):#path to the functional, skull stripped data
-                print("DIRECTORY: ", dir)#not needed but i get crazy
-
-        # move to the func directory
-                os.chdir(dir)
-
-
-        # check for motion_assesment directory
-                if not os.path.exists(os.path.join(dir,'motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
-                    os.makedirs(os.path.join(dir,'motion_assessment')) #making dir if it doesn't exist
-
-        # getting user input filename variable
-
-                for func_input in glob.glob(os.path.join(func_keyword)):
-                    task = func_input.split('.')[0]
-
-
-
-         # set input/output path
-
-                    fsl_input = os.path.join(dir, func_input)
-
-
-         # set comparison param
-                    cmd="fslnvols " + func_input
-                    volume = subprocess.check_output(cmd, shell=True, encoding="utf-8")
-                    volume = volume.strip()
-                    comparator = int(volume) *.25
-
-                    print("Identifier: ", id)
-                    print("TASK: ", task)
-                    print("FUNC FILE(Input): ", func_input)
-                    print("VOLUME: ", volume)
-                    print("Comparison: ", comparator)
-                    print("CMD:", cmd)
-                    print("FSL INPUT: ", fsl_input)
-                    print("OUTPUT: ", output)
-                    print("OUTHTML: ", outhtml)
-
-
-
-           # Now we're running fsl_motion_outliers
-           # this is generating the fd confounds txt, it is using the fd metric,
-           # making a plot and putting it in the motion assessment directory we made above
-                    os.system("fsl_motion_outliers -i %s  -o %s/%s_confound.txt  --fd --thresh=0.9 -p motion_assessment/fd_plot -v > %s/%s_outlier_output.txt"%(task, output,task,output, task))
-
-                    os.system("cat motion_assessment/%s_outlier_output.txt >> %s"%(task,outhtml))
+            #fmriprep_func_path=os.path.join(sub_dir,sub, 'fmriprep', id ,'func')
+            bids_func_path=os.path.join(input_dir,sub,'func')
+# change to func directory
+            os.chdir(bids_func_path)
+# check for motion_assesment directory
+            if not os.path.exists(os.path.join(dir,'motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
+                os.makedirs(os.path.join(dir,'motion_assessment')) #making dir if it doesn't exist
+# iterate over nifti files
+            for nifti in glob.glob(os.path.join('sub-*_task-%s_bold_brain.nii.gz')%(arglist['TASK'])):
+                print("NIFTI: ", nifti)
+                filename=nifti.split('.')[0]
+                print("FILENAME: ", filename)
+                         # set comparison param
+                cmd="fslnvols " + nifti
+                volume = subprocess.check_output(cmd, shell=True, encoding="utf-8")
+                volume = volume.strip()
+                comparator = int(volume) *.25
+                print("VOLUME: ", volume)
+                print("Comparison: ", comparator)
+                print("CMD:", cmd)
+                os.system("ls")
+                os.system("fsl_motion_outliers -i %s  -o motion_assessment/%s_confound.txt  --fd --thresh=0.9 -p motion_assessment/fd_plot -v > motion_assessment/%s_outlier_output.txt"%(filename,filename, filename))
+                os.system("cat motion_assessment/%s_outlier_output.txt >> %s"%(filename,outhtml))
 
            # Get the full path to the plot created by fsl_motion_outliers
-                    plotz=os.path.join(output,'fd_plot.png')
+                plotz=os.path.join(bids_func_path, 'motion_assessment','fd_plot.png')
 
            # Create an html file based on plot
-                    os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s WIDTH=%s></BODY></HTML>' >> %s"%(task,plotz,'100%', outhtml))
+                os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s WIDTH=%s></BODY></HTML>' >> %s"%(filename, plotz,'100%', outhtml))
 
 
            # Create a blank file
            # --sometimes you have a great subject who didn't move
-                    if os.path.isfile("%s/%s_confound.txt"%(output,task))==False:
-                        os.system("touch motion_assessment/%s_confound.txt"%(task))
+                if os.path.isfile("motion_assesment/%s_confound.txt"%(filename))==False:
+                    os.system("touch motion_assessment/%s_confound.txt"%(filename))
 
            # how many columns are there = how many 'bad' points
-                    check = subprocess.check_output("grep -o 1 %s/%s_confound.txt | wc -l"%(output, task), shell=True)
+                check = subprocess.check_output("grep -o 1 motion_assessment/%s_confound.txt | wc -l"%(filename), shell=True)
 
-                    num_scrub = [int(s) for s in check.split() if s.isdigit()]
-                    print("NUM SCRUB: ", str(num_scrub[0]), "\n")
+                num_scrub = [int(s) for s in check.split() if s.isdigit()]
+                print("NUM SCRUB: ", str(num_scrub[0]), "\n")
 
-                    if num_scrub[0] > comparator: #if the number in check is greater than num_scrub then we don't want it
-                        with open(out_bad_bold_list, "a") as myfile: #making a file that lists all the bad ones
-                            myfile.write("%s\n"%(task))
-                            print("wrote bad file")
-                            myfile.close()
+                if num_scrub[0] > comparator: #if the number in check is greater than num_scrub then we don't want it
+                    with open(out_bad_bold_list, "a") as myfile: #making a file that lists all the bad ones
+                        myfile.write("%s\n"%(filename))
+                        print("wrote bad file")
+                        myfile.close()
+
+
 
 
 def main():
 
     get_subjects()
-    B, C = split_list(all_data)
+
+    write_files()
 
 
-    sub_dict ={}
-
-    set_directories()
 
     set_parser()
 
 
-    get_subjects(sub_dict) #,sub_dir)
 
-    print("SUBJECT DICTIONARY: ", sub_dict)
+    print("SUBJECT DICTIONARY: ", sub_dict, "\n")
     #for key in sub_dict:
      #   print(key)
         #test dictionary
 
+    B, C = split_list()
     pool = Pool(processes=2)
     pool.map(preproc, [B,C])
     #preproc(DATA)
