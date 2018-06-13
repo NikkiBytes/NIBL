@@ -103,7 +103,7 @@ def preproc(DATA):
         print("PRINTING DATA: \n", DATA, "\n")
 
         for sub in DATA:
-            for nifti in glob.glob(os.path.join(sub, 'func', 'sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
+            for nifti in glob.glob(os.path.join('func', 'sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
                 # make our variables
                 output=nifti.strip('.nii.gz')
                 BET_OUTPUT=output+'_brain'
