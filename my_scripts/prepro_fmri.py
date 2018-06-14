@@ -1,4 +1,4 @@
-#!/usr/bin/env 
+#!/usr/bin/env
 # -*- coding: utf-8 -*-
 """
 Created on Thu May 31 20:38:28 2018
@@ -20,23 +20,48 @@ import datetime
 #__________________________________________________________________________________________________________________________
 # Set (GLOBAL) directories **currently hardcoded
 
+def check_output_directories(sub):
+    # check for motion_assesment directory
+    out=os.path.join(output_dir, 'derivatives')
+    if not os.path.exists(os.path.join(out, sub)): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
+        os.makedirs(os.path.join(out, sub)) #making dir if it doesn't exist
+    if not os.path.exists(os.path.join(out, sub, 'anat')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
+        os.makedirs(os.path.join(out, sub, 'anat')) #making dir if it doesn't exist
+    if not os.path.exists(os.path.join(out, sub, 'func')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
+        os.makedirs(os.path.join(out, sub, 'func')) #making dir if it doesn't exist
+    if not os.path.exists(os.path.join(out, sub, 'func','motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
+        os.makedirs(os.path.join(out, sub, 'func',  'motion_assessment')) #making dir if it doesn't exist
+    if not os.path.exists(os.path.join(out, sub, 'func','Analysis')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
+        os.makedirs(os.path.join(out, sub, 'func',  'Analysis')) #making dir if it doesn't exist
+
+def set_paths(sub):
+    global func_output_path
+    global anat_output_path
+    anat_output_path=os.path.join(output_dir, sub, 'anat')
+    func_output_path=os.path.join(output_dir, sub, 'func')
 
 
 def get_subjects():
     global sub_dir
+    global output_dir
     global input_dir
     global sub_dict
     sub_dict = {}
 
     # Get data from input
     #input_dir = input("Enter directory path of your subjects: ")
+    #output_dir = input("Enter directory path for your output: ")
     input_dir = '/projects/niblab/bids_projects/Experiments/test'
+    output_dir = '/projects/niblab/bids_projects/Experiments/test/output'
     sub_dir=glob.glob(os.path.join(input_dir, 'sub*'))
     os.chdir(input_dir)
     files = os.listdir('.')
     for file in files:
         if 'sub' in file:
             sub_dict[file] = None
+    for sub in sub_dict:
+        check_output_directories(sub)
+        set_paths(sub)
 
 def write_files():
     global datestamp
@@ -46,6 +71,7 @@ def write_files():
     datestamp=datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
     outhtml = os.path.join(input_dir,'bold_motion_QA_%s.html'%(datestamp))
     out_bad_bold_list = os.path.join(input_dir,'TEST_%s.txt'%(datestamp))
+
 
 
 #__________________________________________________________________________________________________________________________
@@ -75,16 +101,6 @@ def split_list():
         half = len(sub_dir)/2
         return sub_dir[:int(half)], sub_dir[int(half):]
 #__________________________________________________________________________________________________________________________
-# Get data
-
-#__________________________________________________________________________________________________________________________
-# Get Data
-# -- dictionary of subjects from given directory
-# currently this assumes the data is listed in the sub-XX folder of a given directory path
-# any input in the directory given containing 'sub*' will be included as a data directory
-# ----------> MODIFY FOR FLEXIBILITY/REPRODUCIBILITY
-
-
 
 
 
@@ -114,7 +130,7 @@ def preproc(DATA):
                 else:
                     print("Running bet on ", nifti)
 #                    print("BET COMMAND: ", bet_cmd, "\n")
-                    bet_cmd=("bet %s %s -F -m"%(nifti, BET_OUTPUT))
+                    bet_cmd=("bet %s %s/%s -F -m"%(nifti, func_output_path, BET_OUTPUT))
                     os.system(bet_cmd)
 
         # lets check our variables
@@ -139,12 +155,13 @@ def preproc(DATA):
         #       fMRIprep: { sub_dir + the sub# (sub-XX) + fmriprep + sub# (sub-XX) + func }
 
             #fmriprep_func_path=os.path.join(sub_dir,sub, 'fmriprep', id ,'func')
-            bids_func_path=os.path.join(input_dir,sub,'func')
+            input_bids_func_path=os.path.join(input_dir,sub,'func')
+            output_bids_func_path=os.path.join(output_dir, sub, 'func')
 # change to func directory
-            os.chdir(bids_func_path)
+            os.chdir(input_bids_func_path)
 # check for motion_assesment directory
-            if not os.path.exists(os.path.join(bids_func_path,'motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
-                os.makedirs(os.path.join(bids_func_path,'motion_assessment')) #making dir if it doesn't exist
+            if not os.path.exists(os.path.join(output_bids_func_path,'motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
+                os.makedirs(os.path.join(output_bids_func_path,'motion_assessment')) #making dir if it doesn't exist
 # iterate over nifti files
             for nifti in glob.glob(os.path.join('sub-*_task-%s_bold_brain.nii.gz')%(arglist['TASK'])):
                 print("NIFTI: ", nifti)
@@ -163,7 +180,7 @@ def preproc(DATA):
                 os.system("cat motion_assessment/%s_outlier_output.txt >> %s"%(filename,outhtml))
 
            # Get the full path to the plot created by fsl_motion_outliers
-                plotz=os.path.join(bids_func_path, 'motion_assessment','fd_plot.png')
+                plotz=os.path.join(output_bids_func_path, 'motion_assessment','fd_plot.png')
 
            # Create an html file based on plot
                 os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s WIDTH=%s></BODY></HTML>' >> %s"%(filename, plotz,'100%', outhtml))
@@ -193,22 +210,20 @@ def main():
 
     get_subjects()
 
-    write_files()
+    #write_files()
 
 
 
-    set_parser()
+    #set_parser()
 
 
 
-    print("SUBJECT DICTIONARY: ", sub_dict, "\n")
-    #for key in sub_dict:
-     #   print(key)
-        #test dictionary
 
-    B, C = split_list()
-    pool = Pool(processes=2)
-    pool.map(preproc, [B,C])
+
+
+    #B, C = split_list()
+    #pool = Pool(processes=2)
+    #pool.map(preproc, [B,C])
     #preproc(DATA)
 
 #________________________________________________________________________________________________
