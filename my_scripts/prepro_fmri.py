@@ -22,29 +22,34 @@ import datetime
 
 def check_output_directories(sub):
     # check for motion_assesment directory
-    out=os.path.join(output_dir, 'derivatives')
-    if not os.path.exists(os.path.join(out, sub)): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
-        os.makedirs(os.path.join(out, sub)) #making dir if it doesn't exist
-    if not os.path.exists(os.path.join(out, sub, 'anat')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
-        os.makedirs(os.path.join(out, sub, 'anat')) #making dir if it doesn't exist
-    if not os.path.exists(os.path.join(out, sub, 'func')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
-        os.makedirs(os.path.join(out, sub, 'func')) #making dir if it doesn't exist
-    if not os.path.exists(os.path.join(out, sub, 'func','motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
-        os.makedirs(os.path.join(out, sub, 'func',  'motion_assessment')) #making dir if it doesn't exist
-    if not os.path.exists(os.path.join(out, sub, 'func','Analysis')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
-        os.makedirs(os.path.join(out, sub, 'func',  'Analysis')) #making dir if it doesn't exist
+
+    if not os.path.exists(os.path.join(derivatives_dir, sub)):
+        os.makedirs(os.path.join(derivatives_dir, sub))
+    if not os.path.exists(os.path.join(anat_output_path)):
+        os.makedirs(os.path.join(anat_output_path))
+    if not os.path.exists(os.path.join(func_output_path)):
+        os.makedirs(os.path.join(func_output_path))
+    if not os.path.exists(os.path.join(func_output_path,'motion_assessment')):
+        os.makedirs(os.path.join(func_output_path,  'motion_assessment'))
+    if not os.path.exists(os.path.join(func_output_path,'Analysis')):
+        os.makedirs(os.path.join(func_output_path,  'Analysis'))
 
 def set_paths(sub):
     global func_output_path
     global anat_output_path
-    anat_output_path=os.path.join(output_dir, sub, 'anat')
-    func_output_path=os.path.join(output_dir, sub, 'func')
+    global input_bids_func_path
+    global motion_assessment_path
+    input_bids_func_path=os.path.join(input_dir,sub,'func')
+    anat_output_path=os.path.join(derivatives_dir, sub, 'anat')
+    func_output_path=os.path.join(derivatives_dir, sub, 'func')
+    motion_assessment_path=os.path.join(derivatives_dir, sub, 'func','motion_assessment')
 
 
 def get_subjects():
     global sub_dir
     global output_dir
     global input_dir
+    global derivatives_dir
     global sub_dict
     sub_dict = {}
 
@@ -52,16 +57,18 @@ def get_subjects():
     #input_dir = input("Enter directory path of your subjects: ")
     #output_dir = input("Enter directory path for your output: ")
     input_dir = '/projects/niblab/bids_projects/Experiments/test'
-    output_dir = '/projects/niblab/bids_projects/Experiments/test/output'
+    output_dir = '/projects/niblab/bids_projects/Experiments/test'
+    derivatives_dir = os.path.join(output_dir, 'derivatives')
     sub_dir=glob.glob(os.path.join(input_dir, 'sub*'))
     os.chdir(input_dir)
     files = os.listdir('.')
     for file in files:
         if 'sub' in file:
             sub_dict[file] = None
+
     for sub in sub_dict:
-        check_output_directories(sub)
         set_paths(sub)
+        check_output_directories(sub)
 
 def write_files():
     global datestamp
@@ -69,8 +76,8 @@ def write_files():
     global out_bad_bold_list
 
     datestamp=datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
-    outhtml = os.path.join(input_dir,'bold_motion_QA_%s.html'%(datestamp))
-    out_bad_bold_list = os.path.join(input_dir,'TEST_%s.txt'%(datestamp))
+    outhtml = os.path.join(derivatives_dir,'bold_motion_QA_%s.html'%(datestamp))
+    out_bad_bold_list = os.path.join(derivatives_dir,'TEST_%s.txt'%(datestamp))
 
 
 
@@ -116,29 +123,32 @@ def preproc(DATA):
 
     if args.STRIP==True:
         print("starting bet")
-        print("PRINTING DATA: \n", DATA, "\n")
+#        print("PRINTING DATA: \n", DATA, "\n")
 
-        for sub in DATA:
+        for sub in sub_dict:
             print("SUB: ", sub)
-            for nifti in glob.glob(os.path.join(sub,'func', 'sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
+            set_paths(sub)
+            os.chdir(input_bids_func_path)
+            for nifti in glob.glob(os.path.join('sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
               # make our variables
                 output=nifti.strip('.nii.gz')
-                BET_OUTPUT=output+'_brain'
+                bet_name=output+'_brain'
                 # check if data exists already
-                if os.path.exists(BET_OUTPUT):
-                    print(BET_OUTPUT + ' exists, skipping \n')
+                bet_output = os.path.join(func_output_path, bet_name)
+                if os.path.exists(bet_output + '.nii.gz'):
+                    print(bet_output + ' exists, skipping \n')
                 else:
                     print("Running bet on ", nifti)
 #                    print("BET COMMAND: ", bet_cmd, "\n")
-                    bet_cmd=("bet %s %s/%s -F -m"%(nifti, func_output_path, BET_OUTPUT))
-                    os.system(bet_cmd)
+                    bet_cmd=("bet %s %s -F -m"%(nifti, bet_output))
+                #    os.system(bet_cmd)
 
         # lets check our variables
                 print("VARIABLES:")
                 print("SUB: ", sub)
                 print("NIFTI: ", nifti)
                 print("OUTPUT: ", output)
-                print("BET OUTPUT: ", BET_OUTPUT)
+                print("BET OUTPUT: ", bet_output)
                 print("__________________________________________________________________________________")
 
 
@@ -147,27 +157,20 @@ def preproc(DATA):
     else:
         print("---------> Starting motion correction")
         for sub in sub_dict:
-
+            set_paths(sub)
         # decide which input path is being used [fmriprep or bids],
         # --note all directories may be different and may effect this pathing
         # --the path here connects the pathing to get the func folder:
         #       BIDS: { sub_dir + the sub# (sub-XX) + func }
         #       fMRIprep: { sub_dir + the sub# (sub-XX) + fmriprep + sub# (sub-XX) + func }
 
-            #fmriprep_func_path=os.path.join(sub_dir,sub, 'fmriprep', id ,'func')
-            input_bids_func_path=os.path.join(input_dir,sub,'func')
-            output_bids_func_path=os.path.join(output_dir, sub, 'func')
-# change to func directory
-            os.chdir(input_bids_func_path)
-# check for motion_assesment directory
-            if not os.path.exists(os.path.join(output_bids_func_path,'motion_assessment')): #looking for a motion assessment dir to put out put in, I like to put it in my functional directory where my skull stripped brain is
-                os.makedirs(os.path.join(output_bids_func_path,'motion_assessment')) #making dir if it doesn't exist
+            os.chdir(func_output_path)
 # iterate over nifti files
             for nifti in glob.glob(os.path.join('sub-*_task-%s_bold_brain.nii.gz')%(arglist['TASK'])):
                 print("NIFTI: ", nifti)
                 filename=nifti.split('.')[0]
                 print("FILENAME: ", filename)
-                         # set comparison param
+            # set comparison param
                 cmd="fslnvols " + nifti
                 volume = subprocess.check_output(cmd, shell=True, encoding="utf-8")
                 volume = volume.strip()
@@ -175,12 +178,11 @@ def preproc(DATA):
                 print("VOLUME: ", volume)
                 print("Comparison: ", comparator)
                 print("CMD:", cmd)
-                os.system("ls")
-                os.system("fsl_motion_outliers -i %s  -o motion_assessment/%s_confound.txt  --fd --thresh=0.9 -p motion_assessment/fd_plot -v > motion_assessment/%s_outlier_output.txt"%(filename,filename, filename))
-                os.system("cat motion_assessment/%s_outlier_output.txt >> %s"%(filename,outhtml))
+                os.system("fsl_motion_outliers -i %s  -o %s/%s_confound.txt  --fd --thresh=0.9 -p %s/fd_plot -v > %s/%s_outlier_output.txt"%(filename, motion_assessment_path, filename, motion_assessment_path, motion_assessment_path, filename))
+                os.system("cat %s/%s_outlier_output.txt >> %s"%(motion_assessment_path, filename,outhtml))
 
            # Get the full path to the plot created by fsl_motion_outliers
-                plotz=os.path.join(output_bids_func_path, 'motion_assessment','fd_plot.png')
+                plotz=os.path.join(motion_assessment_path, 'fd_plot.png')
 
            # Create an html file based on plot
                 os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s WIDTH=%s></BODY></HTML>' >> %s"%(filename, plotz,'100%', outhtml))
@@ -188,18 +190,18 @@ def preproc(DATA):
 
            # Create a blank file
            # --sometimes you have a great subject who didn't move
-                if os.path.isfile("motion_assesment/%s_confound.txt"%(filename))==False:
-                    os.system("touch motion_assessment/%s_confound.txt"%(filename))
+                if os.path.isfile("%s/%s_confound.txt"%(motion_assessment_path, filename))==False:
+                    os.system("touch %s/%s_confound.txt"%(motion_assessment_path, filename))
 
            # how many columns are there = how many 'bad' points
-                check = subprocess.check_output("grep -o 1 motion_assessment/%s_confound.txt | wc -l"%(filename), shell=True)
+                check = subprocess.check_output("grep -o 1 %s/%s_confound.txt | wc -l"%(motion_assessment_path, filename), shell=True)
 
                 num_scrub = [int(s) for s in check.split() if s.isdigit()]
                 print("NUM SCRUB: ", str(num_scrub[0]), "\n")
 
                 if num_scrub[0] > comparator: #if the number in check is greater than num_scrub then we don't want it
                     with open(out_bad_bold_list, "a") as myfile: #making a file that lists all the bad ones
-                        myfile.write("%s\n"%(filename))
+                        myfile.write("%s/%s\n"%(derivatives_dir, filename))
                         print("wrote bad file")
                         myfile.close()
 
@@ -210,33 +212,17 @@ def main():
 
     get_subjects()
 
-    #write_files()
+    write_files()
 
+    set_parser()
 
+    B, C = split_list()
+    pool = Pool(processes=2)
+    pool.map(preproc, [B,C])
 
-    #set_parser()
-
-
-
-
-
-
-    #B, C = split_list()
-    #pool = Pool(processes=2)
-    #pool.map(preproc, [B,C])
-    #preproc(DATA)
 
 #________________________________________________________________________________________________
 
 # Start Program
-
-# intiate with data grab and split
-
-
-
-# begin parallel process, prompt main
-#if __name__ == "__main__":
-#    pool = Pool(processes=2)
-#    pool.map(main, [B,C])
-
-main()
+if __name__ == "__main__":
+    main()
