@@ -54,10 +54,10 @@ def get_subjects():
     sub_dict = {}
 
     # Get data from input
-    #input_dir = input("Enter directory path of your subjects: ")
-    #output_dir = input("Enter directory path for your output: ")
-    input_dir = '/projects/niblab/bids_projects/Experiments/test'
-    output_dir = '/projects/niblab/bids_projects/Experiments/test'
+    input_dir = input("Enter directory path of your subjects: ")
+    output_dir = input("Enter directory path for your output: ")
+    #input_dir = '/projects/niblab/bids_projects/Experiments/test'
+    #output_dir = '/projects/niblab/bids_projects/Experiments/test'
     derivatives_dir = os.path.join(output_dir, 'derivatives')
     sub_dir=glob.glob(os.path.join(input_dir, 'sub*'))
     os.chdir(input_dir)
