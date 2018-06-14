@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env 
 # -*- coding: utf-8 -*-
 """
 Created on Thu May 31 20:38:28 2018
@@ -33,7 +33,7 @@ def get_subjects()):
     input_dir = '/Users/nikkibytes/Documents/testing/BIDS'
     sub_dir=glob.glob(os.path.join(input_dir, 'sub*'))
     os.chdir(input_dir)
-    files = os.listdir('sub*')
+    files = os.listdir('.')
     for file in files:
         if 'sub' in file:
             sub_dict[file] = None
@@ -189,16 +189,9 @@ def preproc(DATA):
 
 
 def main():
-
     get_subjects()
-
     write_files()
-
-
-
     set_parser()
-
-
 
     print("SUBJECT DICTIONARY: ", sub_dict, "\n")
     #for key in sub_dict:
@@ -222,4 +215,4 @@ def main():
 #    pool = Pool(processes=2)
 #    pool.map(main, [B,C])
 
-#main()
+main()
