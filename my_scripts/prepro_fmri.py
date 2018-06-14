@@ -50,8 +50,8 @@ def get_subjects():
     global output_dir
     global input_dir
     global derivatives_dir
-    global sub_dict
-    sub_dict = {}
+    global subjects
+    subjects = []
 
     # Get data from input
     input_dir = input("Enter directory path of your subjects: ")
@@ -64,9 +64,9 @@ def get_subjects():
     files = os.listdir('.')
     for file in files:
         if 'sub' in file:
-            sub_dict[file] = None
-
-    for sub in sub_dict:
+            subjects.append(file)
+    print(subjects)
+    for sub in subjects:
         set_paths(sub)
         check_output_directories(sub)
 
@@ -105,8 +105,8 @@ def set_parser():
     print(arglist)
 
 def split_list():
-        half = len(sub_dir)/2
-        return sub_dir[:int(half)], sub_dir[int(half):]
+        half = len(subjects)/2
+        return subjects[:int(half)], subjects[int(half):]
 #__________________________________________________________________________________________________________________________
 
 
@@ -116,16 +116,14 @@ def split_list():
 # method to run preprocessing steps (functional bet, motion assessment)
 # We pass into it -  DATA (a list of our subjects)
 
-def preproc(DATA):
+def preproc(data):
 
 # BET__________________________________________________________________________________________________________
 # ----> FOCUS: functional
 
     if args.STRIP==True:
         print("starting bet")
-#        print("PRINTING DATA: \n", DATA, "\n")
-
-        for sub in sub_dict:
+        for sub in data:
             print("SUB: ", sub)
             set_paths(sub)
             os.chdir(input_bids_func_path)
@@ -139,9 +137,8 @@ def preproc(DATA):
                     print(bet_output + ' exists, skipping \n')
                 else:
                     print("Running bet on ", nifti)
-#                    print("BET COMMAND: ", bet_cmd, "\n")
                     bet_cmd=("bet %s %s -F -m"%(nifti, bet_output))
-                #    os.system(bet_cmd)
+                    os.system(bet_cmd)
 
         # lets check our variables
                 print("VARIABLES:")
@@ -153,17 +150,11 @@ def preproc(DATA):
 
 
     if args.MOCO==False:
-        print("skippin motion correction")
+        print("skipping motion correction ---------------------------->")
     else:
         print("---------> Starting motion correction")
-        for sub in sub_dict:
+        for sub in data:
             set_paths(sub)
-        # decide which input path is being used [fmriprep or bids],
-        # --note all directories may be different and may effect this pathing
-        # --the path here connects the pathing to get the func folder:
-        #       BIDS: { sub_dir + the sub# (sub-XX) + func }
-        #       fMRIprep: { sub_dir + the sub# (sub-XX) + fmriprep + sub# (sub-XX) + func }
-
             os.chdir(func_output_path)
 # iterate over nifti files
             for nifti in glob.glob(os.path.join('sub-*_task-%s_bold_brain.nii.gz')%(arglist['TASK'])):
