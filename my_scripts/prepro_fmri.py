@@ -3,7 +3,7 @@
 """
 Created on Thu May 31 20:38:28 2018
 
-@author: nikkibytes
+@author: nikkibytes, extending from original by Dr. Grace Shearrer
 """
 from multiprocessing import Pool
 #import pandas as pd
