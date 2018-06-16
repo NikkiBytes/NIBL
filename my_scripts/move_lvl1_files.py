@@ -5,7 +5,7 @@ import fnmatch
 import subprocess
 #import pdb
 import argparse
-
+import shutil
 
 #anat_input_path=input("Enter your anat input path: ")
 basedir="/Users/nikkibytes/Documents/testing"
@@ -22,13 +22,14 @@ for file in listOfSubjects:
 
 
 for sub in subjects:
-    fmriprep_path=os.path.join(basedir, 'fmriprep', sub, 'intermediate_results/fmriprep_wf/', 'single_subject_%s_wf'%(sub.split('-')[1]),'anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip')
+    fmriprep_path=os.path.join(basedir, 'fmriprep', sub, 'intermediate_results/fmriprep_wf/', 'single_subject_%s_wf'%(sub.split('-')[1]),'anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*nii.gz')
     anat_output_path=os.path.join(deriv_path,sub,'anat')
     print("FMRIPREP PATH: ", fmriprep_path)
     print("OUTPUT PATH: ", anat_output_path)
     print("_____________________________________________________________________________________________")
     for file in glob.glob(fmriprep_path):
-        print(file)
+        print("NIFTI FILE: ", file, "\n")
+        shutil.move(file, anat_output_path)
 
 
 # move relevant data
