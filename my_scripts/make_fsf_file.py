@@ -37,7 +37,8 @@ def set_paths():
     #basedir = input("Enter directory path of your subjects: ")
     #outdir = input("Enter directory path for your output: ")
     basedir='/Users/nikkibytes/Documents/testing/derivatives'
-    outdir=os.path.join(basedir,'derivatives','task')
+    #deriv_dir=os.path.join(basedir, 'derivatives')
+    outdir=os.path.join(deriv_dir,'task')
 
 # Set Dictionary keys
 
