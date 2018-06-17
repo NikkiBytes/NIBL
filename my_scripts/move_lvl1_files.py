@@ -40,8 +40,9 @@ def move_anats():
             print("Moving file, %s , into directory located at, %s \n"%(file, anat_output_path))
             try:
                 shutil.move(file, anat_output_path)
-            except shutil.Error:
-                print("SHUTIL ERRROR")
+            except shutil.Error as error:
+                errors.extend(error.args[0])
+                print("SHUTIL ERRROR, FILE ALREADY EXISTS")
 
 
 set_paths()
