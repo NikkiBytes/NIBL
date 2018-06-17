@@ -7,30 +7,45 @@ import subprocess
 import argparse
 import shutil
 
-#anat_input_path=input("Enter your anat input path: ")
-basedir="/Users/nikkibytes/Documents/testing"
 
-#deriv_path=input("Enter your derivatives path: ")
-deriv_path="/Users/nikkibytes/Documents/testing/derivatives"
+def set_paths():
+    print ("STARTING PROGRAM, GETTING VARIABLES....")
 
-subjects=[]
-os.chdir(deriv_path)
-listOfSubjects = os.listdir('.')
-for file in listOfSubjects:
-    if 'sub-' in file:
-        subjects.append(file)
+    global basedir
+    global deriv_path
+    global subjects
+
+    #basedir=input("Enter your base directory input path: ")
+    basedir="/Users/nikkibytes/Documents/testing"
+
+    #deriv_path=input("Enter your derivatives path: ")
+    deriv_path="/Users/nikkibytes/Documents/testing/derivatives"
+
+    subjects=[]
+    os.chdir(deriv_path)
+    listOfSubjects = os.listdir('.')
+    for file in listOfSubjects:
+        if 'sub-' in file:
+            subjects.append(file)
+
+def move_anats():
+    print ("STARTING THE MOVE FILES PROCESS.........")
+
+    for sub in subjects:
+        fmriprep_path=os.path.join(basedir, 'fmriprep', sub, 'intermediate_results/fmriprep_wf/', 'single_subject_%s_wf'%(sub.split('-')[1]),'anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*nii.gz')
+        anat_output_path=os.path.join(deriv_path,sub,'anat')
+        #print("FMRIPREP PATH: ", fmriprep_path)
+        #print("OUTPUT PATH: ", anat_output_path)
+        for file in glob.glob(fmriprep_path):
+            print("Moving file, %s , into directory located at, %s \n"%(file, anat_output_path))
+            try:
+                shutil.move(file, anat_output_path)
+            except shutil.Error:
+                print("SHUTIL ERRROR")
 
 
-for sub in subjects:
-    fmriprep_path=os.path.join(basedir, 'fmriprep', sub, 'intermediate_results/fmriprep_wf/', 'single_subject_%s_wf'%(sub.split('-')[1]),'anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*nii.gz')
-    anat_output_path=os.path.join(deriv_path,sub,'anat')
-    print("FMRIPREP PATH: ", fmriprep_path)
-    print("OUTPUT PATH: ", anat_output_path)
-    print("_____________________________________________________________________________________________")
-    for file in glob.glob(fmriprep_path):
-        print("NIFTI FILE: ", file, "\n")
-        shutil.move(file, anat_output_path)
-
+set_paths()
+move_anats()
 
 # move relevant data
 #derivatives_dir = '/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives'
