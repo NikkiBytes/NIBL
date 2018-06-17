@@ -29,6 +29,7 @@ def set_paths():
             subjects.append(file)
 
 def move_anats():
+    errors = []
     print ("STARTING THE MOVE FILES PROCESS.........")
 
     for sub in subjects:
