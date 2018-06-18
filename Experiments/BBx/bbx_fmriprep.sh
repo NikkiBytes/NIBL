@@ -19,7 +19,7 @@ START=$(date)
 for i in ${subs1[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BevBits/data/BIDS/ses-1 Experiments/BevBits/fmriprep2/ses-1/$i \
+fmriprep Experiments/BevBits/data/BIDS/ses-1 Experiments/BevBits/fmriprep2/ses-1/$iexp \
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
