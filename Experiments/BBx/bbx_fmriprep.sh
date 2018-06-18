@@ -2,7 +2,7 @@
 
 
 
-cd Experiments/BBx/BBx
+cd Experiments/BevBits/data/BIDS/ses-1
 subjects=(sub*)
 arr_length=${#subjects[@]}
 let "x=$arr_length/3"
@@ -19,7 +19,7 @@ START=$(date)
 for i in ${subs1[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
+fmriprep Experiments/BevBits/data/BIDS/ses-1 Experiments/BevBits/fmriprep2/ses-1/$i \
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
@@ -37,7 +37,7 @@ done &
 for i in ${subs2[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
+fmriprep Experiments/BevBits/data/BIDS/ses-1 Experiments/BevBits/fmriprep2/ses-1/$i \
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
@@ -55,7 +55,7 @@ done &
 for i in ${subs3[@]}; do
 echo "Starting fmriprep for subject $i..................................................."
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx/BBx Experiments/BBx/fmriprep/$i \
+fmriprep Experiments/BevBits/data/BIDS/ses-1 Experiments/BevBits/fmriprep2/ses-1/$i \
     participant  \
     --participant-label $i  \
     --fs-license-file freesurfer/license.txt \
