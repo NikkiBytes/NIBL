@@ -1,3 +1,15 @@
+"""
+Created on Fri Jun 15 13:57:30 EDT 2018
+
+@author: nikkibytes
+
+This script has initially been intended to automate the creation of directories,
+and sorting relevant data together, for Feature Analysis
+
+"""
+
+
+
 
 import glob
 import os
@@ -7,6 +19,10 @@ import subprocess
 import argparse
 import shutil
 
+
+
+# THE SET PATHS INITIALIZES AND SETS OUR INPUT/OUTPUT PATHS
+# !-- CURRENTLY THE PROGRAM ASSUMES WE HAVE THE ~/derivatives DIRECTORY
 
 def set_paths():
     print ("STARTING PROGRAM, GETTING VARIABLES....")
@@ -28,6 +44,8 @@ def set_paths():
         if 'sub-' in file:
             subjects.append(file)
 
+# THE MOVE_ANATS METHOD MOVES OUR NIFTI FILES FROM FMRIPREP INTO OUR ~/derivatives directory
+# !-- MAY NEED TO COPY FILES (TO KEEP FMRIPREP?)  
 def move_anats():
     errors = []
     print ("STARTING THE MOVE FILES PROCESS.........")
