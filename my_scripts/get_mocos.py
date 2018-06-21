@@ -1,7 +1,13 @@
 
 # coding: utf-8
+"""
+@author: Nichollette Acosta, NIBL UNC Chapel Hill
+This scripts creates the 1-column motion correction (.txt) files
+The only input required is the directory path that holds the fmriprep directory
+and derivative directory
+"""
 
-# In[8]:
+
 
 
 import pandas as pd
@@ -9,10 +15,13 @@ import os
 import glob
 
 
-# In[17]:
 
-
-# get the data / directory
+'''
+ The get_subjects() method takes the input from the user,
+ and sets a basedir variable holding the input path,
+ it sets the fmriprep_dir based on the basedir,
+ and it goes to the fmriprep directory and gathers a list of subjects
+'''
 def get_subjects():
     global subjects
     global basedir
@@ -23,9 +32,14 @@ def get_subjects():
     subjects=glob.glob("sub-*")
 
 
-# In[18]:
 
 
+'''
+ The write_files() method takes in various variables,
+ the task label, the run #, the subject(sub), the output directory(outputdir),
+ and then the motion correction dataframe holding the relevant data,
+ and writes the data into a (.txt) file
+'''
 def write_files(task, run, moco_df, outputdir, sub):
     for col in moco_df.columns:
         if task != 'task-rest':
@@ -37,10 +51,16 @@ def write_files(task, run, moco_df, outputdir, sub):
         moco_df[col].to_csv(output_path, header=False, index=False)
 
 
-# In[19]:
 
-
-def get_data(): 
+'''
+ The get_data() method iterates through the subjects (gathered in the get_subjects method),
+ and sets the file path (the fmriprep func path that holds the *confound.tsv files),
+ then it sets the output directory, (the derivatives folder, it  creates the 'motion_parameters'
+ directory if it is not there), then the program moves to the filepath directory and iterates through
+ the confound files and pulls out the the relevant data (the motion corrected columns). Finally
+ the program calls the write_files() method and writes the data to the file.
+'''
+def get_data():
     for sub in subjects:
         #print(sub)
         filepath=os.path.join(basedir, 'fmriprep', sub, 'fmriprep', sub, 'func')
@@ -53,7 +73,7 @@ def get_data():
        # print("FILE: ", run)
             df = pd.read_table(run)
             moco_df=df[['X', 'Y', 'Z', 'RotX', 'RotY', 'RotZ']]
-            moco_df.columns = ['moco0', 'moco1', 'moco2', 'moco3', 'moco4', 'moco5'] 
+            moco_df.columns = ['moco0', 'moco1', 'moco2', 'moco3', 'moco4', 'moco5']
         #print(moco_df.head())
             name=run.split('_')
     #    print(task)
@@ -72,17 +92,12 @@ def get_data():
 #        print("RUN: ", run)
 
 
-# In[20]:
-
-
+'''
+ The main() method is the first to execute, it first calls the get_subject method,
+ then it calls our get_data() method.
+'''
 def main():
     get_subjects()
     get_data()
-    
-
-
-# In[21]:
-
 
 main()
-
