@@ -15,13 +15,13 @@ import argparse
 
 
 ############################################################################################################
-# SET PARSER                                    
-#  
+# SET PARSER
+#
 ############################################################################################################.
 
 
 def set_parser():
-    
+
     global arglist
 
     parser=argparse.ArgumentParser(description='make your fsf files')
@@ -30,19 +30,19 @@ def set_parser():
     parser.add_argument('-task',dest='TASK',
                         default=False, help='which functional task are we using?')
 
-    
+
     parser.add_argument('-evs',dest='EV',nargs='+',
                         default=False, help='which evs are we using?')
     parser.add_argument('-runs',dest='RUN',nargs='+',
-                        default=False, help='which run are we using?')    
+                        default=False, help='which run are we using?')
     args = parser.parse_args()
     arglist={}
     for a in args._get_kwargs():
         arglist[a[0]]=a[1]
-    
+
 ############################################################################################################
-# GET DIRECTORY PATHS                                       
-#  
+# GET DIRECTORY PATHS
+#
 ############################################################################################################.
 
 def set_paths():
@@ -58,14 +58,14 @@ def set_paths():
 
 
 ############################################################################################################
-# SET DICTIONARY METHOD                                      
+# SET DICTIONARY METHOD
 # here we are passed our subject parameter and we initialize our dictionary key, the subject,
-# and fill it with another dictionary set with starting values. 
+# and fill it with another dictionary set with starting values.
 ############################################################################################################
 
 def set_dict(sub):
     global main_dict
-    
+
     main_dict[sub] = {
             #'FUNCRUN': None,
             'TR': None,
@@ -75,14 +75,14 @@ def set_dict(sub):
 
 
 ############################################################################################################
-# CHECK REGISTRATION METHOD                                      
-#  
+# CHECK REGISTRATION METHOD
+#
 ############################################################################################################.
 
 
 def check_registartion(sub):
     if arglist['NOREG']==False:
-        with open(os.path.join(basedir,'design.fsf'),'r') as infile:
+        with open(os.path.join(basedir,'reg_design.fsf'),'r') as infile:
             tempfsf=infile.read()
             for key in repl_dict:
                 tempfsf = tempfsf.replace(key, main_dict[key])
@@ -93,7 +93,7 @@ def check_registartion(sub):
 
     else:
         print("skipping registration")
-        with open(os.path.join(basedir,'no_reg_design.fsf'),'r') as infile:
+        with open(os.path.join(basedir,'design.fsf'),'r') as infile:
             tempfsf=infile.read()
             for key in repl_dict:
                 tempfsf = tempfsf.replace(key, repl_dict[key])
@@ -105,16 +105,16 @@ def check_registartion(sub):
 
 
 ############################################################################################################
-# FILL DICTIONARY METHOD                                      
+# FILL DICTIONARY METHOD
 # here we are updating our dictionary with relevant values
 ############################################################################################################
-    
+
 def fill_dict( ):
-   
+
     for sub in main_dict:
         print(sub)
-        
-    # -- THE SUBEJCT 
+
+    # -- THE SUBEJCT
     #repl_dict.update({'SUB':sub})
         deriv_dir = '/Users/nikkibytes/Documents/Test/derivatives'
     # -- THE RUNS
@@ -124,7 +124,7 @@ def fill_dict( ):
             x=int(run)
             main_dict[sub]['FUNCRUN%i'%x] = funcrun
            # print("FUNCRUN: ", funcrun)
-        
+
     # -- THE TIMEPOINTS -- found by running 'fslnvols' on our scan file
             ntmpts=check_output(['fslnvols', funcrun])
             ntmpts = ntmpts.decode('utf-8')
@@ -132,11 +132,11 @@ def fill_dict( ):
             main_dict[sub]['NTIMEPOINTS%i'%x] = ntmpts
            # print("TIMEPOINT: ", ntmpts)
 
-    # -- CONFOUNDS 
+    # -- CONFOUNDS
             confounds=os.path.join(deriv_dir,sub,'func','motion_assessment','%s_task-%s_run-%s_bold_brain_confound.txt'%(sub,arglist['TASK'],x))
             main_dict[sub]['CONFOUNDS%i'%x] = confounds
           #  print("CONFOUNDS: ", confounds)
-        
+
     # -- MOTION CORRECTION
             for i in range(6):
                 motcor=os.path.join(sub,'func','motion_assessment', 'motion_parameters','%s_task-%s_run-%s_moco%s.txt' %(sub,arglist['TASK'],run,i))
@@ -150,14 +150,14 @@ def fill_dict( ):
         trs=trs.strip('\n')
         #print("TRs: ", trs)
         main_dict[sub]['TR'] = trs
-    
-    
+
+
     # -- OUTPUT -- directory where output will go
         output=os.path.join(deriv_dir, sub, 'func', 'Analysis', 'task', arglist['TASK'])
         main_dict[sub]['OUTPUT'] = output
-        print("OUTPUT: ", output)   
-    
-    
+        print("OUTPUT: ", output)
+
+
     # -- ANAT -- get the anat file for the subject, the syntax currently follows fmriprep standard
         anat=os.path.join(deriv_dir ,sub,'anat','highres001_BrainExtractionBrain.nii.gz')
         main_dict[sub]['ANAT'] = anat
@@ -170,27 +170,27 @@ def fill_dict( ):
         for item in arglist['EV']:
             #print(item)
             ctr=ctr+1
-            main_dict[sub]['EV%iTITLE'%ctr] = item 
-            ev=os.path.join(sub,'func','onsets','%s_%s_%s_output.txt'%(sub,arglist['TASK'],item))
+            main_dict[sub]['EV%iTITLE'%ctr] = item
+            ev=os.path.join(sub,'func','onsets','%s_%s_%s_onset.txt'%(sub,arglist['TASK'],item))
             #print("EV: ", ev)
             main_dict[sub]['EV%i'%ctr] = ev
-        
+
 ############################################################################################################
-# CREATE FSF FILE                                    
-#  
+# CREATE FSF FILE
+#
 ############################################################################################################.
 
 def create_fsf():
     os.chdir(deriv_dir)
-    
+
     for sub in glob.glob('sub-*'):
         set_dict(sub)
         fill_dict(sub)
         check_registartion(sub)
 
 ############################################################################################################
-# MAIN METHOD                                     
-#  
+# MAIN METHOD
+#
 ############################################################################################################.
 
 
