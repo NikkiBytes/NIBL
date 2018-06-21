@@ -82,9 +82,9 @@ def set_dict(sub):
 
 def check_registartion(sub):
     if arglist['NOREG']==False:
-        with open(os.path.join(basedir,'reg_design.fsf'),'r') as infile:
+        with open(os.path.join(deriv_dir,'reg_design.fsf'),'r') as infile:
             tempfsf=infile.read()
-            for key in repl_dict:
+            for key in main_dict:
                 tempfsf = tempfsf.replace(key, main_dict[key])
                 with open(os.path.join(outdir,sub,'%s_%s.fsf'%(sub,arglist['TASK'])),'w') as outfile:
                     outfile.write(tempfsf)
@@ -93,10 +93,10 @@ def check_registartion(sub):
 
     else:
         print("skipping registration")
-        with open(os.path.join(basedir,'design.fsf'),'r') as infile:
+        with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
             tempfsf=infile.read()
-            for key in repl_dict:
-                tempfsf = tempfsf.replace(key, repl_dict[key])
+            for key in main_dict:
+                tempfsf = tempfsf.replace(key, main_dict[key])
                 with open(os.path.join(outdir,sub,'%s_%s_no_reg.fsf'%(sub,arglist['TASK'])),'w') as outfile:
                     outfile.write(tempfsf)
                 outfile.close()
@@ -171,7 +171,7 @@ def fill_dict( ):
             #print(item)
             ctr=ctr+1
             main_dict[sub]['EV%iTITLE'%ctr] = item
-            ev=os.path.join(sub,'func','onsets','%s_%s_%s_onset.txt'%(sub,arglist['TASK'],item))
+            ev=os.path.join(sub,'func','onsets','%s_%s_%s.txt'%(sub,arglist['TASK'],item))
             #print("EV: ", ev)
             main_dict[sub]['EV%i'%ctr] = ev
 
