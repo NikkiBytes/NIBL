@@ -45,7 +45,7 @@ def set_paths():
             subjects.append(file)
 
 # THE MOVE_ANATS METHOD MOVES OUR NIFTI FILES FROM FMRIPREP INTO OUR ~/derivatives directory
-# !-- MAY NEED TO COPY FILES (TO KEEP FMRIPREP?)  
+# !-- MAY NEED TO COPY FILES (TO KEEP elFMRIPREP?)  
 def move_anats():
     errors = []
     print ("STARTING THE MOVE FILES PROCESS.........")

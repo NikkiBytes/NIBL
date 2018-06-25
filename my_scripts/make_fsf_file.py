@@ -51,7 +51,7 @@ def set_paths():
     global deriv_dir
     #basedir = input("Enter directory path of your subjects: ")
     #outdir = input("Enter directory path for your output: ")
-    basedir='/Users/nikkibytes/Documents/testing/derivatives'
+    basedir='/Users/nikkibytes/Documents/testing'
     deriv_dir=os.path.join(basedir, 'derivatives')
     outdir=os.path.join(deriv_dir,'task')
 
@@ -64,7 +64,7 @@ def set_paths():
 ############################################################################################################
 
 def set_dict(sub):
-    global main_dict
+
 
     main_dict[sub] = {
             #'FUNCRUN': None,
@@ -90,7 +90,7 @@ def check_registartion(sub):
                     outfile.write(tempfsf)
                 outfile.close()
             infile.close()
-
+## **** START EDIT HERE 
     else:
         print("skipping registration")
         with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
@@ -109,14 +109,14 @@ def check_registartion(sub):
 # here we are updating our dictionary with relevant values
 ############################################################################################################
 
-def fill_dict( ):
-
+def fill_dict(subj):
+    print("SUBJ: ", subj)
     for sub in main_dict:
         print(sub)
 
     # -- THE SUBEJCT
     #repl_dict.update({'SUB':sub})
-        deriv_dir = '/Users/nikkibytes/Documents/Test/derivatives'
+        deriv_dir = '/Users/nikkibytes/Documents/testing/derivatives'
     # -- THE RUNS
         for run in arglist['RUN']:
             scan=(os.path.join( sub,'func','%s_task-%s_run-%s_bold_brain.nii.gz')%(sub,arglist['TASK'], run))
@@ -182,6 +182,8 @@ def fill_dict( ):
 
 def create_fsf():
     os.chdir(deriv_dir)
+    global main_dict
+    main_dict= {}
 
     for sub in glob.glob('sub-*'):
         set_dict(sub)
@@ -196,6 +198,9 @@ def create_fsf():
 
 def main():
     set_parser()
-    set_paths()
-    create_fsf()
+    if not arglist["RUN"]:
+        print("RUN list is empty")
+    else:
+        set_paths()
+        create_fsf()
 main()
