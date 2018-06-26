@@ -51,7 +51,7 @@ def set_paths():
     global deriv_dir
     #basedir = input("Enter directory path of your subjects: ")
     #outdir = input("Enter directory path for your output: ")
-    basedir='/Users/nikkibytes/Documents/testing'
+    basedir='/Users/nikkibytes/Documents/Test'
     deriv_dir=os.path.join(basedir, 'derivatives')
     outdir=os.path.join(deriv_dir,'task')
 
@@ -68,10 +68,10 @@ def set_dict(sub):
 
     main_dict[sub] = {
             #'FUNCRUN': None,
-            'TR': None,
             'OUTPUT': None,
-            'ANAT': None,
-         }
+        }
+    for run in arglist["RUN"]:
+        main_dict[sub][run] = {}
 
 
 ############################################################################################################
@@ -93,36 +93,54 @@ def check_registartion(sub):
 ## **** START EDIT HERE
     else:
         print("skipping registration")
-        with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
-            tempfsf=infile.read()
-            for key in main_dict:
-                for run in arglist["RUN"]:
+        for key in main_dict:
+            for run in arglist["RUN"]:
+                with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
+                    tempfsf=infile.read()
+
                     num=int(run)
-                    print(num,  main_dict[key]["CONFOUND%i"%num])
-                    tempfsf = tempfsf.replace("OUTPUT", main_dict[key]["OUTPUT"])
-                    tempfsf = tempfsf.replace("FUNCRUN", main_dict[key]["FUNCRUN%i"%num]) #4D AVW DATA
-                    tempfsf = tempfsf.replace("NTPTS", main_dict[key]["NTIMEPOINT%i"%num])
-                    tempfsf = tempfsf.replace("CONFOUND", main_dict[key]["CONFOUND%i"%num])
-                    for key2 in main_dict[key]:
+                    out = main_dict[key]["OUTPUT"]
+                    func = main_dict[key][run]["FUNCRUN%i"%num]
+                    time = main_dict[key][run]["NTIMEPOINT%i"%num]
+                    con = main_dict[key][run]["CONFOUND%i"%num]
+
+                    print("RUN: ", run)
+                    print("OUT: ", out)
+                    print("FUNC: ", func)
+                    print("TIME: ", time)
+                    print("CONFOUND: ", con)
+
+
+                    tempfsf = tempfsf.replace("OUTPUT", out)
+                    tempfsf = tempfsf.replace("FUNCRUN", func) #4D AVW DATA
+                    tempfsf = tempfsf.replace("NTPTS", time)
+                    tempfsf = tempfsf.replace("CONFOUND", con)
+
+                    for key2 in main_dict[key][run]:
                         if re.match(r'EV[0-9]TITLE', key2):
-                            ev_title = main_dict[key][key2]
+                            ev_title = main_dict[key][run][key2]
                             n = re.findall('\d+', key2)
                             n = ''.join(str(x) for x in n)
-                            #print("EV%s"%n)
-                            tempfsf = tempfsf.replace("EV%s"%n, main_dict[key]["EV%s"%n])
-                        tempfsf = tempfsf.replace("MOCO0", main_dict[key]["MOCO0"])
-                        tempfsf = tempfsf.replace("MOCO1", main_dict[key]["MOCO1"])
-                        tempfsf = tempfsf.replace("MOCO2", main_dict[key]["MOCO2"])
-                        tempfsf = tempfsf.replace("MOCO3", main_dict[key]["MOCO3"])
-                        tempfsf = tempfsf.replace("MOCO4", main_dict[key]["MOCO4"])
-                        tempfsf = tempfsf.replace("MOCO5", main_dict[key]["MOCO5"])
+                            ev = main_dict[key][run]["EV%s"%n]
+                            print("EVTITLE: ", ev_title)
+                            print("EV%s"%n, ev)
+                            tempfsf = tempfsf.replace("EV%sTITLE"%n, ev_title)
+                            tempfsf = tempfsf.replace("EV%s"%n, ev)
+
+                    for i in range(6):
+                        moco = main_dict[key][run]["MOCO%i"%i]
+                        tempfsf = tempfsf.replace("MOCO%i"%i, moco)
+                        print("MOCO%i: "%i , main_dict[key][run]["MOCO%i"%i])
                     outpath= outdir+"/"+sub
+                    #print(tempfsf)
                     if not os.path.exists(outpath):
                         os.makedirs(outpath)
+
+                #print(main_dict[key])
                     with open(os.path.join(outpath,'%s_task-%s_run-%s_no_reg.fsf'%(sub,arglist['TASK'], run)),'w') as outfile:
                         outfile.write(tempfsf)
-                        outfile.close()
-                    infile.close()
+                    outfile.close()
+                infile.close()
 
 
 
@@ -135,67 +153,61 @@ def fill_dict(subj):
     #print("SUBJ: ", subj)
     for sub in main_dict:
         #print(sub)
+            # -- OUTPUT -- directory where output will go
+        output=os.path.join(deriv_dir, sub, 'func', 'Analysis', 'task', arglist['TASK'])
+        main_dict[sub]['OUTPUT'] = output
+                #print("OUTPUT: ", output)
+
 
     # -- THE SUBEJCT
     #repl_dict.update({'SUB':sub})
-        deriv_dir = '/Users/nikkibytes/Documents/testing/derivatives'
+        #deriv_dir = '/Users/nikkibytes/Documents/testing/derivatives'
     # -- THE RUNS
         for run in arglist['RUN']:
             scan=(os.path.join( sub,'func','%s_task-%s_run-%s_bold_brain.nii.gz')%(sub,arglist['TASK'], run))
             funcrun=os.path.join(deriv_dir, scan)
             x=int(run)
-            main_dict[sub]['FUNCRUN%i'%x] = funcrun
+            main_dict[sub][run]['FUNCRUN%i'%x] = funcrun
            # print("FUNCRUN: ", funcrun)
 
     # -- THE TIMEPOINTS -- found by running 'fslnvols' on our scan file
             ntmpts=check_output(['fslnvols', funcrun])
             ntmpts = ntmpts.decode('utf-8')
             ntmpts = ntmpts.strip('\n')
-            main_dict[sub]['NTIMEPOINT%i'%x] = ntmpts
+            main_dict[sub][run]['NTIMEPOINT%i'%x] = ntmpts
            # print("TIMEPOINT: ", ntmpts)
 
     # -- CONFOUNDS
             confounds=os.path.join(deriv_dir,sub,'func','motion_assessment','%s_task-%s_run-%s_bold_brain_confound.txt'%(sub,arglist['TASK'],x))
-            main_dict[sub]['CONFOUND%i'%x] = confounds
+            main_dict[sub][run]['CONFOUND%i'%x] = confounds
           #  print("CONFOUNDS: ", confounds)
 
     # -- MOTION CORRECTION
             for i in range(6):
                 motcor=os.path.join(sub,'func','motion_assessment', 'motion_parameters','%s_task-%s_run-%s_moco%s.txt' %(sub,arglist['TASK'],run,i))
-                main_dict[sub]['MOCO%i'%i] = motcor
+                main_dict[sub][run]['MOCO%i'%i] = motcor
          #       print("MOTCOR: ", motcor)
 
 
     # -- TRS FROM NIFTI -- this value will always be 2, therefore we only run the check once
-        trs=check_output(['fslval','%s'%(funcrun),'pixdim4',scan])
-        trs=trs.decode('utf-8')
-        trs=trs.strip('\n')
+            trs=check_output(['fslval','%s'%(funcrun),'pixdim4',scan])
+            trs=trs.decode('utf-8')
+            trs=trs.strip('\n')
         #print("TRs: ", trs)
-        main_dict[sub]['TR'] = trs
+            main_dict[sub][run]['TR'] = trs
 
-
-    # -- OUTPUT -- directory where output will go
-        output=os.path.join(deriv_dir, sub, 'func', 'Analysis', 'task', arglist['TASK'])
-        main_dict[sub]['OUTPUT'] = output
-        #print("OUTPUT: ", output)
-
-
-    # -- ANAT -- get the anat file for the subject, the syntax currently follows fmriprep standard
-        anat=os.path.join(deriv_dir ,sub,'anat','highres001_BrainExtractionBrain.nii.gz')
-        main_dict[sub]['ANAT'] = anat
-        #print("ANAT: ", anat)
 
 
     # -- EVS -- here we loop through the given EVs and add the corresponding file to the dictionary
 
-        ctr=0
-        for item in arglist['EV']:
+            ctr=0
+            for item in arglist['EV']:
             #print(item)
-            ctr=ctr+1
-            main_dict[sub]['EV%iTITLE'%ctr] = item
-            ev=os.path.join(sub,'func','onsets','%s_%s_%s.txt'%(sub,arglist['TASK'],item))
+                ctr=ctr+1
+                main_dict[sub][run]['EV%iTITLE'%ctr] = item
+                ev=os.path.join(sub,'func','onsets','%s_%s_%s.txt'%(sub,arglist['TASK'],item))
             #print("EV: ", ev)
-            main_dict[sub]['EV%i'%ctr] = ev
+                main_dict[sub][run]['EV%i'%ctr] = ev
 
 ############################################################################################################
 # CREATE FSF FILE
@@ -210,6 +222,7 @@ def create_fsf():
     for sub in glob.glob('sub-*'):
         set_dict(sub)
         fill_dict(sub)
+        #print(main_dict[sub]["4"])
         check_registartion(sub)
 
 ############################################################################################################
