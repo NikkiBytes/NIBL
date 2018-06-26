@@ -12,7 +12,7 @@ import os
 from subprocess import check_output
 #import pdb
 import argparse
-
+import re
 
 ############################################################################################################
 # SET PARSER
@@ -90,17 +90,39 @@ def check_registartion(sub):
                     outfile.write(tempfsf)
                 outfile.close()
             infile.close()
-## **** START EDIT HERE 
+## **** START EDIT HERE
     else:
         print("skipping registration")
         with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
             tempfsf=infile.read()
             for key in main_dict:
-                tempfsf = tempfsf.replace(key, main_dict[key])
-                with open(os.path.join(outdir,sub,'%s_%s_no_reg.fsf'%(sub,arglist['TASK'])),'w') as outfile:
-                    outfile.write(tempfsf)
-                outfile.close()
-            infile.close()
+                for run in arglist["RUN"]:
+                    num=int(run)
+                    print(num,  main_dict[key]["CONFOUND%i"%num])
+                    tempfsf = tempfsf.replace("OUTPUT", main_dict[key]["OUTPUT"])
+                    tempfsf = tempfsf.replace("FUNCRUN", main_dict[key]["FUNCRUN%i"%num]) #4D AVW DATA
+                    tempfsf = tempfsf.replace("NTPTS", main_dict[key]["NTIMEPOINT%i"%num])
+                    tempfsf = tempfsf.replace("CONFOUND", main_dict[key]["CONFOUND%i"%num])
+                    for key2 in main_dict[key]:
+                        if re.match(r'EV[0-9]TITLE', key2):
+                            ev_title = main_dict[key][key2]
+                            n = re.findall('\d+', key2)
+                            n = ''.join(str(x) for x in n)
+                            #print("EV%s"%n)
+                            tempfsf = tempfsf.replace("EV%s"%n, main_dict[key]["EV%s"%n])
+                        tempfsf = tempfsf.replace("MOCO0", main_dict[key]["MOCO0"])
+                        tempfsf = tempfsf.replace("MOCO1", main_dict[key]["MOCO1"])
+                        tempfsf = tempfsf.replace("MOCO2", main_dict[key]["MOCO2"])
+                        tempfsf = tempfsf.replace("MOCO3", main_dict[key]["MOCO3"])
+                        tempfsf = tempfsf.replace("MOCO4", main_dict[key]["MOCO4"])
+                        tempfsf = tempfsf.replace("MOCO5", main_dict[key]["MOCO5"])
+                    outpath= outdir+"/"+sub
+                    if not os.path.exists(outpath):
+                        os.makedirs(outpath)
+                    with open(os.path.join(outpath,'%s_task-%s_run-%s_no_reg.fsf'%(sub,arglist['TASK'], run)),'w') as outfile:
+                        outfile.write(tempfsf)
+                        outfile.close()
+                    infile.close()
 
 
 
@@ -110,9 +132,9 @@ def check_registartion(sub):
 ############################################################################################################
 
 def fill_dict(subj):
-    print("SUBJ: ", subj)
+    #print("SUBJ: ", subj)
     for sub in main_dict:
-        print(sub)
+        #print(sub)
 
     # -- THE SUBEJCT
     #repl_dict.update({'SUB':sub})
@@ -129,18 +151,18 @@ def fill_dict(subj):
             ntmpts=check_output(['fslnvols', funcrun])
             ntmpts = ntmpts.decode('utf-8')
             ntmpts = ntmpts.strip('\n')
-            main_dict[sub]['NTIMEPOINTS%i'%x] = ntmpts
+            main_dict[sub]['NTIMEPOINT%i'%x] = ntmpts
            # print("TIMEPOINT: ", ntmpts)
 
     # -- CONFOUNDS
             confounds=os.path.join(deriv_dir,sub,'func','motion_assessment','%s_task-%s_run-%s_bold_brain_confound.txt'%(sub,arglist['TASK'],x))
-            main_dict[sub]['CONFOUNDS%i'%x] = confounds
+            main_dict[sub]['CONFOUND%i'%x] = confounds
           #  print("CONFOUNDS: ", confounds)
 
     # -- MOTION CORRECTION
             for i in range(6):
                 motcor=os.path.join(sub,'func','motion_assessment', 'motion_parameters','%s_task-%s_run-%s_moco%s.txt' %(sub,arglist['TASK'],run,i))
-                main_dict[sub]['MOTCOR%i'%i] = motcor
+                main_dict[sub]['MOCO%i'%i] = motcor
          #       print("MOTCOR: ", motcor)
 
 
@@ -155,7 +177,7 @@ def fill_dict(subj):
     # -- OUTPUT -- directory where output will go
         output=os.path.join(deriv_dir, sub, 'func', 'Analysis', 'task', arglist['TASK'])
         main_dict[sub]['OUTPUT'] = output
-        print("OUTPUT: ", output)
+        #print("OUTPUT: ", output)
 
 
     # -- ANAT -- get the anat file for the subject, the syntax currently follows fmriprep standard
