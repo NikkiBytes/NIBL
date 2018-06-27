@@ -51,12 +51,13 @@ def check_output_directories(sub):
 def set_paths(sub):
     global func_output_path
     global anat_output_path
-    global input_bids_func_path
+    global func_input_path
     global motion_assessment_path
-    input_bids_func_path=os.path.join(input_dir,sub,'func')
+    func_input_path=os.path.join(input_dir,sub,'func')
     anat_output_path=os.path.join(derivatives_dir, sub, 'anat')
     func_output_path=os.path.join(derivatives_dir, sub, 'func')
     motion_assessment_path=os.path.join(derivatives_dir, sub, 'func','motion_assessment')
+    print("FUNC OUTPUT: ", func_output_path)
 
 #________________________________________________________________________________________
 # The get_subjects() method gets an input directory, the BIDS path, we ask for the "top level"
@@ -76,11 +77,13 @@ def get_subjects():
     subjects = []
 
     # Get data from input
-    input_dir = input("Enter directory path of your subjects: ")
-    output_dir = input("Enter directory path for your output: ")
-    #input_dir = '/projects/niblab/bids_projects/Experiments/test'
-    #output_dir = '/projects/niblab/bids_projects/Experiments/test'
+    #input_dir = input("Enter directory path of your subjects: ")
+    #output_dir = input("Enter directory path for your output: ")
+    input_dir = '/Users/nikkibytes/Documents/testing/BBx/BIDS'
+    output_dir = '/Users/nikkibytes/Documents/testing/BBx'
     derivatives_dir = os.path.join(output_dir, 'derivatives')
+    if not os.path.exists(os.path.join(derivatives_dir)):
+        os.makedirs(os.path.join(derivatives_dir))
     sub_dir=glob.glob(os.path.join(input_dir, 'sub*'))
     os.chdir(input_dir)
     files = os.listdir('.')
@@ -95,8 +98,10 @@ def get_subjects():
 
 
 #________________________________________________________________________________________
+# The write_files() method sets the file paths for output files
+#________________________________________________________________________________________
 
-def write_files():
+def output_files():
     global datestamp
     global outhtml
     global out_bad_bold_list
@@ -107,8 +112,7 @@ def write_files():
 
 
 
-#__________________________________________________________________________________________________________________________
-# Get dictionary of subjects from given directory
+#________________________________________________________________________________________
 
 def set_parser():
     global parser
@@ -122,6 +126,10 @@ def set_parser():
                         action="store_true", help='this is using fsl_motion_outliers to preform motion correction and generate a confounds.txt as well as DVARS')
     parser.add_argument('-bet',dest='STRIP',action='store_true',
                         default=False, help='bet via fsl using defaults for functional images')
+    parser.add_argument('-run',dest='RUN', action='store_true',
+                        default=False, help='have multiple runs?')
+    parser.add_argument('-ses',dest='SES', action='store_true',
+                        default=False, help='have multiple sessions?')
 
 
     args = parser.parse_args()
@@ -133,27 +141,20 @@ def set_parser():
 def split_list():
         half = len(subjects)/2
         return subjects[:int(half)], subjects[int(half):]
-#__________________________________________________________________________________________________________________________
 
 
-
-
-# def preproc()__________________________________________________________________________________________________________________________
-# method to run preprocessing steps (functional bet, motion assessment)
-# We pass into it -  DATA (a list of our subjects)
+#________________________________________________________________________________________
 
 def preproc(data):
-
-# BET__________________________________________________________________________________________________________
-# ----> FOCUS: functional
 
     if args.STRIP==True:
         print("starting bet")
         for sub in data:
             print("SUB: ", sub)
             set_paths(sub)
-            os.chdir(input_bids_func_path)
-            for nifti in glob.glob(os.path.join('sub-*_task-%s_bold.nii.gz')%(arglist['TASK'])):
+            os.chdir(func_input_path)
+
+            for nifti in glob.glob(os.path.join('*bold.nii.gz')):
               # make our variables
                 output=nifti.strip('.nii.gz')
                 bet_name=output+'_brain'
@@ -172,18 +173,19 @@ def preproc(data):
                 print("NIFTI: ", nifti)
                 print("OUTPUT: ", output)
                 print("BET OUTPUT: ", bet_output)
-                print("__________________________________________________________________________________")
+                print("__________________________________")
 
 
     if args.MOCO==False:
-        print("skipping motion correction ---------------------------->")
+        print(" -------------------> skipping motion correction")
     else:
         print("---------> Starting motion correction")
         for sub in data:
             set_paths(sub)
             os.chdir(func_output_path)
 # iterate over nifti files
-            for nifti in glob.glob(os.path.join('sub-*_task-%s_bold_brain.nii.gz')%(arglist['TASK'])):
+
+            for nifti in glob.glob('*brain.nii.gz'):
                 print("NIFTI: ", nifti)
                 filename=nifti.split('.')[0]
                 print("FILENAME: ", filename)
@@ -225,11 +227,14 @@ def preproc(data):
 
 
 
+#________________________________________________________________________________________
+
 def main():
+
 
     get_subjects()
 
-    write_files()
+    output_files()
 
     set_parser()
 
@@ -238,7 +243,7 @@ def main():
     pool.map(preproc, [B,C])
 
 
-#________________________________________________________________________________________________
+#________________________________________________________________________________________
 
 # Start Program
 if __name__ == "__main__":
