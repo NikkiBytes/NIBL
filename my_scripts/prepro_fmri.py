@@ -17,8 +17,13 @@ import datetime
 
 
 
-#__________________________________________________________________________________________________________________________
-# Set (GLOBAL) directories **currently hardcoded
+
+
+#________________________________________________________________________________________
+# This method, check_output_directories(sub), checks the ~/derivatives directory
+# and will make relevant directories if we need to {anat/, func/, motion_assesment/ Analysis/},
+# as an argument it takes the subject ID.
+#________________________________________________________________________________________
 
 def check_output_directories(sub):
     # check for motion_assesment directory
@@ -34,6 +39,15 @@ def check_output_directories(sub):
     if not os.path.exists(os.path.join(func_output_path,'Analysis')):
         os.makedirs(os.path.join(func_output_path,  'Analysis'))
 
+
+
+
+#________________________________________________________________________________________
+# The set_paths(sub) method assigns variables for our directory paths.
+# [input (BIDS), output(anat, func, motion_assesment)]
+# It takes the subject ID as an argument, and **it is called from get_subjects()
+#________________________________________________________________________________________
+
 def set_paths(sub):
     global func_output_path
     global anat_output_path
@@ -43,6 +57,14 @@ def set_paths(sub):
     anat_output_path=os.path.join(derivatives_dir, sub, 'anat')
     func_output_path=os.path.join(derivatives_dir, sub, 'func')
     motion_assessment_path=os.path.join(derivatives_dir, sub, 'func','motion_assessment')
+
+#________________________________________________________________________________________
+# The get_subjects() method gets an input directory, the BIDS path, we ask for the "top level"
+# BIDS directory, where the subjects are listed, ~/STUDYNAME.
+# For the output directory we ask for you to provide the location where you would like
+# your derivatives directory to be, or the path to its location, however do not include
+# the derivatives directory.
+#________________________________________________________________________________________
 
 
 def get_subjects():
@@ -69,6 +91,10 @@ def get_subjects():
     for sub in subjects:
         set_paths(sub)
         check_output_directories(sub)
+
+
+
+#________________________________________________________________________________________
 
 def write_files():
     global datestamp
