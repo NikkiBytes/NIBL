@@ -90,8 +90,8 @@ def get_subjects():
     # Get data from input
     #input_dir = input("Enter directory path of your subjects: ")
     #output_dir = input("Enter directory path for your output: ")
-    input_dir = '/Users/nikkibytes/Documents/testing/BBx/BIDS'
-    output_dir = '/Users/nikkibytes/Documents/testing/BBx'
+    input_dir = '/Users/nikkibytes/Documents/Test/BIDS'
+    output_dir = '/Users/nikkibytes/Documents/Test'
     derivatives_dir = os.path.join(output_dir, 'derivatives')
     if not os.path.exists(os.path.join(derivatives_dir)):
         os.makedirs(os.path.join(derivatives_dir))
@@ -118,8 +118,14 @@ def output_files():
     global out_bad_bold_list
 
     datestamp=datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
-    outhtml = os.path.join(derivatives_dir,'bold_motion_QA_%s.html'%(datestamp))
-    out_bad_bold_list = os.path.join(derivatives_dir,'TEST_%s.txt'%(datestamp))
+
+    if arglist["SES"] == False:
+        outhtml = os.path.join(derivatives_dir,'bold_motion_QA_%s.html'%(datestamp))
+        out_bad_bold_list = os.path.join(derivatives_dir,'TEST_%s.txt'%(datestamp))
+    else:
+        outhtml = os.path.join(derivatives_dir,'%s_bold_motion_QA_%s.html'%(arglist["SES"],datestamp))
+        out_bad_bold_list = os.path.join(derivatives_dir,'%s_TEST_%s.txt'%(arglist["SES"], datestamp))
+
 
 
 
@@ -137,9 +143,7 @@ def set_parser():
                         action="store_true", help='this is using fsl_motion_outliers to preform motion correction and generate a confounds.txt as well as DVARS')
     parser.add_argument('-bet',dest='STRIP',action='store_true',
                         default=False, help='bet via fsl using defaults for functional images')
-    parser.add_argument('-run',dest='RUN', action='store_true',
-                        default=False, help='have multiple runs?')
-    parser.add_argument('-ses',dest='SES', 
+    parser.add_argument('-ses',dest='SES',
                         default=False, help='have multiple sessions?')
 
 
@@ -160,82 +164,91 @@ def preproc(data):
 
     if args.STRIP==True:
         print("starting bet")
-        for sub in data:
-            print("SUB: ", sub)
-            set_paths(sub)
-            os.chdir(func_input_path)
+        try:
+            for sub in data:
+                print("SUB: ", sub)
+                set_paths(sub)
+                os.chdir(func_input_path)
 
-            for nifti in glob.glob(os.path.join('*bold.nii.gz')):
+                for nifti in glob.glob(os.path.join('*bold.nii.gz')):
               # make our variables
-                output=nifti.strip('.nii.gz')
-                bet_name=output+'_brain'
+                    output=nifti.strip('.nii.gz')
+                    bet_name=output+'_brain'
                 # check if data exists already
-                bet_output = os.path.join(func_output_path, bet_name)
-                if os.path.exists(bet_output + '.nii.gz'):
-                    print(bet_output + ' exists, skipping \n')
-                else:
-                    print("Running bet on ", nifti)
-                    bet_cmd=("bet %s %s -F -m"%(nifti, bet_output))
-                    os.system(bet_cmd)
+                    bet_output = os.path.join(func_output_path, bet_name)
+                    if os.path.exists(bet_output + '.nii.gz'):
+                        print(bet_output + ' exists, skipping \n')
+                    else:
+                        print("Running bet on ", nifti)
+                        bet_cmd=("bet %s %s -F -m"%(nifti, bet_output))
+                        os.system(bet_cmd)
 
         # lets check our variables
-                print("VARIABLES:")
-                print("SUB: ", sub)
-                print("NIFTI: ", nifti)
-                print("OUTPUT: ", output)
-                print("BET OUTPUT: ", bet_output)
-                print("__________________________________")
+                    print("VARIABLES:")
+                    print("SUB: ", sub)
+                    print("NIFTI: ", nifti)
+                    print("OUTPUT: ", output)
+                    print("BET OUTPUT: ", bet_output)
+                    print("__________________________________")
+        except FileNotFoundError:
+            print("BAD FILE PASSING")
+            outfile = os.path.join(derivatives_dir, 'empty_subjects.txt')
+            print(outfile)
+            with open(outfile, 'a') as f:
+                f.write("Empty: %s \n "%(sub))
+                f.close()
 
 
     if args.MOCO==False:
         print(" -------------------> skipping motion correction")
     else:
         print("---------> Starting motion correction")
-        for sub in data:
-            set_paths(sub)
-            os.chdir(func_output_path)
+        try:
+            for sub in data:
+                set_paths(sub)
+                os.chdir(func_output_path)
 # iterate over nifti files
 
-            for nifti in glob.glob('*brain.nii.gz'):
-                print("NIFTI: ", nifti)
-                filename=nifti.split('.')[0]
-                print("FILENAME: ", filename)
+                for nifti in glob.glob('*brain.nii.gz'):
+                    print("NIFTI: ", nifti)
+                    filename=nifti.split('.')[0]
+                    print("FILENAME: ", filename)
             # set comparison param
-                cmd="fslnvols " + nifti
-                volume = subprocess.check_output(cmd, shell=True, encoding="utf-8")
-                volume = volume.strip()
-                comparator = int(volume) *.25
-                print("VOLUME: ", volume)
-                print("Comparison: ", comparator)
-                print("CMD:", cmd)
-                os.system("fsl_motion_outliers -i %s  -o %s/%s_confound.txt  --fd --thresh=0.9 -p %s/fd_plot -v > %s/%s_outlier_output.txt"%(filename, motion_assessment_path, filename, motion_assessment_path, motion_assessment_path, filename))
-                os.system("cat %s/%s_outlier_output.txt >> %s"%(motion_assessment_path, filename,outhtml))
+                    cmd="fslnvols " + nifti
+                    volume = subprocess.check_output(cmd, shell=True, encoding="utf-8")
+                    volume = volume.strip()
+                    comparator = int(volume) *.25
+                    print("VOLUME: ", volume)
+                    print("Comparison: ", comparator)
+                    print("CMD:", cmd)
+                    os.system("fsl_motion_outliers -i %s  -o %s/%s_confound.txt  --fd --thresh=0.9 -p %s/fd_plot -v > %s/%s_outlier_output.txt"%(filename, motion_assessment_path, filename, motion_assessment_path, motion_assessment_path, filename))
+                    os.system("cat %s/%s_outlier_output.txt >> %s"%(motion_assessment_path, filename,outhtml))
 
            # Get the full path to the plot created by fsl_motion_outliers
-                plotz=os.path.join(motion_assessment_path, 'fd_plot.png')
+                    plotz=os.path.join(motion_assessment_path, 'fd_plot.png')
 
            # Create an html file based on plot
-                os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s WIDTH=%s></BODY></HTML>' >> %s"%(filename, plotz,'100%', outhtml))
+                    os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s WIDTH=%s></BODY></HTML>' >> %s"%(filename, plotz,'100%', outhtml))
 
 
            # Create a blank file
            # --sometimes you have a great subject who didn't move
-                if os.path.isfile("%s/%s_confound.txt"%(motion_assessment_path, filename))==False:
-                    os.system("touch %s/%s_confound.txt"%(motion_assessment_path, filename))
+                    if os.path.isfile("%s/%s_confound.txt"%(motion_assessment_path, filename))==False:
+                        os.system("touch %s/%s_confound.txt"%(motion_assessment_path, filename))
 
            # how many columns are there = how many 'bad' points
-                check = subprocess.check_output("grep -o 1 %s/%s_confound.txt | wc -l"%(motion_assessment_path, filename), shell=True)
+                    check = subprocess.check_output("grep -o 1 %s/%s_confound.txt | wc -l"%(motion_assessment_path, filename), shell=True)
 
-                num_scrub = [int(s) for s in check.split() if s.isdigit()]
-                print("NUM SCRUB: ", str(num_scrub[0]), "\n")
+                    num_scrub = [int(s) for s in check.split() if s.isdigit()]
+                    print("NUM SCRUB: ", str(num_scrub[0]), "\n")
 
-                if num_scrub[0] > comparator: #if the number in check is greater than num_scrub then we don't want it
-                    with open(out_bad_bold_list, "a") as myfile: #making a file that lists all the bad ones
-                        myfile.write("%s/%s\n"%(derivatives_dir, filename))
-                        print("wrote bad file")
-                        myfile.close()
-
-
+                    if num_scrub[0] > comparator: #if the number in check is greater than num_scrub then we don't want it
+                        with open(out_bad_bold_list, "a") as myfile: #making a file that lists all the bad ones
+                            myfile.write("%s/%s\n"%(derivatives_dir, filename))
+                            print("wrote bad file")
+                            myfile.close()
+        except FileNotFoundError:
+            print("FILE IS EMPTY, PASSING")
 
 
 #________________________________________________________________________________________
@@ -251,6 +264,8 @@ def main():
 
     B, C = split_list()
     pool = Pool(processes=2)
+
+
     pool.map(preproc, [B,C])
 
 
