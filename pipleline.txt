@@ -1,0 +1,8 @@
+Preprocessing fMRI data for higher level analysis.
+
+The current pipeline we follow utilizes BIDS, fmriprep, FSL and other hidden tools.
+Initially we convert the raw dicom data (.IMA)
+
+
+
+Preprocessing 
