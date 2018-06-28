@@ -30,7 +30,7 @@ set fmri(featwatcher_yn) 1
 set fmri(sscleanup_yn) 0
 
 # Output directory
-set fmri(outputdir) OUTPUT
+set fmri(outputdir) "OUTPUT"
 
 # TR(s)
 set fmri(tr) 2.000000
@@ -273,16 +273,16 @@ set fmri(totalVoxels) 35103600
 set fmri(ncopeinputs) 0
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) INPUT
+set feat_files(1) "FUNCRUN"
 
 # Add confound EVs text file
 set fmri(confoundevs) 1
 
 # Confound EVs text file for analysis 1
-set confoundev_files(1) CONFOUND
+set confoundev_files(1) "CONFOUND"
 
 # EV 1 title
-set fmri(evtitle1) "choice"
+set fmri(evtitle1) "EV1TITLE"
 
 # Basic waveform shape (EV 1)
 # 0 : Square
@@ -313,7 +313,7 @@ set fmri(tempfilt_yn1) 1
 set fmri(deriv_yn1) 1
 
 # Custom EV file (EV 1)
-set fmri(custom1) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/onsets/sub-001_choice.txt"
+set fmri(custom1) "EV1"
 
 # Orthogonalise EV 1 wrt EV 0
 set fmri(ortho1.0) 0
@@ -349,7 +349,7 @@ set fmri(ortho1.9) 0
 set fmri(ortho1.10) 0
 
 # EV 2 title
-set fmri(evtitle2) "sweet"
+set fmri(evtitle2) "EV2TITLE"
 
 # Basic waveform shape (EV 2)
 # 0 : Square
@@ -380,7 +380,7 @@ set fmri(tempfilt_yn2) 1
 set fmri(deriv_yn2) 1
 
 # Custom EV file (EV 2)
-set fmri(custom2) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/onsets/bevel01_sweet_run01.txt"
+set fmri(custom2) "EV2"
 
 # Orthogonalise EV 2 wrt EV 0
 set fmri(ortho2.0) 0
@@ -416,7 +416,7 @@ set fmri(ortho2.9) 0
 set fmri(ortho2.10) 0
 
 # EV 3 title
-set fmri(evtitle3) "bitter"
+set fmri(evtitle3) "EV3TITLE"
 
 # Basic waveform shape (EV 3)
 # 0 : Square
@@ -447,7 +447,7 @@ set fmri(tempfilt_yn3) 1
 set fmri(deriv_yn3) 1
 
 # Custom EV file (EV 3)
-set fmri(custom3) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/onsets/bevel01_bitter_run01.txt"
+set fmri(custom3) "EV3"
 
 # Orthogonalise EV 3 wrt EV 0
 set fmri(ortho3.0) 0
@@ -483,7 +483,7 @@ set fmri(ortho3.9) 0
 set fmri(ortho3.10) 0
 
 # EV 4 title
-set fmri(evtitle4) "neu"
+set fmri(evtitle4) "EV4TITLE"
 
 # Basic waveform shape (EV 4)
 # 0 : Square
@@ -514,7 +514,7 @@ set fmri(tempfilt_yn4) 1
 set fmri(deriv_yn4) 1
 
 # Custom EV file (EV 4)
-set fmri(custom4) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/onsets/bevel01_neu_run01.txt"
+set fmri(custom4) "EV4"
 
 # Orthogonalise EV 4 wrt EV 0
 set fmri(ortho4.0) 0
@@ -581,7 +581,7 @@ set fmri(tempfilt_yn5) 1
 set fmri(deriv_yn5) 1
 
 # Custom EV file (EV 5)
-set fmri(custom5) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/func/motion_assessment/motion_parameters/sub-001_task-prob_run-1_moco0.txt"
+set fmri(custom5) "MOCO0"
 
 # Orthogonalise EV 5 wrt EV 0
 set fmri(ortho5.0) 0
@@ -648,7 +648,7 @@ set fmri(tempfilt_yn6) 1
 set fmri(deriv_yn6) 1
 
 # Custom EV file (EV 6)
-set fmri(custom6) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/func/motion_assessment/motion_parameters/sub-001_task-prob_run-1_moco1.txt"
+set fmri(custom6) "MOCO1"
 
 # Orthogonalise EV 6 wrt EV 0
 set fmri(ortho6.0) 0
@@ -715,7 +715,7 @@ set fmri(tempfilt_yn7) 1
 set fmri(deriv_yn7) 1
 
 # Custom EV file (EV 7)
-set fmri(custom7) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/func/motion_assessment/motion_parameters/sub-001_task-prob_run-1_moco2.txt"
+set fmri(custom7) "MOCO2"
 
 # Orthogonalise EV 7 wrt EV 0
 set fmri(ortho7.0) 0
@@ -782,7 +782,7 @@ set fmri(tempfilt_yn8) 1
 set fmri(deriv_yn8) 1
 
 # Custom EV file (EV 8)
-set fmri(custom8) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/func/motion_assessment/motion_parameters/sub-001_task-prob_run-1_moco3.txt"
+set fmri(custom8) "MOCO3"
 
 # Orthogonalise EV 8 wrt EV 0
 set fmri(ortho8.0) 0
@@ -849,7 +849,7 @@ set fmri(tempfilt_yn9) 1
 set fmri(deriv_yn9) 1
 
 # Custom EV file (EV 9)
-set fmri(custom9) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/func/motion_assessment/motion_parameters/sub-001_task-prob_run-1_moco4.txt"
+set fmri(custom9) "MOCO4"
 
 # Orthogonalise EV 9 wrt EV 0
 set fmri(ortho9.0) 0
@@ -916,7 +916,7 @@ set fmri(tempfilt_yn10) 1
 set fmri(deriv_yn10) 1
 
 # Custom EV file (EV 10)
-set fmri(custom10) "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-001/func/motion_assessment/motion_parameters/sub-001_task-prob_run-1_moco5.txt"
+set fmri(custom10) "MOCO5"
 
 # Orthogonalise EV 10 wrt EV 0
 set fmri(ortho10.0) 0
