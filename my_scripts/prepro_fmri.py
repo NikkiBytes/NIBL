@@ -30,6 +30,11 @@ def check_output_directories(sub):
 
     if not os.path.exists(os.path.join(derivatives_dir, sub)):
         os.makedirs(os.path.join(derivatives_dir, sub))
+
+    if arglist["SES"] != False:
+        if not os.path.exists(os.path.join(derivatives_dir, sub, arglist["SES"])):
+            os.makedirs(os.path.join(derivatives_dir, sub, arglist["SES"]))
+
     if not os.path.exists(os.path.join(anat_output_path)):
         os.makedirs(os.path.join(anat_output_path))
     if not os.path.exists(os.path.join(func_output_path)):
@@ -53,10 +58,16 @@ def set_paths(sub):
     global anat_output_path
     global func_input_path
     global motion_assessment_path
+
+    if arglist["SES"] == False:
+        out_dir = os.path.join(derivatives_dir, sub)
+    else:
+        out_dir = os.path.join(derivatives_dir, sub, arglist["SES"])
+
     func_input_path=os.path.join(input_dir,sub,'func')
-    anat_output_path=os.path.join(derivatives_dir, sub, 'anat')
-    func_output_path=os.path.join(derivatives_dir, sub, 'func')
-    motion_assessment_path=os.path.join(derivatives_dir, sub, 'func','motion_assessment')
+    anat_output_path=os.path.join(out_dir, 'anat')
+    func_output_path=os.path.join(out_dir,'func')
+    motion_assessment_path=os.path.join(out_dir,'func','motion_assessment')
     print("FUNC OUTPUT: ", func_output_path)
 
 #________________________________________________________________________________________
@@ -128,7 +139,7 @@ def set_parser():
                         default=False, help='bet via fsl using defaults for functional images')
     parser.add_argument('-run',dest='RUN', action='store_true',
                         default=False, help='have multiple runs?')
-    parser.add_argument('-ses',dest='SES', action='store_true',
+    parser.add_argument('-ses',dest='SES', 
                         default=False, help='have multiple sessions?')
 
 
@@ -231,12 +242,12 @@ def preproc(data):
 
 def main():
 
-
+    set_parser()
     get_subjects()
 
     output_files()
 
-    set_parser()
+
 
     B, C = split_list()
     pool = Pool(processes=2)
