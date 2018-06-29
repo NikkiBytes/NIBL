@@ -164,8 +164,8 @@ def preproc(data):
 
     if args.STRIP==True:
         print("starting bet")
-        try:
-            for sub in data:
+        for sub in data:
+            try:
                 print("SUB: ", sub)
                 set_paths(sub)
                 os.chdir(func_input_path)
@@ -190,13 +190,13 @@ def preproc(data):
                     print("OUTPUT: ", output)
                     print("BET OUTPUT: ", bet_output)
                     print("__________________________________")
-        except FileNotFoundError:
-            print("BAD FILE PASSING")
-            outfile = os.path.join(derivatives_dir, 'empty_subjects.txt')
-            print(outfile)
-            with open(outfile, 'a') as f:
-                f.write("Empty: %s \n "%(sub))
-                f.close()
+            except FileNotFoundError:
+                print("BAD FILE PASSING")
+                outfile = os.path.join(derivatives_dir, 'empty_subjects.txt')
+                print(outfile)
+                with open(outfile, 'a') as f:
+                    f.write("Empty: %s \n "%(sub))
+                    f.close()
 
 
     if args.MOCO==False:
