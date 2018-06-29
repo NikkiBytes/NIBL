@@ -51,9 +51,9 @@ def set_paths():
     global deriv_dir
     #basedir = input("Enter directory path of your subjects: ")
     #outdir = input("Enter directory path for your output: ")
-    basedir='/Users/nikkibytes/Documents/Test'
+    basedir='/Users/nikkibytes/Documents/Test/Bevel'
     deriv_dir=os.path.join(basedir, 'derivatives')
-    outdir=os.path.join(deriv_dir,'task')
+    outdir=os.path.join(deriv_dir)
 
 
 
@@ -131,7 +131,7 @@ def check_registartion(sub):
                         moco = main_dict[key][run]["MOCO%i"%i]
                         tempfsf = tempfsf.replace("MOCO%i"%i, moco)
                         print("MOCO%i: "%i , main_dict[key][run]["MOCO%i"%i])
-                    outpath= outdir+"/"+sub
+                    outpath= os.path.join(outdir, sub, 'func', 'Analysis')
                     #print(tempfsf)
                     if not os.path.exists(outpath):
                         os.makedirs(outpath)
@@ -168,14 +168,14 @@ def fill_dict(subj):
             funcrun=os.path.join(deriv_dir, scan)
             x=int(run)
             main_dict[sub][run]['FUNCRUN%i'%x] = funcrun
-           # print("FUNCRUN: ", funcrun)
+            print("FUNCRUN: ", funcrun)
 
     # -- THE TIMEPOINTS -- found by running 'fslnvols' on our scan file
             ntmpts=check_output(['fslnvols', funcrun])
             ntmpts = ntmpts.decode('utf-8')
             ntmpts = ntmpts.strip('\n')
             main_dict[sub][run]['NTIMEPOINT%i'%x] = ntmpts
-           # print("TIMEPOINT: ", ntmpts)
+            print("TIMEPOINT: ", ntmpts)
 
     # -- CONFOUNDS
             confounds=os.path.join(deriv_dir,sub,'func','motion_assessment','%s_task-%s_run-%s_bold_brain_confound.txt'%(sub,arglist['TASK'],x))
@@ -222,7 +222,7 @@ def create_fsf():
     for sub in glob.glob('sub-*'):
         set_dict(sub)
         fill_dict(sub)
-        #print(main_dict[sub]["4"])
+        print(main_dict[sub]["4"])
         check_registartion(sub)
 
 ############################################################################################################
