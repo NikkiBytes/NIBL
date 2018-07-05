@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+#SBATCH --job-name=BEVEL_RUN
+#SBATCH -N 8
+#SBATCH -c 4
+#SBATCH -t 12:00:00
+#SBATCH --mem-per-cpu 10000
+#SBATCH -o feat_level1_bevel_out.txt
+#SBATCH -e feat_level1_bevel_err.txt
+
+module load fsl/5.0.10
+
+/usr/bin/python /projects/niblab/scripts/runlevel1.py 

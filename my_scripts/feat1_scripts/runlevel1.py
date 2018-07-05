@@ -12,10 +12,13 @@ from multiprocessing import Pool
 
 
 
-basedir='/Users/gracer/Desktop/data/derivatives/task'
-all_data=glob.glob(os.path.join(basedir,'sub*','sub*bart.fsf'))
+basedir='/projects/niblab/bids_projects/Experiments/Bevel/data'
+all_data=glob.glob(os.path.join(basedir, 'derivatives', 'sub*', 'func', 'Analysis', 'sub*.fsf'))
+
+
 def split_list(a_list):
         half = len(a_list)/2
+        half = int(half)
         return a_list[:half], a_list[half:]
 
 B, C = split_list(all_data)
