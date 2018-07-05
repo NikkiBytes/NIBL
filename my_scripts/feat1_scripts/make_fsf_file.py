@@ -66,10 +66,7 @@ def set_paths():
 def set_dict(sub):
 
 
-    main_dict[sub] = {
-            #'FUNCRUN': None,
-            'OUTPUT': None,
-        }
+    main_dict[sub] = { }
     for run in arglist["RUN"]:
         main_dict[sub][run] = {}
 
@@ -99,7 +96,7 @@ def check_registartion(sub):
                     tempfsf=infile.read()
 
                     num=int(run)
-                    out = main_dict[key]["OUTPUT"]
+                    out = main_dict[key][run]["OUTPUT"]
                     func = main_dict[key][run]["FUNCRUN%i"%num]
                     time = main_dict[key][run]["NTIMEPOINT%i"%num]
                     con = main_dict[key][run]["CONFOUND%i"%num]
@@ -160,8 +157,8 @@ def fill_dict(subj):
         #deriv_dir = '/Users/nikkibytes/Documents/testing/derivatives'
     # -- THE RUNS
         for run in arglist['RUN']:
-            output=os.path.join(deriv_dir, sub, 'func', 'Analysis', 'task', 'run%s'%run)
-            main_dict[sub]['OUTPUT'] = output
+            output=os.path.join(deriv_dir, sub, 'func', 'Analysis', 'feat1', 'run%s'%run)
+            main_dict[sub][run]['OUTPUT'] = output
             print("OUTPUT: ", output)
 
             scan=(os.path.join( sub,'func','%s_task-%s_run-%s_bold_brain.nii.gz')%(sub,arglist['TASK'], run))
@@ -223,7 +220,7 @@ def create_fsf():
         set_dict(sub)
         fill_dict(sub)
         print(main_dict[sub]["4"])
-        #check_registartion(sub)
+        check_registartion(sub)
 
 ############################################################################################################
 # MAIN METHOD
