@@ -49,9 +49,9 @@ def set_paths():
     global basedir
     global outdir
     global deriv_dir
-    #basedir = input("Enter directory path of your subjects: ")
+    basedir = input("Enter directory path of your data: ")
     #outdir = input("Enter directory path for your output: ")
-    basedir='/Users/nikkibytes/Documents/Test/Bevel'
+    #basedir='/Users/nikkibytes/Documents/Test/Bevel'
     deriv_dir=os.path.join(basedir, 'derivatives')
     outdir=os.path.join(deriv_dir)
 
@@ -162,6 +162,7 @@ def fill_dict(subj):
             print("OUTPUT: ", output)
 
             scan=(os.path.join( sub,'func','%s_task-%s_run-%s_bold_brain.nii.gz')%(sub,arglist['TASK'], run))
+            scan = scan.split('.')[0]
             funcrun=os.path.join(deriv_dir, scan)
             x=int(run)
             main_dict[sub][run]['FUNCRUN%i'%x] = funcrun
@@ -202,7 +203,10 @@ def fill_dict(subj):
             #print(item)
                 ctr=ctr+1
                 main_dict[sub][run]['EV%iTITLE'%ctr] = item
-                ev=os.path.join(deriv_dir, sub,'func','onsets','%s_task-%s_run-%s.txt'%(sub,item,run))
+                if item == 'choice':
+                    ev=os.path.join(deriv_dir, sub,'func','onsets', 'sub-001_task-choice_run-1.txt')
+                else:
+                    ev=os.path.join(deriv_dir, sub,'func','onsets','%s_task-%s_run-%s.txt'%(sub,item,run))
                 print("EV: ", ev)
                 main_dict[sub][run]['EV%i'%ctr] = ev
 
