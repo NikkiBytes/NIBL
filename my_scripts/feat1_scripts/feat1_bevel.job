@@ -8,6 +8,6 @@
 #SBATCH -o feat_level1_bevel_out.txt
 #SBATCH -e feat_level1_bevel_err.txt
 
-module load fsl/5.0.10
+module load /home/nbytes/modules/modulefiles/fsl/5.0.10
 
-/usr/bin/python /projects/niblab/scripts/runlevel1.py 
+/usr/bin/python /projects/niblab/scripts/runlevel1.py
