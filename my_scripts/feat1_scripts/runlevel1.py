@@ -6,9 +6,9 @@ Created on Thu Jul  5 12:21:50 2018
 @author: nikkibytes
 """
 
-import os 
+import os
 import glob
-from multiprocessing import Pool 
+from multiprocessing import Pool
 
 
 
@@ -24,13 +24,17 @@ def split_list(a_list):
 B, C = split_list(all_data)
 
 def run_level1(DATA):
-    for item in DATA:
-        print('starting to run on %s'%item)
-        os.system("feat %s"%item)    
+    try:
+        for item in DATA:
+            print('starting to run on %s'%item)
+            os.system("feat %s"%item)
+    except Exception:
+        with open("bad_subject_files.txt", 'a') as f:
+            f.write("Bad file: ", item)
+            f.close()  
 
 if __name__ == '__main__':
    pool = Pool(processes=2)
    pool.map(run_level1, [B,C])
    pool.close()
    pool.join()
-   

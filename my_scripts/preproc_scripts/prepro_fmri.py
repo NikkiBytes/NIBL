@@ -180,7 +180,7 @@ def preproc(data):
                         print(bet_output + ' exists, skipping \n')
                     else:
                         print("Running bet on ", nifti)
-                        bet_cmd=("bet %s %s -F -m"%(nifti, bet_output))
+                        bet_cmd=("bet %s %s -F -m -f 0.63"%(nifti, bet_output))
                         os.system(bet_cmd)
 
         # lets check our variables
