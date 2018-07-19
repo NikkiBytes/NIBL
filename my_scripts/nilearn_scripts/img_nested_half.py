@@ -81,6 +81,8 @@ print(condition_mask.shape)
 y = y_mask[condition_mask]
 print(y.shape)
 
+n_conditions = np.size(np.unique(y))
+print(n_conditions)
 #n_conditions = np.size(np.unique(y))
 print(y.unique())
 #session = func_df[condition_mask].to_records(index=False)
@@ -119,10 +121,11 @@ y_pred = anova_svc.predict(X)
 
 
 cv = LeaveOneLabelOut(subs[subs < 1])
+k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
+cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
 
-k_range = [10, 15, 30, 50, 150, 300, 500, 1000, 1500, 3000, 5000]
-cv_scores = []
 scores_validation = []
+cv_means =[]
 
 # we are working with a composite estimator:
 # a pipeline of feature selection followed by SVC. Thus to give the name of the parameter that we want to tune we need to give the name of the step in
@@ -134,3 +137,14 @@ nested_cv_scores = cross_val_score(grid, X, y)
 classification_accuracy = np.mean(nested_cv_scores)
 print("Classification accuracy: %.4f / Chance level: %f" %
       (classification_accuracy, 1. / n_conditions))
+
+
+for k in k_range:
+    curr_k = k
+    anova_svc.set_params(anova__k=curr_k, svc__C=1).fit(X[subs == 1], y[subs == 1])
+    cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
+    cv_means.append(cv_scores.mean())
+    print("CV score: %.4f" % cv_scores[-1])
+    y_pred = anova_svc.predict(X[subs == 0])
+    scores_validation.append(cv_scores.mean(y_pred == y[subs == 0]))
+    print("score validation: %.4f" % scores_validation[-1])
