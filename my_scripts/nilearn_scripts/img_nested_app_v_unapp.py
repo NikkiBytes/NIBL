@@ -30,8 +30,8 @@ from sklearn.dummy import DummyClassifier
 #Decoding of response to app vs. unapp images using an ANOVA-based feature selection, within the power atlas
 
 # ---STEP 1---
-#Cncatenate the imagine data into a NIFTI-2 file. 
-#Note: the data does not fit into a NIFTI-1 file, due to large number of subs. 
+#Cncatenate the imagine data into a NIFTI-2 file.
+#Note: the data does not fit into a NIFTI-1 file, due to large number of subs.
 
 #set basepath
 basepath=os.path.join('/projects','niblab','data','eric_data','W1','imagine')
@@ -77,7 +77,7 @@ y = y_mask[condition_mask]
 print(y)
 n_conditions = np.size(np.unique(y))
 
-#prepare the fxnl data. 
+#prepare the fxnl data.
 nifti_masker = NiftiMasker(mask_img=imag_mask,
                            smoothing_fwhm=4,standardize=True,
                            memory="nilearn_cache",memory_level=1)
@@ -110,7 +110,7 @@ k_range = [10, 15, 30, 50, 150, 300, 500, 1000, 1500, 3000, 5000]
 cv_scores = []
 scores_validation = []
 
-# we are working with a composite estimator: 
+# we are working with a composite estimator:
 # a pipeline of feature selection followed by SVC. Thus to give the name of the parameter that we want to tune we need to give the name of the step in
 # the pipeline, followed by the name of the parameter, with ‘__’ as a separator.
 # We are going to tune the parameter 'k' of the step called 'anova' in the pipeline. Thus we need to address it as 'anova__k'.
@@ -148,12 +148,12 @@ weight_img = nifti_masker.inverse_transform(coef)
 
 
 # ---STEP 6---
-#permunation testing to measure probablility of chance first score is mean accuracy of the null scores without perm targets, then the array, then the p-value. 
-#null_cv_scores = permutation_test_score(svc, X, y, cv=10)  
-#print(null_cv_scores) 
+#permunation testing to measure probablility of chance first score is mean accuracy of the null scores without perm targets, then the array, then the p-value.
+#null_cv_scores = permutation_test_score(svc, X, y, cv=10)
+#print(null_cv_scores)
 
 #from sklearn.dummy import DummyClassifier
-null_cv_scoresdumb = cross_val_score(DummyClassifier(), X, y, cv=10)  
+null_cv_scoresdumb = cross_val_score(DummyClassifier(), X, y, cv=10)
 print(null_cv_scoresdumb)
 meannull_cv_scoresdumb = np.mean(null_cv_scoresdumb)
 print(meannull_cv_scoresdumb)

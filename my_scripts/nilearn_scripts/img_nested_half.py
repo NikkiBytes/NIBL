@@ -23,14 +23,14 @@ from nilearn import image
 #from nilearn.plotting import plot_stat_map, show
 from sklearn.dummy import DummyClassifier
 import pandas as pd
-
+from sklearn.cross_validation import LeaveOneLabelOut
 
 # In[4]:
 
 
 # ---STEP 1---
-#Cncatenate the imagine data into a NIFTI-2 file. 
-#Note: the data does not fit into a NIFTI-1 file, due to large number of subs. 
+#Cncatenate the imagine data into a NIFTI-2 file.
+#Note: the data does not fit into a NIFTI-1 file, due to large number of subs.
 
 #set basepath
 basepath=os.path.join('/projects','niblab','data','eric_data','W1','imagine')
@@ -90,13 +90,47 @@ print(y.unique())
 # In[22]:
 
 
-#prepare the fxnl data. 
+#prepare the fxnl data.
 nifti_masker = NiftiMasker(mask_img=imag_mask,
                            smoothing_fwhm=4,standardize=True,
-                           memory="nilearn_cache",memory_level=1)
+                           memory_level=0)
 
 fmri_trans = nifti_masker.fit_transform(fmri_subjs)
-#print(fmri_trans)
-#X = fmri_trans[condition_mask]
-#subs = subs[condition_mask]
+print(fmri_trans)
+X = fmri_trans[condition_mask]
+subs = subs[condition_mask]
 
+
+# ---STEP 4---
+#setting prediction  & testing the classifer
+svc = SVC(kernel='linear')
+print(svc)
+
+# Define the dimension reduction to be used.
+# Here we use a classical univariate feature selection based on F-test, namely Anova. We set the number of features to be selected to 500
+feature_selection = SelectKBest(f_classif, k=3000)
+
+# We have our classifier (SVC), our feature selection (SelectKBest), and now, we can plug them together in a *pipeline* that performs the two operations successively:
+anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
+
+#fit the decoder and predict
+anova_svc.fit(X, y)
+y_pred = anova_svc.predict(X)
+
+
+cv = LeaveOneLabelOut(subs[subs < 1])
+
+k_range = [10, 15, 30, 50, 150, 300, 500, 1000, 1500, 3000, 5000]
+cv_scores = []
+scores_validation = []
+
+# we are working with a composite estimator:
+# a pipeline of feature selection followed by SVC. Thus to give the name of the parameter that we want to tune we need to give the name of the step in
+# the pipeline, followed by the name of the parameter, with ‘__’ as a separator.
+# We are going to tune the parameter 'k' of the step called 'anova' in the pipeline. Thus we need to address it as 'anova__k'.
+# Note that GridSearchCV takes an n_jobs argument that can make it go much faster
+grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range},n_jobs=-1)
+nested_cv_scores = cross_val_score(grid, X, y)
+classification_accuracy = np.mean(nested_cv_scores)
+print("Classification accuracy: %.4f / Chance level: %f" %
+      (classification_accuracy, 1. / n_conditions))
