@@ -8,8 +8,10 @@ import os
 import numpy as np
 import nilearn
 import glob
-#import matplotlib
+import matplotlib.pyplot as plt
 import nibabel as nib
+import pandas as pd
+
 from nilearn.image import concat_imgs, index_img, smooth_img
 from nilearn.image import resample_to_img
 #from nilearn import plotting
@@ -22,7 +24,6 @@ from sklearn.grid_search import GridSearchCV
 from nilearn import image
 #from nilearn.plotting import plot_stat_map, show
 from sklearn.dummy import DummyClassifier
-import pandas as pd
 from sklearn.cross_validation import LeaveOneLabelOut
 
 # In[4]:
@@ -48,7 +49,7 @@ half_func = all_func[:67]
 #load & prepare MRI data
 #load, fxnl, anatomical, & mask for plotting
 fmri_subjs=os.path.join(basepath, 'concatenated_imagine.nii')
-average_ana=os.path.join(basepath,'CS_avg_mprage_image.nii.gz')
+average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
 imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
 
 #plot mask (Power ROIs) over anatomical that is defined above
@@ -56,7 +57,7 @@ imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
 
 #load labels for the functional data
 stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_67_sub.csv')
-labels = np.recfromcsv(stim, delimiter=",",encoding='UTF-8')
+#labels = np.recfromcsv(stim, delimiter=",",encoding='UTF-8')
 #print(labels)
 #Its shape corresponds to the number of time-points times the number of voxels in the mask
 func_df = pd.read_csv(stim, sep=",")
@@ -110,7 +111,7 @@ print(svc)
 
 # Define the dimension reduction to be used.
 # Here we use a classical univariate feature selection based on F-test, namely Anova. We set the number of features to be selected to 500
-feature_selection = SelectKBest(f_classif, k=3000)
+feature_selection = SelectKBest(f_classif, k=500)
 
 # We have our classifier (SVC), our feature selection (SelectKBest), and now, we can plug them together in a *pipeline* that performs the two operations successively:
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
@@ -141,10 +142,36 @@ print("Classification accuracy: %.4f / Chance level: %f" %
 
 for k in k_range:
     curr_k = k
-    anova_svc.set_params(anova__k=curr_k, svc__C=1).fit(X[subs == 1], y[subs == 1])
+    anova_svc.set_params(anova__k=curr_k, svc__C=1.0).fit(X[subs == 1], y[subs == 1])
     cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
     cv_means.append(cv_scores.mean())
     print("CV score: %.4f" % cv_scores[-1])
     y_pred = anova_svc.predict(X[subs == 0])
-    scores_validation.append(cv_scores.mean(y_pred == y[subs == 0]))
+    scores_validation.append(np.mean(y_pred == y[subs == 0]))
     print("score validation: %.4f" % scores_validation[-1])
+
+print("SCORE VALIDATION: ", scores_validation)
+print("CV MEANS: ", cv_means)
+
+# ---STEP 5---
+#flipping the martix backinto an image
+coef = svc.coef_
+print(coef)
+
+# reverse feature selection
+coef = feature_selection.inverse_transform(coef)
+
+# reverse masking
+weight_img = nifti_masker.inverse_transform(coef)
+#plot image
+#plot_stat_map(weight_img, average_ana, title='SVM weights')
+#plt.show()
+
+
+from sklearn.dummy import DummyClassifier
+null_cv_scoresdumb = cross_val_score(DummyClassifier(), X, y, cv=10)
+print(null_cv_scoresdumb)
+null_cv_scoresdumb = cross_val_score(DummyClassifier(), X, y, cv=1)
+print(null_cv_scoresdumb)
+meannull_cv_scoresdumb = np.mean(null_cv_scoresdumb)
+print(meannull_cv_scoresdumb)
