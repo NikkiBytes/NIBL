@@ -2,7 +2,12 @@
 # coding: utf-8
 
 # In[3]:
+"""
+Created on Thu Feb  1 10:56:59 2018
 
+@author: jennygilbert extended upon by nicholletteacosta
+
+"""
 
 import os
 import numpy as np
@@ -41,6 +46,16 @@ all_func = glob.glob(os.path.join(basepath,'level1_grace_edit','cs*++.feat','fil
 half_func = all_func[:67]
 
 
+"""
+#load in all the files from the glob above, then convert them from nifti1 to nifti2
+ni2_funcs = (nib.Nifti2Image.from_image(nib.load(func)) for func in all_func)
+#concat, this is with nibabel, but should work with nilearn too
+ni2_concat = nib.concat_images(ni2_funcs, check_affines=False, axis=3)
+#set the output file name
+outfile=os.path.join(basepath,'concatenated_imagine.nii')
+#write the file
+ni2_concat.to_filename(outfile)
+"""
 # In[18]:
 
 
