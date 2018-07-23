@@ -39,16 +39,14 @@ outpath = "/projects/niblab/nilearn_projects"
 #make a list of the files to concat
 all_func = glob.glob(os.path.join(basepath,'level1_grace_edit','cs*++.feat','filtered_func_data.nii.gz'))
 len(all_func)
-#half_func = all_func[:67]
+half_func = all_func[:67]
+other_half= all_func[67:]
 
-
-"""
-load in all the files from the glob above, then convert them from nifti1 to nifti2
-ni2_funcs = (nib.Nifti2Image.from_image(nib.load(func)) for func in all_func)
+#load in all the files from the glob above, then convert them from nifti1 to nifti2
+ni2_funcs = (nib.Nifti2Image.from_image(nib.load(func)) for func in other_half)
 #concat, this is with nibabel, but should work with nilearn too
 ni2_concat = nib.concat_images(ni2_funcs, check_affines=False, axis=3)
 #set the output file name
 outfile=os.path.join(outpath,'concatenated_imagine_all.nii')
 #write the file
 ni2_concat.to_filename(outfile)
-"""

@@ -63,7 +63,7 @@ ni2_concat.to_filename(outfile)
 # ---STEP 2---
 #load & prepare MRI data
 #load, fxnl, anatomical, & mask for plotting
-fmri_subjs=os.path.join(basepath, 'concatenated_imagine.nii')
+fmri_subjs=os.path.join(basepath, 'concatenated_imagine_67.nii')
 average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
 imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
 
