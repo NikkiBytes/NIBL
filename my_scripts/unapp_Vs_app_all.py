@@ -35,18 +35,89 @@ from sklearn.cross_validation import LeaveOneLabelOut
 
 #set basepath
 basepath=os.path.join('/projects','niblab','data','eric_data','W1','imagine')
+#basepath ='/projects/niblab/nilearn_projects'
+
 outpath = "/projects/niblab/nilearn_projects"
 #make a list of the files to concat
 all_func = glob.glob(os.path.join(basepath,'level1_grace_edit','cs*++.feat','filtered_func_data.nii.gz'))
 len(all_func)
 half_func = all_func[:67]
-other_half= all_func[67:]
-
+half2_func= all_func[67:]
+"""
 #load in all the files from the glob above, then convert them from nifti1 to nifti2
-ni2_funcs = (nib.Nifti2Image.from_image(nib.load(func)) for func in other_half)
+ni2_funcs = (nib.Nifti2Image.from_image(nib.load(func)) for func in all_func)
 #concat, this is with nibabel, but should work with nilearn too
 ni2_concat = nib.concat_images(ni2_funcs, check_affines=False, axis=3)
 #set the output file name
 outfile=os.path.join(outpath,'concatenated_imagine_all.nii')
 #write the file
 ni2_concat.to_filename(outfile)
+"""
+fmri_subjs=os.path.join(outpath, 'concatenated_imagine_all.nii')
+average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
+imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
+
+stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_all_sub.csv')
+
+
+
+func_df = pd.read_csv(stim, sep=",")
+y_mask =  func_df['label']
+subs = func_df['sub']
+
+# ---STEP 3---
+#feature selection
+#To keep only data corresponding to app food or unapp food, we create a mask of the samples belonging to the condition.
+#condition_mask = np.logical_or(y_mask == b'app',y_mask == b'unapp')
+condition_mask = func_df["label"].isin(['app', 'unapp'])
+print(condition_mask.shape)
+#y = y_mask[condition_mask]
+y = y_mask[condition_mask]
+print(y.shape)
+
+
+n_conditions = np.size(np.unique(y))
+print(n_conditions)
+#n_conditions = np.size(np.unique(y))
+print(y.unique())
+
+nifti_masker = NiftiMasker(mask_img=imag_mask,
+                           smoothing_fwhm=4,standardize=True)
+
+fmri_trans = nifti_masker.fit_transform(fmri_subjs)
+print(fmri_trans)
+X = fmri_trans[condition_mask]
+subs = subs[condition_mask]
+
+svc = SVC(kernel='linear')
+print(svc)
+
+# Define the dimension reduction to be used.
+# Here we use a classical univariate feature selection based on F-test, namely Anova. We set the number of features to be selected to 500
+feature_selection = SelectKBest(f_classif, k=500)
+
+# We have our classifier (SVC), our feature selection (SelectKBest), and now, we can plug them together in a *pipeline* that performs the two operations successively:
+anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
+
+#fit the decoder and predict
+anova_svc.fit(X, y)
+y_pred = anova_svc.predict(X)
+
+cv = LeaveOneLabelOut(subs[subs < 1])
+k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
+cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
+
+scores_validation = []
+cv_means =[]
+
+
+# we are working with a composite estimator:
+# a pipeline of feature selection followed by SVC. Thus to give the name of the parameter that we want to tune we need to give the name of the step in
+# the pipeline, followed by the name of the parameter, with ‘__’ as a separator.
+# We are going to tune the parameter 'k' of the step called 'anova' in the pipeline. Thus we need to address it as 'anova__k'.
+# Note that GridSearchCV takes an n_jobs argument that can make it go much faster
+grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range},n_jobs=-1)
+nested_cv_scores = cross_val_score(grid, X, y)
+classification_accuracy = np.mean(nested_cv_scores)
+print("Classification accuracy: %.4f / Chance level: %f" %
+      (classification_accuracy, 1. / n_conditions))
