@@ -63,7 +63,7 @@ ni2_concat.to_filename(outfile)
 # ---STEP 2---
 #load & prepare MRI data
 #load, fxnl, anatomical, & mask for plotting
-fmri_subjs=os.path.join(basepath, 'concatenated_imagine_67.nii')
+fmri_subjs=os.path.join(outpath, 'concatenated_imagine_67.nii')
 average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
 imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
 
@@ -118,17 +118,29 @@ print(fmri_trans)
 X = fmri_trans[condition_mask]
 subs = subs[condition_mask]
 
-
+"""
 # ---STEP 4---
 #setting prediction  & testing the classifer
+#Define the prediction function to be used. Here we use a Support Vector Classification, with a linear kernel
+"""
+
 svc = SVC(kernel='linear')
 print(svc)
 
+
+"""
 # Define the dimension reduction to be used.
-# Here we use a classical univariate feature selection based on F-test, namely Anova. We set the number of features to be selected to 500
+# Here we use a classical univariate feature selection based on F-test, namely Anova.
+# We set the number of features to be selected to 500
+"""
 feature_selection = SelectKBest(f_classif, k=500)
 
-# We have our classifier (SVC), our feature selection (SelectKBest), and now, we can plug them together in a *pipeline* that performs the two operations successively:
+"""
+# We have our classifier (SVC),
+# our feature selection (SelectKBest),
+# and now, we can plug them together in a *pipeline*
+# that performs the two operations successively.
+"""
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
 
 #fit the decoder and predict
@@ -136,9 +148,10 @@ anova_svc.fit(X, y)
 y_pred = anova_svc.predict(X)
 
 
-cv = LeaveOneLabelOut(subs[subs < 1])
+cv = LeaveOneLabelOut(subs[subs < 10 ])
 k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
-cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
+#cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
+cv_scores = []
 
 scores_validation = []
 cv_means =[]
@@ -156,13 +169,17 @@ print("Classification accuracy: %.4f / Chance level: %f" %
 
 
 for k in k_range:
-    curr_k = k
+    feature_selection.k = k
     anova_svc.set_params(anova__k=curr_k, svc__C=1.0).fit(X[subs == 1], y[subs == 1])
-    cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
-    cv_means.append(cv_scores.mean())
+
+    cv_scores.append(np.mean(cross_val_score(anova_svc, X[subs ==1], y[subs ==1])))
     print("CV score: %.4f" % cv_scores[-1])
-    y_pred = anova_svc.predict(X[subs == 0])
-    scores_validation.append(np.mean(y_pred == y[subs == 0]))
+
+    #y_pred = anova_svc.predict(X[subs == 0])
+    #scores_validation.append(np.mean(y_pred == y[subs == 0]))
+    #print("score validation: %.4f" % scores_validation[-1])
+    anova_svc.fit(X[subs < 10], y[subs <10])
+    scores_validation.append(np.mean(y_pred == y[subs == 10]))
     print("score validation: %.4f" % scores_validation[-1])
 
 print("SCORE VALIDATION: ", scores_validation)
