@@ -26,17 +26,13 @@ import shutil
 
 def set_paths():
     print ("STARTING PROGRAM, GETTING VARIABLES....")
-
     global basedir
     global deriv_path
     global subjects
-
     #basedir=input("Enter your base directory input path: ")
-    basedir="/Users/nikkibytes/Documents/testing"
-
+    basedir="/projects/niblab/bids_projects/Experiments/BBx"
     #deriv_path=input("Enter your derivatives path: ")
-    deriv_path="/Users/nikkibytes/Documents/testing/derivatives"
-
+    deriv_path=os.path.join(basedir, "derivatives")
     subjects=[]
     os.chdir(deriv_path)
     listOfSubjects = os.listdir('.')
@@ -45,20 +41,21 @@ def set_paths():
             subjects.append(file)
 
 # THE MOVE_ANATS METHOD MOVES OUR NIFTI FILES FROM FMRIPREP INTO OUR ~/derivatives directory
-# !-- MAY NEED TO COPY FILES (TO KEEP elFMRIPREP?)  
+# !-- MAY NEED TO COPY FILES (TO KEEP elFMRIPREP?)
 def move_anats():
     errors = []
     print ("STARTING THE MOVE FILES PROCESS.........")
-
     for sub in subjects:
-        fmriprep_path=os.path.join(basedir, 'fmriprep', sub, 'intermediate_results/fmriprep_wf/', 'single_subject_%s_wf'%(sub.split('-')[1]),'anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*nii.gz')
-        anat_output_path=os.path.join(deriv_path,sub,'anat')
+        fmriprep_path=os.path.join(basedir, 'fmriprep', 'ses-1', sub, 'intermediate_results/fmriprep_wf/', 'single_subject_%s_wf'%(sub.split('-')[1]),'anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*nii.gz')
+        anat_output_path=os.path.join(deriv_path,sub, 'ses-1', 'anat')
         #print("FMRIPREP PATH: ", fmriprep_path)
         #print("OUTPUT PATH: ", anat_output_path)
         for file in glob.glob(fmriprep_path):
-            print("Moving file, %s , into directory located at, %s \n"%(file, anat_output_path))
             try:
-                shutil.move(file, anat_output_path)
+                #print("Moving file, %s , into directory located at, %s \n"%(file, anat_output_path))
+                #shutil.move(file, anat_output_path)
+                print("Copying file, %s , into directory located at, %s \n"%(file, anat_output_path))
+                shutil.copy2(file, anat_output_path)
             except shutil.Error as error:
                 errors.extend(error.args[0])
                 print("SHUTIL ERRROR, FILE ALREADY EXISTS")
