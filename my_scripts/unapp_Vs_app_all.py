@@ -10,13 +10,11 @@ import glob
 import matplotlib.pyplot as plt
 import nibabel as nib
 import pandas as pd
-
 from nilearn.image import concat_imgs, index_img, smooth_img
 from nilearn.image import resample_to_img
 #from nilearn import plotting
 from nilearn.input_data import NiftiMasker
 from sklearn.svm import SVC
-
 from sklearn.model_selection import LeaveOneOut, cross_val_score, permutation_test_score
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.pipeline import Pipeline

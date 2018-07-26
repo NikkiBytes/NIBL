@@ -152,38 +152,51 @@ cv = LeaveOneLabelOut(subs[subs < 10 ])
 k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
 #cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
 cv_scores = []
-
 scores_validation = []
-cv_means =[]
+
+
+for k in k_range:
+    feature_selection.k = k
+    #anova_svc.set_params(anova__k=feat svc__C=1.0).fit(X[subs == 1], y[subs == 1])
+    cv_scores.append(np.mean(cross_val_score(anova_svc, X[subs ==1], y[subs ==1])))
+    print("CV score: %.4f" % cv_scores[-1])
+    #scores_validation.append(np.mean(y_pred == y[subs == 0]))
+    #print("score validation: %.4f" % scores_validation[-1])
+    anova_svc.fit(X[subs ==1], y[subs == 1])
+    y_pred = anova_svc.predict(X[subs == 0])
+    scores_validation.append(np.mean(y_pred == y[subs == 0]))
+    print("score validation: %.4f" % scores_validation[-1])
 
 # we are working with a composite estimator:
 # a pipeline of feature selection followed by SVC. Thus to give the name of the parameter that we want to tune we need to give the name of the step in
 # the pipeline, followed by the name of the parameter, with ‘__’ as a separator.
 # We are going to tune the parameter 'k' of the step called 'anova' in the pipeline. Thus we need to address it as 'anova__k'.
 # Note that GridSearchCV takes an n_jobs argument that can make it go much faster
-grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range},n_jobs=-1)
+grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range},n_jobs=-1, verbose=1)
 nested_cv_scores = cross_val_score(grid, X, y)
 classification_accuracy = np.mean(nested_cv_scores)
 print("Classification accuracy: %.4f / Chance level: %f" %
       (classification_accuracy, 1. / n_conditions))
 
 
-for k in k_range:
-    feature_selection.k = k
-    anova_svc.set_params(anova__k=curr_k, svc__C=1.0).fit(X[subs == 1], y[subs == 1])
-
-    cv_scores.append(np.mean(cross_val_score(anova_svc, X[subs ==1], y[subs ==1])))
-    print("CV score: %.4f" % cv_scores[-1])
-
-    #y_pred = anova_svc.predict(X[subs == 0])
-    #scores_validation.append(np.mean(y_pred == y[subs == 0]))
-    #print("score validation: %.4f" % scores_validation[-1])
-    anova_svc.fit(X[subs < 10], y[subs <10])
-    scores_validation.append(np.mean(y_pred == y[subs == 10]))
-    print("score validation: %.4f" % scores_validation[-1])
 
 print("SCORE VALIDATION: ", scores_validation)
-print("CV MEANS: ", cv_means)
+print("CV Scores: ", cv_scores)
+
+# plot
+plt.plot(cv_scores, label='Cross validation scores')
+plt.plot(scores_validation, label='Left-out validation data scores')
+plt.xticks(np.arange(len(k_range)), k_range)
+plt.axis('tight')
+plt.xlabel('k')
+
+plt.axhline(np.mean(nested_cv_scores),
+            label='Nested cross-validation',
+            color='r')
+
+plt.legend(loc='best', frameon=False)
+plt.show()
+
 
 # ---STEP 5---
 #flipping the martix backinto an image
@@ -196,8 +209,8 @@ coef = feature_selection.inverse_transform(coef)
 # reverse masking
 weight_img = nifti_masker.inverse_transform(coef)
 #plot image
-#plot_stat_map(weight_img, average_ana, title='SVM weights')
-#plt.show()
+plt.plot_stat_map(weight_img, average_ana, title='SVM weights')
+plt.show()
 
 
 from sklearn.dummy import DummyClassifier
