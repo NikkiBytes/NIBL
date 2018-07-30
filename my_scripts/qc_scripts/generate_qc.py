@@ -8,13 +8,11 @@ Created on Mon Jul  2 14:58:40 2018
 """
 
 
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfFileMerger,PdfFileWriter, PdfFileReader
 import os
 import cairosvg
 import glob
-from pyPdf import PdfFileWriter, PdfFileReader
 from io import StringIO
-
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
@@ -84,7 +82,7 @@ def getPDFs(dpath,sub, fpath):
 from reportlab.lib import utils
 
 def get_image(path, width=1*cm):
-    
+
 for png in pngs:
      filename=png.split('.')[0]
      c = canvas.Canvas(filename+".pdf")

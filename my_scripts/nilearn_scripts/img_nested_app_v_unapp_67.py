@@ -18,7 +18,7 @@ from nilearn.image import resample_to_img
 #from nilearn import plotting
 from nilearn.input_data import NiftiMasker
 from sklearn.svm import SVC
-from sklearn.cross_validation import LeaveOneLabelOut, cross_val_score, permutation_test_score
+from sklearn.model_selection import LeaveOneOut, cross_val_score, permutation_test_score
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.pipeline import Pipeline
 from sklearn.grid_search import GridSearchCV

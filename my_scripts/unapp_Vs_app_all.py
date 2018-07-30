@@ -18,11 +18,10 @@ from sklearn.svm import SVC
 from sklearn.model_selection import LeaveOneOut, cross_val_score, permutation_test_score
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.pipeline import Pipeline
-from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from nilearn import image
 #from nilearn.plotting import plot_stat_map, show
 from sklearn.dummy import DummyClassifier
-from sklearn.cross_validation import LeaveOneLabelOut
 
 # In[4]:
 
@@ -34,7 +33,6 @@ from sklearn.cross_validation import LeaveOneLabelOut
 #set basepath
 basepath=os.path.join('/projects','niblab','data','eric_data','W1','imagine')
 #basepath ='/projects/niblab/nilearn_projects'
-
 outpath = "/projects/niblab/nilearn_projects"
 #make a list of the files to concat
 all_func = glob.glob(os.path.join(basepath,'level1_grace_edit','cs*++.feat','filtered_func_data.nii.gz'))
@@ -54,11 +52,7 @@ ni2_concat.to_filename(outfile)
 fmri_subjs=os.path.join(outpath, 'concatenated_imagine_all.nii')
 average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
 imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
-
 stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_all_sub.csv')
-
-
-
 func_df = pd.read_csv(stim, sep=",")
 y_mask =  func_df['label']
 subs = func_df['sub']
@@ -72,16 +66,11 @@ print(condition_mask.shape)
 #y = y_mask[condition_mask]
 y = y_mask[condition_mask]
 print(y.shape)
-
-
 n_conditions = np.size(np.unique(y))
 print(n_conditions)
 #n_conditions = np.size(np.unique(y))
 print(y.unique())
-
-nifti_masker = NiftiMasker(mask_img=imag_mask,
-                           smoothing_fwhm=4,standardize=True)
-
+nifti_masker = NiftiMasker(mask_img=imag_mask, smoothing_fwhm=4,standardize=True)
 fmri_trans = nifti_masker.fit_transform(fmri_subjs)
 print(fmri_trans)
 X = fmri_trans[condition_mask]
@@ -89,14 +78,11 @@ subs = subs[condition_mask]
 
 svc = SVC(kernel='linear')
 print(svc)
-
 # Define the dimension reduction to be used.
 # Here we use a classical univariate feature selection based on F-test, namely Anova. We set the number of features to be selected to 500
-feature_selection = SelectKBest(f_classif, k=500)
-
+feature_selection = SelectKBest(f_classif, k=3000)
 # We have our classifier (SVC), our feature selection (SelectKBest), and now, we can plug them together in a *pipeline* that performs the two operations successively:
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
-
 #fit the decoder and predict
 anova_svc.fit(X, y)
 y_pred = anova_svc.predict(X)
@@ -104,7 +90,6 @@ y_pred = anova_svc.predict(X)
 cv = LeaveOneLabelOut(subs[subs < 1])
 k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
 cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
-
 scores_validation = []
 cv_means =[]
 
