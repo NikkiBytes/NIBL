@@ -2,6 +2,8 @@
 @author: jennygilbert extended upon by nicholletteacosta
 
 """
+%matplotlib inline
+
 
 import os
 import numpy as np
@@ -12,7 +14,7 @@ import nibabel as nib
 import pandas as pd
 from nilearn.image import concat_imgs, index_img, smooth_img
 from nilearn.image import resample_to_img
-#from nilearn import plotting
+from nilearn import plotting
 from nilearn.input_data import NiftiMasker
 from sklearn.svm import SVC
 from sklearn.model_selection import LeaveOneOut, cross_val_score, permutation_test_score
@@ -20,7 +22,7 @@ from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from nilearn import image
-#from nilearn.plotting import plot_stat_map, show
+from nilearn.plotting import plot_stat_map, show
 from sklearn.dummy import DummyClassifier
 
 # In[4]:
@@ -74,12 +76,13 @@ nifti_masker = NiftiMasker(mask_img=imag_mask, smoothing_fwhm=4,standardize=True
 fmri_trans = nifti_masker.fit_transform(fmri_subjs)
 print(fmri_trans)
 X = fmri_trans[condition_mask]
-subs = subs[condition_mask]
+subs = subs[condition_mask] # equivalent to 'session'
 
 svc = SVC(kernel='linear')
 print(svc)
 # Define the dimension reduction to be used.
 # Here we use a classical univariate feature selection based on F-test, namely Anova. We set the number of features to be selected to 500
+# SelectKBest removes all but the k highest scoring features
 feature_selection = SelectKBest(f_classif, k=3000)
 # We have our classifier (SVC), our feature selection (SelectKBest), and now, we can plug them together in a *pipeline* that performs the two operations successively:
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
@@ -89,18 +92,34 @@ y_pred = anova_svc.predict(X)
 
 cv = LeaveOneLabelOut(subs[subs < 1])
 k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
-cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
+#cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
 scores_validation = []
-cv_means =[]
+cv_scores = []
+#classification_accuracy = cv_scores.mean()
+#print("Classification accuracy: %.4f / Chance level: %f" %
+#      (classification_accuracy, 1. / n_conditions))
 
+for k in k_range:
+    feature_selection.k = k
+    cv_scores.append(np.mean(cross_val_score(anova_svc, X[subs==1], y[subs==1])))
+    print("CV score: %.4f" % cv_scores[-1])
+    anova_svc.fit(X[subs ==1], y[subs == 1])
+    y_pred = anova_svc.predict(X[subs == 0])
+    scores_validation.append(np.mean(y_pred == y[subs == 0]))
+    print("score validation: %.4f" % scores_validation[-1])
 
-# we are working with a composite estimator:
-# a pipeline of feature selection followed by SVC. Thus to give the name of the parameter that we want to tune we need to give the name of the step in
+"""
+# Nested Cross-Validation
+# We are going to tune the parameter 'k' of the step called 'anova' in the pipeline.
+# Thus we need to address it as 'anova__k'. we are working with a composite estimator:
+# -- a pipeline of feature selection followed by SVC. Thus to give the name of the parameter 
+# that we want to tune we need to give the name of the step in
 # the pipeline, followed by the name of the parameter, with ‘__’ as a separator.
-# We are going to tune the parameter 'k' of the step called 'anova' in the pipeline. Thus we need to address it as 'anova__k'.
 # Note that GridSearchCV takes an n_jobs argument that can make it go much faster
-grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range},n_jobs=-1)
+
+"""
+
+grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range},n_jobs=2, verbose=1)
 nested_cv_scores = cross_val_score(grid, X, y)
-classification_accuracy = np.mean(nested_cv_scores)
-print("Classification accuracy: %.4f / Chance level: %f" %
-      (classification_accuracy, 1. / n_conditions))
+class_accuracy = np.mean(nested_cv_scores)
+print("Nested CV score: %.4f" %(class_accuracy))
