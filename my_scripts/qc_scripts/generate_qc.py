@@ -48,7 +48,7 @@ def mergePDFs(sub):
 
 def getPDFs(dpath,sub, fpath):
     #data/fmriprep/ses-1/sub-001/fmriprep/sub-001
-    svgs= glob.glob(os.path.join(fpath, 'ses-1', sub,  'fmriprep',sub, 'figures', '*rois.svg'))
+    svgs= glob.glob(os.path.join(fpath, 'ses-1', 'sub*',  'fmriprep', 'sub*', 'figures', '*rois.svg'))
     #print(svgs)
     for img in svgs:
         # get our current filename
