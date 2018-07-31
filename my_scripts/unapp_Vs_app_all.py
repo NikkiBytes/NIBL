@@ -3,8 +3,6 @@
 
 """
 %matplotlib inline
-
-
 import os
 import numpy as np
 import nilearn
@@ -105,7 +103,7 @@ anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
 """
 anova_svc.fit(X, y)
 y_pred = anova_svc.predict(X)
-cv = LeaveOneLabelOut(subs[subs < 1])
+cv = LeaveOneLabelOut(subs[subs<1])
 k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
 #cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
 scores_validation = []
@@ -121,7 +119,6 @@ for k in k_range:
     y_pred = anova_svc.predict(X[subs == 0])
     scores_validation.append(np.mean(y_pred == y[subs == 0]))
     print("score validation: %.4f" % scores_validation[-1])
-
 """
 # ---STEP 6---
 # Nested Cross-Validation
@@ -136,3 +133,20 @@ grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range},n_jobs=2, verbos
 nested_cv_scores = cross_val_score(grid, X, y)
 class_accuracy = np.mean(nested_cv_scores)
 print("Nested CV score: %.4f" %(class_accuracy))
+
+"""
+# Plot the Prediction Scores
+"""
+plt.figure(figsize=(6, 4))
+plt.plot(cv_scores, label='Cross validation scores')
+plt.plot(scores_validation, label='Left-out validation data scores')
+plt.xticks(np.arange(len(k_range)), k_range)
+plt.axis('tight')
+plt.xlabel('k')
+
+plt.axhline(np.mean(nested_cv_scores),
+            label='Nested cross-validation',
+            color='r')
+
+plt.legend(loc='best', frameon=False)
+plt.show()
