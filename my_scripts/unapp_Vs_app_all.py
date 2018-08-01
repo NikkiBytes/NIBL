@@ -59,6 +59,8 @@ func_df = pd.read_csv(stim, sep=",")
 y_mask =  func_df['label']
 subs = func_df['sub']
 
+
+
 """
 # ---STEP 3---
 # Feature Selection
@@ -93,6 +95,8 @@ subs = subs[condition_mask] # equivalent to 'session'
 """
 svc = SVC(kernel='linear')
 print(svc)
+
+feature_selection = SelectPercentile(f_classif, percentile=5)
 feature_selection = SelectKBest(f_classif, k=3000)
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
 
