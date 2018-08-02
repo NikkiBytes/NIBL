@@ -8,12 +8,11 @@ Created on Thu Feb  1 10:56:59 2018
 @author: jennygilbert extended upon by nicholletteacosta
 
 """
-
+import matplotlib.pyplot as plt
 import os
 import numpy as np
 import nilearn
 import glob
-import matplotlib.pyplot as plt
 import nibabel as nib
 import pandas as pd
 from nilearn.image import concat_imgs, index_img, smooth_img
@@ -120,7 +119,7 @@ svc = SVC(kernel='linear', verbose=False)
 print(svc)
 from sklearn.feature_selection import SelectPercentile, f_classif, chi2
 #feature_selection = SelectPercentile(f_classif, percentile=10)
-feature_selection = SelectKBest(f_classif, k=2000)
+feature_selection = SelectKBest(f_classif, k=5000)
 
 """
 # Define the dimension reduction to be used.
@@ -139,7 +138,6 @@ anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
 anova_svc.fit(X, y)
 y_pred = anova_svc.predict(X)
 
-cv = LeaveOneLabelOut(subs[subs == 1])
 k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
 #cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
 cv_scores = []
