@@ -89,6 +89,4 @@ cv_scores = cross_val_score(anova_svc, X, y, cv=cv)
 classification_accuracy = cv_scores.mean()
 
 print("Classification accuracy: %.4f / Chance level: %f" %
-      (classification_accuracy, 1. / len(conditions.unique())))
-
-      
+      (classification_accuracy, 1. / len(y.unique())))
