@@ -16,20 +16,19 @@ import glob
 import matplotlib.pyplot as plt
 import nibabel as nib
 import pandas as pd
-
 from nilearn.image import concat_imgs, index_img, smooth_img
 from nilearn.image import resample_to_img
 #from nilearn import plotting
 from nilearn.input_data import NiftiMasker
 from sklearn.svm import SVC
-from sklearn.model_selection import LeaveOneOut, cross_val_score, permutation_test_score
+from sklearn.cross_validation import LeaveOneLabelOut
+from sklearn.model_selection import  cross_val_score, permutation_test_score
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.pipeline import Pipeline
 from sklearn.grid_search import GridSearchCV
 from nilearn import image
-#from nilearn.plotting import plot_stat_map, show
+from nilearn.plotting import plot_stat_map, show
 from sklearn.dummy import DummyClassifier
-from sklearn.cross_validation import LeaveOneLabelOut
 
 # In[4]:
 
@@ -56,10 +55,6 @@ outfile=os.path.join(basepath,'concatenated_imagine.nii')
 #write the file
 ni2_concat.to_filename(outfile)
 """
-# In[18]:
-
-
-
 # ---STEP 2---
 #load & prepare MRI data
 #load, fxnl, anatomical, & mask for plotting
@@ -91,12 +86,12 @@ subs = func_df['subs']
 #feature selection
 #To keep only data corresponding to app food or unapp food, we create a mask of the samples belonging to the condition.
 #condition_mask = np.logical_or(y_mask == b'app',y_mask == b'unapp')
-condition_mask = func_df["labels"].isin(['app', 'unapp'])
+#condition_mask = func_df["labels"].isin(['app', 'unapp'])
+condition_mask = func_df["labels"].isin(['app', 'H2O'])
 print(condition_mask.shape)
 #y = y_mask[condition_mask]
 y = y_mask[condition_mask]
 print(y.shape)
-
 n_conditions = np.size(np.unique(y))
 print(n_conditions)
 #n_conditions = np.size(np.unique(y))
@@ -109,10 +104,7 @@ print(y.unique())
 
 
 #prepare the fxnl data.
-nifti_masker = NiftiMasker(mask_img=imag_mask,
-                           smoothing_fwhm=4,standardize=True,
-                           memory_level=0)
-
+nifti_masker = NiftiMasker(mask_img=imag_mask, sessions=subs, smoothing_fwhm=4,standardize=True, memory_level=0)
 fmri_trans = nifti_masker.fit_transform(fmri_subjs)
 print(fmri_trans)
 X = fmri_trans[condition_mask]
@@ -124,16 +116,17 @@ subs = subs[condition_mask]
 #Define the prediction function to be used. Here we use a Support Vector Classification, with a linear kernel
 """
 
-svc = SVC(kernel='linear')
+svc = SVC(kernel='linear', verbose=False)
 print(svc)
-
+from sklearn.feature_selection import SelectPercentile, f_classif, chi2
+#feature_selection = SelectPercentile(f_classif, percentile=10)
+feature_selection = SelectKBest(f_classif, k=2000)
 
 """
 # Define the dimension reduction to be used.
 # Here we use a classical univariate feature selection based on F-test, namely Anova.
 # We set the number of features to be selected to 500
 """
-feature_selection = SelectKBest(f_classif, k=500)
 
 """
 # We have our classifier (SVC),
@@ -142,18 +135,16 @@ feature_selection = SelectKBest(f_classif, k=500)
 # that performs the two operations successively.
 """
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
-
 #fit the decoder and predict
 anova_svc.fit(X, y)
 y_pred = anova_svc.predict(X)
 
-
-cv = LeaveOneLabelOut(subs[subs < 10 ])
+cv = LeaveOneLabelOut(subs[subs == 1])
 k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
 #cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
 cv_scores = []
 scores_validation = []
-
+np.warnings.filterwarnings('ignore')
 
 for k in k_range:
     feature_selection.k = k
@@ -172,7 +163,7 @@ for k in k_range:
 # the pipeline, followed by the name of the parameter, with ‘__’ as a separator.
 # We are going to tune the parameter 'k' of the step called 'anova' in the pipeline. Thus we need to address it as 'anova__k'.
 # Note that GridSearchCV takes an n_jobs argument that can make it go much faster
-grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range},n_jobs=-1, verbose=1)
+grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range})
 nested_cv_scores = cross_val_score(grid, X, y)
 classification_accuracy = np.mean(nested_cv_scores)
 print("Classification accuracy: %.4f / Chance level: %f" %

@@ -2,7 +2,7 @@
 @author: jennygilbert extended upon by nicholletteacosta
 
 """
-%matplotlib inline
+#%matplotlib inline
 import os
 import numpy as np
 import nilearn
