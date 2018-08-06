@@ -32,9 +32,6 @@ def get_subjects():
     subjects=glob.glob("sub-*")
     #print("SUBJECTS: ", subjects)
 
-
-
-
 '''
  The write_files() method takes in various variables,
  the task label, the run #, the subject(sub), the output directory(outputdir),
@@ -42,14 +39,19 @@ def get_subjects():
  and writes the data into a (.txt) file
 '''
 def write_files(task, run, moco_df, outputdir, sub):
+    # iterate through the motion correction data frame by columns,
+    # writing individual columns to individual files
     for col in moco_df.columns:
-        if task != 'task-rest':
-            if arglist[""]
+        if run != None:
             filename = "%s_%s_%s_%s.txt"%(sub, task, run, col)
+            print("%s || %s || %s || %s"%(sub, task, run, col))
+            print("WRITING TO FILE >>>>>>>>>>>>>>>>>>>>>>> %s"%filename)
         else:
-            filename = "%s_task-rest.txt"%(sub)
+            #filename = "%s_task-rest.txt"%(sub)
+            filename = "%s_ses-1_%s_%s.txt"%(sub, task, col)
+            print("WRITING TO FILE >>>>>>>>>>>>>>>>>>>>>>> %s"%filename)
         output_path=os.path.join(outputdir, filename)
-        print("Writing to file, ", output_path)
+        #print("Writing to file, ", output_path)
         moco_df[col].to_csv(output_path, header=False, index=False)
 
 
@@ -61,6 +63,19 @@ def write_files(task, run, moco_df, outputdir, sub):
  directory if it is not there), then the program moves to the filepath directory and iterates through
  the confound files and pulls out the the relevant data (the motion corrected columns). Finally
  the program calls the write_files() method and writes the data to the file.
+    """
+    #SPECIAL CASE FOR REST
+    if task == "task-rest":
+        run_id=None
+        #write_files(task, run_id, moco_df, outputdir,sub)
+        print(">>>>>>>>RUN: %s"%run)
+    else:
+        for word in name:
+            if 'run' in word:
+                run_id=word
+            print(">>>>>>>>RUN: %s"%run)
+        #write_files(task, run_id, moco_df,outputdir,sub)
+    """
 '''
 
 
@@ -71,38 +86,32 @@ def get_data():
             print("--------------> GETTING MOCOS FOR SUBJECT: ", sub)
             filepath=os.path.join(basedir, 'fmriprep', sub, 'ses-1', 'fmriprep', sub, 'ses-1','func')
             outputdir=os.path.join(basedir, 'derivatives', sub, 'wave1', 'func', 'motion_assessment')
-            print(">>>>>>>FILEPATH: %s >>>>>>>>OUTPUT DIRECTORY: %s"%(filepath, outputdir))
             if not os.path.exists(os.path.join(outputdir, 'motion_parameters')):
                 os.makedirs(os.path.join(outputdir,  'motion_parameters'))
             outputdir=os.path.join(outputdir, 'motion_parameters')
+            print(">>>>>>>FILEPATH: %s >>>>>>>>OUTPUT DIRECTORY: %s"%(filepath, outputdir))
             os.chdir(filepath)
             for run in glob.glob("*confounds.tsv"):
                 print("FILE: ", run)
                 df = pd.read_table(run)
                 moco_df=df[['X', 'Y', 'Z', 'RotX', 'RotY', 'RotZ']]
                 moco_df.columns = ['moco0', 'moco1', 'moco2', 'moco3', 'moco4', 'moco5']
-                print("DATAFRAME: ", moco_df.head())
+                print("DATAFRAME: \n ", moco_df.head())
                 name=run.split('_')
                 #print("NAME: ", name)
                 for word in name:
                     if 'task' in word:
                         task=word
                         print("TASK: ", task)
-                        #print("RUN: ", run)
-                        if task == "task-rest":
-                            run=None
-                            write_files(task, run, moco_df, outputdir,sub)
-                        else:
-                            for word in name:
-                                if 'run' in word:
-                                    run=word
-                                    write_files(task, run, moco_df,outputdir,sub)
+                        run_id=None
+                write_files(task, run_id, moco_df, outputdir,sub)
+                #print("RUN: ", run)
         except FileNotFoundError as not_found:
             print("********************FILE NOT FOUND: ", not_found.filename)
             if sub not in errors:
                 errors.append(sub)
-        print("ERRORS ", errors)
-        print("ERRORS SORTED ", sorted(errors))
+        #print("ERRORS ", errors)
+        #print("ERRORS SORTED ", sorted(errors))
         errors = sorted(errors)
     for err in errors:
             #print("ERROR" + err)
@@ -117,5 +126,4 @@ def get_data():
 def main():
     get_subjects()
     get_data()
-
 main()
