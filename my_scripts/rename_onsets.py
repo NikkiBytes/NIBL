@@ -4,7 +4,7 @@ import argparse
 
 
 
-path = '/projects/niblab/bids_projects/Experiments/Bevel/data'
+path = '/projects/niblab/bids_projects/Experiments/EricData/data'
 derivpath= os.path.join(path, 'derivatives')
 bevel_txt = os.path.join(path, 'Bevel.txt')
 print(derivpath)
@@ -34,7 +34,7 @@ def set_parser():
     for a in args._get_kwargs():
         arglist[a[0]]=a[1]
 
-# Dictionary 
+# Dictionary
 
 def getConversionDict():
     global conversion
@@ -50,16 +50,16 @@ def getConversionDict():
 
 def renameBIDS():
     os.chdir(path)
-    subs = glob.glob('sub-*')    
-    
+    subs = glob.glob('sub-*')
+
     # replace individual files
     for dir_ in subs:
         print(dir_)
         curr_sub = dir_
         new_sub = "sub-0"+conversion[curr_sub]
-        
+
         #print(curr_sub, new_sub)
-        
+
         os.chdir(os.path.join(path,dir_,'fmap'))
         fmaps = glob.glob('sub-*')
 
@@ -69,8 +69,8 @@ def renameBIDS():
             print("ORIGINAL FMAP:", file)
             print("NEW FMAP: ", new)
             os.replace(file, new)
-        
-        
+
+
         os.chdir(os.path.join(path,dir_,'func'))
         funcs = glob.glob('sub-*')
 
@@ -80,7 +80,7 @@ def renameBIDS():
             print("NEW FUNC:", new)
             os.replace(file, new)
 
-        
+
         os.chdir(os.path.join(path,dir_,'anat'))
         anats = glob.glob('sub-*')
 
@@ -89,8 +89,8 @@ def renameBIDS():
             print("ORIGINAL ANAT: ", file)
             print("NEW ANAT: ", new)
             os.replace(file, new)
-            
-            
+
+
         os.chdir(os.path.join(path, dir_))
         subdir = glob.glob("*%s*"%dir_)
         for file in subdir:
@@ -98,30 +98,30 @@ def renameBIDS():
             print(file)
             print(new)
             os.replace(file, new)
-  
+
 def renameDir(input_path):
-          
+
     os.chdir(input_path)
 
-    subs = glob.glob('sub-*')    
+    subs = glob.glob('sub-*')
     for dir_ in subs:
         curr_sub = dir_
         new_sub = "sub-0"+conversion[curr_sub]
         os.replace(dir_, new_sub)
-    
+
 def renameDeriv():
     os.chdir(derivpath)
-    subs = glob.glob('sub-*')   
-    
-    
+    subs = glob.glob('sub-*')
+
+
     for dir_ in subs:
         print(dir_)
         curr_sub = dir_
         new_sub = "sub-0"+conversion[curr_sub]
-        
+
         os.chdir(os.path.join(derivpath,dir_, 'func'))
-        funcs = glob.glob("*%s*"%dir_) 
-        
+        funcs = glob.glob("*%s*"%dir_)
+
         for file in funcs:
             print(file)
             new = file.replace(curr_sub, new_sub)
@@ -130,27 +130,27 @@ def renameDeriv():
 
         os.chdir('motion_assessment')
         confounds = glob.glob("*%s*"%dir_)
-        
+
         for file in confounds:
             print(file)
             new = file.replace(curr_sub, new_sub)
             print("-------> ",new)
             os.replace(file, new)
-            
-            
+
+
         os.chdir('motion_parameters')
         mocos = glob.glob("*%s*"%dir_)
-        
+
         for file in mocos:
             print(file)
             new = file.replace(curr_sub, new_sub)
             print("-------> ",new)
             os.replace(file, new)
-        
-        
-        
 
-set_parser()        
+
+
+
+set_parser()
 getConversionDict()
 
 if arglist["BIDS"] == True:
@@ -159,6 +159,6 @@ if arglist["BIDS"] == True:
     renameDir()
 
 if arglist["DERIV"] == True:
-    print('here in deriv')  
+    print('here in deriv')
     renameDeriv()
     renameDir(derivpath)

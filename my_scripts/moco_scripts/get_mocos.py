@@ -48,7 +48,7 @@ def write_files(task, run, moco_df, outputdir, sub):
             print("WRITING TO FILE >>>>>>>>>>>>>>>>>>>>>>> %s"%filename)
         else:
             #filename = "%s_task-rest.txt"%(sub)
-            filename = "%s_ses-1_%s_%s.txt"%(sub, task, col)
+            filename = "%s_ses-4_%s_%s.txt"%(sub, task, col)
             print("WRITING TO FILE >>>>>>>>>>>>>>>>>>>>>>> %s"%filename)
         output_path=os.path.join(outputdir, filename)
         #print("Writing to file, ", output_path)
@@ -84,8 +84,8 @@ def get_data():
     for sub in subjects:
         try:
             print("--------------> GETTING MOCOS FOR SUBJECT: ", sub)
-            filepath=os.path.join(basedir, 'fmriprep', sub, 'ses-1', 'fmriprep', sub, 'ses-1','func')
-            outputdir=os.path.join(basedir, 'derivatives', sub, 'wave1', 'func', 'motion_assessment')
+            filepath=os.path.join(basedir, 'fmriprep', sub, 'ses-4', 'fmriprep', sub, 'ses-4','func')
+            outputdir=os.path.join(basedir, 'derivatives', sub, 'wave4', 'func', 'motion_assessment')
             if not os.path.exists(os.path.join(outputdir, 'motion_parameters')):
                 os.makedirs(os.path.join(outputdir,  'motion_parameters'))
             outputdir=os.path.join(outputdir, 'motion_parameters')
@@ -115,7 +115,7 @@ def get_data():
         errors = sorted(errors)
     for err in errors:
             #print("ERROR" + err)
-        file = basedir+"/error_files.txt"
+        file = basedir+"/error_files_wave4.txt"
         with open(file, 'a') as f:
             f.write("--------------------------------> FILE NOT FOUND FOR SUBJECT: " + err  + "\n")
             f.close()

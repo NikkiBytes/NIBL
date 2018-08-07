@@ -10,6 +10,7 @@ Created on Mon Jul  2 14:58:40 2018
 
 from PyPDF2 import PdfFileMerger,PdfFileWriter, PdfFileReader
 import os
+import io
 import cairosvg
 import glob
 from io import StringIO
@@ -19,28 +20,29 @@ from reportlab.lib.pagesizes import letter
 
 
 def makeHTML():
-    os.chdir('/projects/niblab/bids_projects/Experiments/BBx/derivatives/pngs')
+    os.chdir('/projects/niblab/bids_projects/Experiments/EricData/data/derivatives/pngs')
     pngs = glob.glob('*png')
-    outfile = os.path.join(deriv_path, "pngs", "BBX_ses-1_fmriprep_QC.html")
+    deriv_path = os.path.join(basepath, 'derivatives')
+    outfile = os.path.join(deriv_path, "pngs", "CHOCO-DATA_ses-1_fmriprep_QC.html")
     f = open(outfile, "w")
     for file in pngs:
         sub = file.split("_")[0]
         task = file.split("_")[2]
-        if "training" in task:
-            run = file.split("_")[3]
-        else:
-            run = None
-        print(sub, run, task )
+        #if "training" in task:
+        #    run = file.split("_")[3]
+        #else:
+        #    run = None
+        print(sub, task )
         print("-------->", file)
-        f.write("<p>___________________________________________________________________________________")
-        f.write("<p>SUBJECT: %s | SESSION 1 | %s  | %s "%(sub, task, run))
+        f.write("<p>SUBJECT: %s | SESSION 1 | %s "%(sub, task))
+        f.write("<p>__________________________________________________________")
         f.write("<p>FILENAME: %s \n"%(file))
         f.write("<p><IMG SRC=\"%s\">"%(file))
     f.close()
 def mergePDFs(sub):
+    #pdfs = glob.glob(os.path.join(basepath, 'figures', '*.pdf'))
     pdfs = glob.glob(os.path.join(basepath, 'figures', '*.pdf'))
     merger = PdfFileMerger()
-
     for pdf in pdfs:
         merger.append(pdf)
 
@@ -48,23 +50,24 @@ def mergePDFs(sub):
 
 def getPDFs(dpath,sub, fpath):
     #data/fmriprep/ses-1/sub-001/fmriprep/sub-001
-    svgs= glob.glob(os.path.join(fpath, 'ses-1', 'sub*',  'fmriprep', 'sub*', 'figures', '*rois.svg'))
-    #print(svgs)
+    #Experiments/EricData/data/fmriprep/sub-001/ses-1/fmriprep/sub-001/figures
+    svgs= glob.glob(os.path.join(fpath, sub, 'ses-1',  'fmriprep', sub, 'figures', '*rois.svg'))
     for img in svgs:
+        print('>>>>>SVG IMG: ', img)
         # get our current filename
         name = img.split('/')
         for word in name:
             if '.svg' in word:
                 word = word.split('.')[0]
-                filename=word+'.pdf'
-        out=os.path.join(dpath, 'pdfs', filename) #output pdf filename
+                filename=word+'.png'
+        out=os.path.join(dpath, 'test', filename) #output pdf filename
         print(" %s ------> %s "%(img, out))
-        #cairosvg.svg2png(url=img, write_to=out) #convert svg
+        cairosvg.svg2png(url=img, write_to=out) #convert svg
         if not os.path.exists(out):
             cairosvg.svg2pdf(url=img, write_to=out) #convert svg
         packet = io.BytesIO()
         can = canvas.Canvas(packet, pagesize=letter)
-        can.drawString(10, 100, "HELLLLLLLO")
+        can.drawString(10, 100, "W")
         can.save()
         packet.seek(0)
         new_pdf = PdfFileReader(packet)
@@ -98,16 +101,17 @@ for png in pngs:
 
 def main():
     global basepath
-    basepath= '/projects/niblab/bids_projects/Experiments/BBx'
+    basepath= "/projects/niblab/bids_projects/Experiments/EricData/data"
     deriv_path = os.path.join(basepath, 'derivatives')
-    fmriprep_path = os.path.join(basepath, 'fmriprep')
+    fmriprep_path = os.path.join(basepath,'fmriprep')
     subs = glob.glob(os.path.join(deriv_path, 'sub-*'))
+    print(" BASE DIRECTORY >>> %s \nFMRIPREP PATH >>> %s ")
     for sub_path in subs:
         words = sub_path.split('/')
         for w in words:
             if 'sub-' in w:
                 sub = w
-        print(w)
+        print("FETCHING SVGS FIGURES FROM SUBJECT ... %s"%sub)
         getPDFs(deriv_path, sub, fmriprep_path)
         #mergePDFS(sub)
 main()
