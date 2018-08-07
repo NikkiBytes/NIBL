@@ -86,7 +86,8 @@ subs = func_df['subs']
 #To keep only data corresponding to app food or unapp food, we create a mask of the samples belonging to the condition.
 #condition_mask = np.logical_or(y_mask == b'app',y_mask == b'unapp')
 #condition_mask = func_df["labels"].isin(['app', 'unapp'])
-condition_mask = func_df["labels"].isin(['app', 'H2O'])
+condition_mask = func_df["labels"].isin(['app', 'unapp', 'H2O'])
+#condition_mask = condition_mask_partA.append(condition_mask_partB,ignore_index=True)
 print(condition_mask.shape)
 #y = y_mask[condition_mask]
 y = y_mask[condition_mask]
@@ -103,7 +104,7 @@ print(y.unique())
 
 
 #prepare the fxnl data.
-nifti_masker = NiftiMasker(mask_img=imag_mask, sessions=subs, smoothing_fwhm=4,standardize=True, memory_level=0)
+nifti_masker = NiftiMasker(mask_img=imag_mask, smoothing_fwhm=4,standardize=True, memory_level=0)
 fmri_trans = nifti_masker.fit_transform(fmri_subjs)
 print(fmri_trans)
 X = fmri_trans[condition_mask]
@@ -114,8 +115,21 @@ subs = subs[condition_mask]
 #setting prediction  & testing the classifer
 #Define the prediction function to be used. Here we use a Support Vector Classification, with a linear kernel
 """
-
-svc = SVC(kernel='linear', verbose=False)
+"""
+best_score = 0
+for gamma in [0.001, 0.01, 0.1, 1, 10, 100]:
+    for C in [0.001, 0.01, 0.1, 1, 10, 100]:
+        svm = SVC(gamma=gamma, C=C)
+        svm.fit(X,y)
+        score = svm.score(X, y)
+        print(score)
+        if score > best_score:
+            best_score = score
+            best_parameters = {'C' : C, 'gamma':gamma}
+print("Best Score: {:.2f}".format(best_score))
+print("Best Parameters: {}".format(best_parameters))
+"""
+svc = SVC(gamma=0.001, C=0.001, verbose=False)
 print(svc)
 from sklearn.feature_selection import SelectPercentile, f_classif, chi2
 #feature_selection = SelectPercentile(f_classif, percentile=10)
@@ -161,7 +175,7 @@ for k in k_range:
 # the pipeline, followed by the name of the parameter, with ‘__’ as a separator.
 # We are going to tune the parameter 'k' of the step called 'anova' in the pipeline. Thus we need to address it as 'anova__k'.
 # Note that GridSearchCV takes an n_jobs argument that can make it go much faster
-grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range})
+grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range}, n_jobs=2)
 nested_cv_scores = cross_val_score(grid, X, y)
 classification_accuracy = np.mean(nested_cv_scores)
 print("Classification accuracy: %.4f / Chance level: %f" %
