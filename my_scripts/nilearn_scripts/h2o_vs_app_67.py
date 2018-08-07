@@ -129,11 +129,11 @@ for gamma in [0.001, 0.01, 0.1, 1, 10, 100]:
 print("Best Score: {:.2f}".format(best_score))
 print("Best Parameters: {}".format(best_parameters))
 """
-svc = SVC(gamma=0.001, C=0.001, verbose=False)
+svc = SVC(kernel='linear', verbose=False)
 print(svc)
 from sklearn.feature_selection import SelectPercentile, f_classif, chi2
 #feature_selection = SelectPercentile(f_classif, percentile=10)
-feature_selection = SelectKBest(f_classif, k=5000)
+feature_selection = SelectKBest(f_classif, k=500)
 
 """
 # Define the dimension reduction to be used.
@@ -147,6 +147,8 @@ feature_selection = SelectKBest(f_classif, k=5000)
 # and now, we can plug them together in a *pipeline*
 # that performs the two operations successively.
 """
+np.warnings.filterwarnings('ignore')
+
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
 #fit the decoder and predict
 anova_svc.fit(X, y)
@@ -156,7 +158,6 @@ k_range = [10, 15, 30, 50 , 150, 300, 500, 1000, 1500, 3000, 5000]
 #cv_scores = cross_val_score(anova_svc, X[subs ==1], y[subs ==1])
 cv_scores = []
 scores_validation = []
-np.warnings.filterwarnings('ignore')
 
 for k in k_range:
     feature_selection.k = k
