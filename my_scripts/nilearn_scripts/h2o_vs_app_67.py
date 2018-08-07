@@ -60,10 +60,8 @@ ni2_concat.to_filename(outfile)
 fmri_subjs=os.path.join(outpath, 'concatenated_imagine_67.nii')
 average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
 imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
-
 #plot mask (Power ROIs) over anatomical that is defined above
 #plotting.plot_roi(imag_mask,bg_img=average_ana,cmap='Paired')
-
 #load labels for the functional data
 stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_67_sub.csv')
 #labels = np.recfromcsv(stim, delimiter=",",encoding='UTF-8')
@@ -131,9 +129,9 @@ print("Best Parameters: {}".format(best_parameters))
 """
 svc = SVC(kernel='linear', verbose=False)
 print(svc)
-from sklearn.feature_selection import SelectPercentile, f_classif, chi2
+from sklearn.feature_selection import SelectPercentile, f_classif
 #feature_selection = SelectPercentile(f_classif, percentile=10)
-feature_selection = SelectKBest(f_classif, k=500)
+feature_selection = SelectKBest(f_classif, k=1500)
 
 """
 # Define the dimension reduction to be used.

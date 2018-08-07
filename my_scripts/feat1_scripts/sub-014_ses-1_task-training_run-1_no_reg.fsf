@@ -1,4 +1,3 @@
-
 # FEAT version number
 set fmri(version) 6.00
 
@@ -30,13 +29,13 @@ set fmri(featwatcher_yn) 1
 set fmri(sscleanup_yn) 0
 
 # Output directory
-set fmri(outputdir) "OUTPUT"
+set fmri(outputdir) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/Analysis/feat1/run1"
 
 # TR(s)
 set fmri(tr) 2.000000
 
 # Total volumes
-set fmri(npts) NTPTS
+set fmri(npts) 233
 
 # Delete volumes
 set fmri(ndelete) 0
@@ -227,7 +226,7 @@ set fmri(reginitial_highres_search) 90
 set fmri(reginitial_highres_dof) 3
 
 # Registration to main structural
-set fmri(reghighres_yn) 0
+set fmri(reghighres_yn) 1
 
 # Search space for registration to main structural
 # 0   : No search
@@ -266,20 +265,20 @@ set fmri(regstandard_nonlinear_warpres) 10
 set fmri(paradigm_hp) 100
 
 # Total voxels
-set fmri(totalVoxels) 41101200
+set fmri(totalVoxels) 25930800
 
 
 # Number of lower-level copes feeding into higher-level analysis
 set fmri(ncopeinputs) 0
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) "FUNCRUN"
+set feat_files(1) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/sub-014_ses-1_task-training_run-1_bold_brain"
 
 # Add confound EVs text file
 set fmri(confoundevs) 1
 
 # Confound EVs text file for analysis 1
-set confoundev_files(1) "CONFOUND"
+set confoundev_files(1) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/motion_assessment/sub-014_ses-1_task-training_run-1_bold_brain_confound.txt"
 
 # EV 1 title
 set fmri(evtitle1) "TCue"
@@ -313,7 +312,7 @@ set fmri(tempfilt_yn1) 1
 set fmri(deriv_yn1) 1
 
 # Custom EV file (EV 1)
-set fmri(custom1) "EV1"
+set fmri(custom1) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/onsets/sub-014_ses-1_task-Tcue_run-01.txt"
 
 # Orthogonalise EV 1 wrt EV 0
 set fmri(ortho1.0) 0
@@ -389,7 +388,7 @@ set fmri(tempfilt_yn2) 1
 set fmri(deriv_yn2) 1
 
 # Custom EV file (EV 2)
-set fmri(custom2) "EV2"
+set fmri(custom2) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/onsets/sub-014_ses-1_task-Ucue_run-01.txt"
 
 # Orthogonalise EV 2 wrt EV 0
 set fmri(ortho2.0) 0
@@ -465,7 +464,7 @@ set fmri(tempfilt_yn3) 1
 set fmri(deriv_yn3) 1
 
 # Custom EV file (EV 3)
-set fmri(custom3) "EV3"
+set fmri(custom3) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/onsets/sub-014_ses-1_task-Ncue_run-01.txt"
 
 # Orthogonalise EV 3 wrt EV 0
 set fmri(ortho3.0) 0
@@ -541,7 +540,7 @@ set fmri(tempfilt_yn4) 1
 set fmri(deriv_yn4) 1
 
 # Custom EV file (EV 4)
-set fmri(custom4) "EV4"
+set fmri(custom4) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/onsets/sub-014_ses-1_task-TT_run-01.txt"
 
 # Orthogonalise EV 4 wrt EV 0
 set fmri(ortho4.0) 0
@@ -617,7 +616,7 @@ set fmri(tempfilt_yn5) 1
 set fmri(deriv_yn5) 1
 
 # Custom EV file (EV 5)
-set fmri(custom5) "EV5"
+set fmri(custom5) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/onsets/sub-014_ses-1_task-NtNt_run-01.txt"
 
 # Orthogonalise EV 5 wrt EV 0
 set fmri(ortho5.0) 0
@@ -693,7 +692,7 @@ set fmri(tempfilt_yn6) 1
 set fmri(deriv_yn6) 1
 
 # Custom EV file (EV 6)
-set fmri(custom6) "EV6"
+set fmri(custom6) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/onsets/sub-014_ses-1_task-WW_run-01.txt"
 
 # Gamma sigma (EV 6)
 set fmri(gammasigma6) 3
@@ -775,7 +774,7 @@ set fmri(tempfilt_yn7) 1
 set fmri(deriv_yn7) 1
 
 # Custom EV file (EV 7)
-set fmri(custom7) "EV7"
+set fmri(custom7) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/onsets/sub-014_ses-1_task-rinse_run-01.txt"
 
 # Orthogonalise EV 7 wrt EV 0
 set fmri(ortho7.0) 0
@@ -851,7 +850,7 @@ set fmri(tempfilt_yn8) 1
 set fmri(deriv_yn8) 1
 
 # Custom EV file (EV 8)
-set fmri(custom8) "MOCO0"
+set fmri(custom8) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/motion_assessment/motion_parameters/sub-014_ses-1_task-training_run-1_moco0.txt"
 
 # Orthogonalise EV 8 wrt EV 0
 set fmri(ortho8.0) 0
@@ -927,7 +926,7 @@ set fmri(tempfilt_yn9) 1
 set fmri(deriv_yn9) 1
 
 # Custom EV file (EV 9)
-set fmri(custom9) "MOCO1"
+set fmri(custom9) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/motion_assessment/motion_parameters/sub-014_ses-1_task-training_run-1_moco1.txt"
 
 # Orthogonalise EV 9 wrt EV 0
 set fmri(ortho9.0) 0
@@ -1003,7 +1002,7 @@ set fmri(tempfilt_yn10) 1
 set fmri(deriv_yn10) 1
 
 # Custom EV file (EV 10)
-set fmri(custom10) "MOCO2"
+set fmri(custom10) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/motion_assessment/motion_parameters/sub-014_ses-1_task-training_run-1_moco2.txt"
 
 # Orthogonalise EV 10 wrt EV 0
 set fmri(ortho10.0) 0
@@ -1079,7 +1078,7 @@ set fmri(tempfilt_yn11) 1
 set fmri(deriv_yn11) 1
 
 # Custom EV file (EV 11)
-set fmri(custom11) "MOCO3"
+set fmri(custom11) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/motion_assessment/motion_parameters/sub-014_ses-1_task-training_run-1_moco3.txt"
 
 # Orthogonalise EV 11 wrt EV 0
 set fmri(ortho11.0) 0
@@ -1155,7 +1154,7 @@ set fmri(tempfilt_yn12) 1
 set fmri(deriv_yn12) 1
 
 # Custom EV file (EV 12)
-set fmri(custom12) "MOCO4"
+set fmri(custom12) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/motion_assessment/motion_parameters/sub-014_ses-1_task-training_run-1_moco4.txt"
 
 # Gamma sigma (EV 12)
 set fmri(gammasigma12) 3
@@ -1237,7 +1236,7 @@ set fmri(tempfilt_yn13) 1
 set fmri(deriv_yn13) 1
 
 # Custom EV file (EV 13)
-set fmri(custom13) "MOCO5"
+set fmri(custom13) "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-014/ses-1/func/motion_assessment/motion_parameters/sub-014_ses-1_task-training_run-1_moco5.txt"
 
 # Orthogonalise EV 13 wrt EV 0
 set fmri(ortho13.0) 0

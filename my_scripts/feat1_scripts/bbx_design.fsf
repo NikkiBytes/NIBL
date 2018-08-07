@@ -1,4 +1,3 @@
-
 # FEAT version number
 set fmri(version) 6.00
 
@@ -227,7 +226,7 @@ set fmri(reginitial_highres_search) 90
 set fmri(reginitial_highres_dof) 3
 
 # Registration to main structural
-set fmri(reghighres_yn) 0
+set fmri(reghighres_yn) 1
 
 # Search space for registration to main structural
 # 0   : No search
@@ -266,7 +265,7 @@ set fmri(regstandard_nonlinear_warpres) 10
 set fmri(paradigm_hp) 100
 
 # Total voxels
-set fmri(totalVoxels) 41101200
+set fmri(totalVoxels) 25930800
 
 
 # Number of lower-level copes feeding into higher-level analysis

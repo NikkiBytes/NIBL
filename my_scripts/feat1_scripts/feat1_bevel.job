@@ -10,4 +10,4 @@
 
 module load /home/nbytes/modules/modulefiles/fsl/5.0.10
 
-/usr/bin/python /projects/niblab/scripts/runlevel1.py
+/usr/bin/python /projects/niblab/bids_projects/Experiments/BBx/runlevel1.py

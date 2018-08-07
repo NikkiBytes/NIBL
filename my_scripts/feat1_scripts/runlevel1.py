@@ -12,8 +12,8 @@ from multiprocessing import Pool
 
 
 
-basedir='/projects/niblab/bids_projects/Experiments/Bevel/data'
-all_data=glob.glob(os.path.join(basedir, 'derivatives', 'sub*', 'func', 'Analysis', 'sub*.fsf'))
+basedir='/projects/niblab/bids_projects/Experiments/BBx'
+all_data=glob.glob(os.path.join(basedir, 'derivatives', 'sub*', 'ses-1', 'func', 'Analysis', 'sub*.fsf'))
 
 
 def split_list(a_list):
@@ -29,9 +29,9 @@ def run_level1(DATA):
             print('starting to run on %s'%item)
             os.system("feat %s"%item)
     except Exception:
-        with open("bad_subject_files.txt", 'a') as f:
+        with open(basedir+"/bad_subject_files.txt", 'a') as f:
             f.write("Bad file: ", item)
-            f.close()  
+            f.close()
 
 if __name__ == '__main__':
    pool = Pool(processes=2)
