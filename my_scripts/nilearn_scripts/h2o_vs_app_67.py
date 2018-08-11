@@ -8,6 +8,8 @@ Created on Thu Feb  1 10:56:59 2018
 @author: jennygilbert extended upon by nicholletteacosta
 
 """
+import matplotlib as mlp
+mlp.use("Agg")
 import matplotlib.pyplot as plt
 import os
 import numpy as np
@@ -84,8 +86,8 @@ subs = func_df['subs']
 #To keep only data corresponding to app food or unapp food, we create a mask of the samples belonging to the condition.
 #condition_mask = np.logical_or(y_mask == b'app',y_mask == b'unapp')
 #condition_mask = func_df["labels"].isin(['app', 'unapp'])
-condition_mask = func_df["labels"].isin(['app', 'unapp', 'H2O'])
-#condition_mask = condition_mask_partA.append(condition_mask_partB,ignore_index=True)
+condition_mask = func_df["labels"].isin(['app', 'unapp'])
+#condition_mask = func_df["labels"].isin(['app', 'unapp', 'H2O'])
 print(condition_mask.shape)
 #y = y_mask[condition_mask]
 y = y_mask[condition_mask]
@@ -127,6 +129,7 @@ for gamma in [0.001, 0.01, 0.1, 1, 10, 100]:
 print("Best Score: {:.2f}".format(best_score))
 print("Best Parameters: {}".format(best_parameters))
 """
+svc = SVC()
 svc = SVC(kernel='linear', verbose=False)
 print(svc)
 from sklearn.feature_selection import SelectPercentile, f_classif

@@ -40,21 +40,26 @@ imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
 #plotting.plot_roi(imag_mask,bg_img=average_ana,cmap='Paired')
 #load labels for the functional data
 stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_67_sub.csv')
-#labels = np.recfromcsv(stim, delimiter=",",encoding='UTF-8')
-#print(labels)
+
 #Its shape corresponds to the number of time-points times the number of voxels in the mask
+# loading target information as string and give a numerical identifier to each
 labels_df = pd.read_csv(stim, sep=",")
-labels_df = labels_df[labels_df.labels != "trash"]
-#Retrieve the behavioral targets, that we are going to predict in the decoding
-#y_mask = labels['labels']
-#subs = labels['subs']
-stimuli =  labels_df['labels']
-#subs = func_df['subs']
+labels_df = labels_df[labels_df.labels != "trash"] #remove 'trash' data
+
+#Retrieve the behavioral targets that we are going to predict in the decoding
+#Restrict analysis to 'unapp', 'app', 'H2O'
+stimuli =  labels_df['labels'] #Stimuli dataframe holds the string labels
+
+# identify and remove resting state data
 task_mask = (stimuli != 'rest')
+
+# find the names of remaining labels 
 categories = stimuli[task_mask].unique()
+
+#extract tags indicating to which acquisition run a tag belongs
 session_labels = labels_df["subs"][task_mask]
 
 
 
 nifti_masker = NiftiMasker(mask_img=imag_mask, smoothing_fwhm=4,standardize=True)
-fmri_trans = nifti_masker.fit_transform(fmri_subjs)
+masked_timecourses = nifti_masker.fit_transform(fmri_subjs)[task_mask]

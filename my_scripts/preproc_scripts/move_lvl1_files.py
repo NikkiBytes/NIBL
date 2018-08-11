@@ -30,39 +30,47 @@ def set_paths():
     global deriv_path
     global subjects
     #basedir=input("Enter your base directory input path: ")
-    basedir="/projects/niblab/bids_projects/Experiments/BBx"
+    basedir="/projects/niblab/bids_projects/Experiments/EricData/data"
     #deriv_path=input("Enter your derivatives path: ")
     deriv_path=os.path.join(basedir, "derivatives")
-    subjects=[]
+    subjects = glob.glob("/projects/niblab/bids_projects/Experiments/EricData/data/fmriprep/sub-*")
+    print(subjects)
+    """subjects=[]
     os.chdir(deriv_path)
     listOfSubjects = os.listdir('.')
     for file in listOfSubjects:
         if 'sub-' in file:
             subjects.append(file)
+    """
 
 # THE MOVE_ANATS METHOD MOVES OUR NIFTI FILES FROM FMRIPREP INTO OUR ~/derivatives directory
 # !-- MAY NEED TO COPY FILES (TO KEEP elFMRIPREP?)
 def move_anats():
     errors = []
     print ("STARTING THE MOVE FILES PROCESS.........")
-    for sub in subjects:
-        fmriprep_path=os.path.join(basedir, 'fmriprep', 'ses-1', sub, 'intermediate_results/fmriprep_wf/', 'single_subject_%s_wf'%(sub.split('-')[1]),'anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*nii.gz')
-        anat_output_path=os.path.join(deriv_path,sub, 'ses-1', 'anat')
-        #print("FMRIPREP PATH: ", fmriprep_path)
+    for sub_file in subjects:
+        sub = sub_file.split("/")[-1]
+        print("SUBJECT >>>> %s \nSUBJECT FILE >>>> %s" %(sub, sub_file))
+        #/EricData/data/fmriprep/sub-152/ses-2/fmriprep_wf
+        #/single_subject_152_wf/anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip
+        fmriprep_path=os.path.join(sub_file, 'ses-2', 'fmriprep_wf/', 'single_subject_*','anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*nii.gz')
+        anat_output_path=os.path.join(deriv_path,sub, 'ses-2', 'anat')
         #print("OUTPUT PATH: ", anat_output_path)
         for file in glob.glob(fmriprep_path):
             try:
                 #print("Moving file, %s , into directory located at, %s \n"%(file, anat_output_path))
                 #shutil.move(file, anat_output_path)
-                print("Copying file, %s , into directory located at, %s \n"%(file, anat_output_path))
-                shutil.copy2(file, anat_output_path)
+                print("Copying file  %s ---------------------------------------> %s \n"%(file, anat_output_path))
+                shutil.copy(file, anat_output_path)
             except shutil.Error as error:
                 errors.extend(error.args[0])
-                print("SHUTIL ERRROR, FILE ALREADY EXISTS")
+                print(">>>>>>>>>>>>ERRROR")
 
 
 set_paths()
 move_anats()
+
+
 
 # move relevant data
 #derivatives_dir = '/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives'
