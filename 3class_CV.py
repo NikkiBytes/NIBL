@@ -1,4 +1,3 @@
-
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
@@ -23,11 +22,7 @@ from nilearn import image
 from nilearn.plotting import plot_stat_map, show
 from sklearn.dummy import DummyClassifier
 
-# ---STEP 1---
-#Cncatenate the imagine data into a NIFTI-2 file.
-#Note: the data does not fit into a NIFTI-1 file, due to large number of subs.
 
-#set basepath
 basepath=os.path.join('/projects','niblab','data','eric_data','W1','imagine')
 outpath = "/projects/niblab/nilearn_projects"
 #make a list of the files to concat
@@ -37,41 +32,33 @@ half_func = all_func[:67]
 # ---STEP 2---
 #load & prepare MRI data
 #load, fxnl, anatomical, & mask for plotting
-fmri_subjs=os.path.join(outpath, 'concatenated_imagine_67.nii')
-#fmri_subjs=os.path.join(outpath, 'concatenated_imagine_all.nii')
+#fmri_subjs=os.path.join(outpath, 'concatenated_imagine_67.nii')
+fmri_subjs=os.path.join(outpath, 'concatenated_imagine_all.nii')
 average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
 imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
 #plot mask (Power ROIs) over anatomical that is defined above
 #plotting.plot_roi(imag_mask,bg_img=average_ana,cmap='Paired')
 #load labels for the functional data
-stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_67_sub.csv')
-#stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_all_sub.csv')
+#stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_67_sub.csv')
+stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_all_sub.csv')
 
 orig_data = pd.read_csv(stim, sep=",")
-y = orig_data["labels"] #'labels' for half_func
-session = orig_data["subs"] #'subs' for half_func
+y = orig_data["label"] #'labels' for half_func
+session = orig_data["sub"] #'subs' for half_func
 
-
-#condition_mask = y.isin(['app', 'unapp'])
-condition_mask = y.isin(['unapp', 'H2O'])
+condition_mask = y.isin(['app', 'unapp', 'H2O'])
 y = y[condition_mask]
-
-
-
 n_conditions = np.size(np.unique(y))
 print(n_conditions)
+
 nifti_masker = NiftiMasker(mask_img=imag_mask, sessions=session,smoothing_fwhm=4,standardize=True, memory_level=1)
 X = nifti_masker.fit_transform(fmri_subjs)
 print(X)
 X = X[condition_mask]
 session = session[condition_mask]
 
-
-from sklearn.svm import SVC
-#svc = SVC(verbose=False)
-svc = SVC(kernel='linear', verbose=False)
-
-feature_selection = SelectKBest(f_classif, k=500)
+svc = SVC(kernel='linear',verbose=False)
+feature_selection = SelectKBest(f_classif, k=1500)
 anova_svc = Pipeline([('anova', feature_selection), ('svc', svc)])
 np.warnings.filterwarnings('ignore')
 k_range = [10, 15, 30, 50, 150, 300, 500, 1000, 1500, 3000, 5000]
@@ -85,26 +72,3 @@ for k in k_range:
     y_pred = anova_svc.predict(X[session == 1])
     scores_validation.append(np.mean(y_pred == y[session == 1]))
     print("score validation: %.4f" % scores_validation[-1])
-
-
-grid = GridSearchCV(anova_svc, param_grid={'anova__k': k_range}, verbose=1, n_jobs=2)
-nested_cv_scores = cross_val_score(grid, X, y)
-classification_accuracy = np.mean(nested_cv_scores)
-print("Classification accuracy: %.4f / Chance level: %f" %(classification_accuracy, 1. / n_conditions))
-
-
-plt.figure(figsize=(6, 4))
-plt.plot(cv_scores, color="#33ccff",label='Cross validation scores')
-plt.plot(scores_validation, color="#bf00ff", label='Left-out validation data scores')
-plt.xticks(np.arange(len(k_range)), k_range)
-plt.axis('tight')
-plt.xlabel('k')
-plt.ylabel('%')
-plt.title("CV For H2O vs. App w/ linear kernel (67 subjects) ")
-plt.axhline(np.mean(nested_cv_scores),
-            label='Nested cross-validation',
-            color='#33cc33')
-
-plt.legend(loc='upper left',bbox_to_anchor=(1.04,1))
-plt.show()
-plt.savefig("/projects/niblab/nilearn_projects/h2O_vs_app_CV_67", bbox_inches = "tight" )
