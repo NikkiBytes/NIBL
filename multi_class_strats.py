@@ -22,6 +22,7 @@ from sklearn.grid_search import GridSearchCV
 from nilearn import image
 from nilearn.plotting import plot_stat_map, show
 from sklearn.dummy import DummyClassifier
+np.warnings.filterwarnings('ignore')
 
 
 basepath=os.path.join('/projects','niblab','data','eric_data','W1','imagine')
@@ -56,3 +57,60 @@ unique_conditions, order = np.unique(y, return_index=True)
 unique_conditions = unique_conditions[np.argsort(order)]
 
 nifti_masker = NiftiMasker(mask_img=imag_mask, sessions=session,smoothing_fwhm=4,standardize=True, memory_level=1)
+X = nifti_masker.fit_transform(fmri_subjs)
+
+
+X = X[non_rest]
+session = session[non_rest]
+
+X = X[non_trash]
+session = session[non_trash]
+
+from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
+svc_ovo = OneVsOneClassifier(Pipeline([
+    ('anova', SelectKBest(f_classif, k=500)),
+    ('svc', SVC(kernel='linear'))
+]))
+
+svc_ova = OneVsRestClassifier(Pipeline([
+    ('anova', SelectKBest(f_classif, k=500)),
+    ('svc', SVC(kernel='linear'))
+]))
+
+
+cv_scores_ovo = cross_val_score(svc_ovo, X, y, cv=5, verbose=1)
+
+cv_scores_ova = cross_val_score(svc_ova, X, y, cv=5, verbose=1)
+
+print('OvO:', cv_scores_ovo.mean())
+print('OvA:', cv_scores_ova.mean())
+
+
+plt.figure(figsize=(4, 3))
+plt.boxplot([cv_scores_ova, cv_scores_ovo])
+plt.xticks([1, 2], ['One vs All', 'One vs One'])
+plt.title('Prediction: accuracy score')
+plt.show()
+plt.savefig("/projects/niblab/nilearn_projects/multi-class_strats_box_whisker_plot", bbox_inches = "tight" )
+
+
+
+from sklearn.metrics import confusion_matrix
+from nilearn.plotting import plot_matrix
+
+svc_ovo.fit(X[session < 10], y[session < 10])
+y_pred_ovo = svc_ovo.predict(X[session >= 10])
+
+plot_matrix(confusion_matrix(y_pred_ovo, y[session >= 10]),
+            labels=unique_conditions,
+            title='Confusion matrix: One vs One', cmap='hot_r')
+
+svc_ova.fit(X[session < 10], y[session < 10])
+y_pred_ova = svc_ova.predict(X[session >= 10])
+
+plot_matrix(confusion_matrix(y_pred_ova, y[session >= 10]),
+            labels=unique_conditions,
+            title='Confusion matrix: One vs All', cmap='hot_r')
+
+plt.show()
+plt.savefig("/projects/niblab/nilearn_projects/multi-class_strats_confusion_matrix", bbox_inches = "tight" )

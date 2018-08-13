@@ -67,6 +67,9 @@ X = X[condition_mask]
 session = session[condition_mask]
 
 
+np.warnings.filterwarnings('ignore')
+
+
 from sklearn.svm import SVC
 #svc = SVC(verbose=False)
 svc = SVC(kernel='linear', verbose=False)
@@ -100,11 +103,11 @@ plt.xticks(np.arange(len(k_range)), k_range)
 plt.axis('tight')
 plt.xlabel('k')
 plt.ylabel('%')
-plt.title("CV For H2O vs. App w/ linear kernel (67 subjects) ")
+plt.title("CV For H2O vs. Unapp w/ linear kernel (67 subjects) ")
 plt.axhline(np.mean(nested_cv_scores),
             label='Nested cross-validation',
             color='#33cc33')
 
 plt.legend(loc='upper left',bbox_to_anchor=(1.04,1))
 plt.show()
-plt.savefig("/projects/niblab/nilearn_projects/h2O_vs_app_CV_67", bbox_inches = "tight" )
+plt.savefig("/projects/niblab/nilearn_projects/h2O_vs_unapp_CV_67", bbox_inches = "tight" )
