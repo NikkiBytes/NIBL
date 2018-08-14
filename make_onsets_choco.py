@@ -10,15 +10,14 @@ mlkA = glob.glob(os.path.join(mlkDir, "mkA*"))
 mlkB = glob.glob(os.path.join(mlkDir, "mkB*"))
 mlkC = glob.glob(os.path.join(mlkDir, "mkC*"))
 mlkD = glob.glob(os.path.join(mlkDir, "mkD*"))
-
 subs = glob.glob(os.path.join("/projects/niblab/bids_projects/Experiments/EricData/data/derivatives", "sub-*"))
 
 for sub in subs:
-    funcDir = os.path.join(sub, "ses-2/func")
-    newDest = os.path.join(sub, "ses-2/func/onsets")
+    funcDir = os.path.join(sub, "ses-4/func")
+    newDest = os.path.join(sub, "ses-4/func/onsets")
     curr_mlks = glob.glob(os.path.join(funcDir, "*milkshake*"))
     if not curr_mlks:
-        print(">>>>>>>>>>>>> NO DATE FOR ", sub.split("/")[-1])
+        print(">>>>>>>>>>>>> NO DATA FOR ", sub.split("/")[-1])
         pass
     else:
         print(">>>>>>>>>>>>> SUBJECTS: ", sub.split("/")[-1])

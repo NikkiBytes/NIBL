@@ -13,7 +13,7 @@ from multiprocessing import Pool
 
 
 basedir='/projects/niblab/bids_projects/Experiments/BBx'
-all_data=glob.glob(os.path.join(basedir, 'derivatives', 'sub*', 'ses-1', 'func', 'Analysis', 'sub*.fsf'))
+all_data=glob.glob(os.path.join(basedir, 'derivatives', 'sub*', 'ses-2', 'func', 'Analysis', 'sub*.fsf'))
 
 
 def split_list(a_list):

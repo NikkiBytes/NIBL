@@ -27,7 +27,7 @@ def get_subjects():
     global basedir
     subjects = []
     basedir=input("Enter the main directory: ")
-    fmriprep_dir=os.path.join(basedir, 'fmriprep')
+    fmriprep_dir=os.path.join(basedir, 'fmriprep', 'ses-2')
     os.chdir(fmriprep_dir)
     subjects=glob.glob("sub-*")
     #print("SUBJECTS: ", subjects)
@@ -43,15 +43,15 @@ def write_files(task, run, moco_df, outputdir, sub):
     # writing individual columns to individual files
     for col in moco_df.columns:
         if run != None:
-            filename = "%s_%s_%s_%s.txt"%(sub, task, run, col)
+            filename = "%s_ses-2_%s_%s_%s.txt"%(sub, task, run, col)
             print("%s || %s || %s || %s"%(sub, task, run, col))
             print("WRITING TO FILE >>>>>>>>>>>>>>>>>>>>>>> %s"%filename)
         else:
             #filename = "%s_task-rest.txt"%(sub)
-            filename = "%s_ses-4_%s_%s.txt"%(sub, task, col)
+            filename = "%s_ses-2_%s_%s.txt"%(sub, task, col)
             print("WRITING TO FILE >>>>>>>>>>>>>>>>>>>>>>> %s"%filename)
         output_path=os.path.join(outputdir, filename)
-        #print("Writing to file, ", output_path)
+        print("Writing to file, ", output_path)
         moco_df[col].to_csv(output_path, header=False, index=False)
 
 
@@ -84,14 +84,15 @@ def get_data():
     for sub in subjects:
         try:
             print("--------------> GETTING MOCOS FOR SUBJECT: ", sub)
-            filepath=os.path.join(basedir, 'fmriprep', sub, 'ses-4', 'fmriprep', sub, 'ses-4','func')
-            outputdir=os.path.join(basedir, 'derivatives', sub, 'wave4', 'func', 'motion_assessment')
+            filepath=os.path.join(basedir, 'fmriprep','ses-2', sub, 'fmriprep', sub, 'ses-2','func')
+            outputdir=os.path.join(basedir, 'derivatives', sub, 'ses-2', 'func', 'motion_assessment')
             if not os.path.exists(os.path.join(outputdir, 'motion_parameters')):
                 os.makedirs(os.path.join(outputdir,  'motion_parameters'))
             outputdir=os.path.join(outputdir, 'motion_parameters')
             print(">>>>>>>FILEPATH: %s >>>>>>>>OUTPUT DIRECTORY: %s"%(filepath, outputdir))
             os.chdir(filepath)
             for run in glob.glob("*confounds.tsv"):
+                print("---------------------------------------------> GRABBING NEW FILE:")
                 print("FILE: ", run)
                 df = pd.read_table(run)
                 moco_df=df[['X', 'Y', 'Z', 'RotX', 'RotY', 'RotZ']]
@@ -103,8 +104,18 @@ def get_data():
                     if 'task' in word:
                         task=word
                         print("TASK: ", task)
-                        run_id=None
-                write_files(task, run_id, moco_df, outputdir,sub)
+                        #run_id=None
+                        if task == "task-rest":
+                            run_id=None
+                            write_files(task, run_id, moco_df, outputdir,sub)
+                            print(">>>>>>>>RUN: %s"%run)
+                        else:
+                            for word in name:
+                                if 'run' in word:
+                                    run_id=word
+                                    print(">>>>>>>>RUN: %s"%run)
+                            write_files(task, run_id, moco_df,outputdir,sub)
+                #write_files(task, run_id, moco_df, outputdir,sub)
                 #print("RUN: ", run)
         except FileNotFoundError as not_found:
             print("********************FILE NOT FOUND: ", not_found.filename)
@@ -115,7 +126,7 @@ def get_data():
         errors = sorted(errors)
     for err in errors:
             #print("ERROR" + err)
-        file = basedir+"/error_files_wave4.txt"
+        file = basedir+"/error_files_ses-2.txt"
         with open(file, 'a') as f:
             f.write("--------------------------------> FILE NOT FOUND FOR SUBJECT: " + err  + "\n")
             f.close()

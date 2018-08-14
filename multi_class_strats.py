@@ -86,7 +86,7 @@ print('OvO:', cv_scores_ovo.mean())
 print('OvA:', cv_scores_ova.mean())
 
 
-plt.figure(figsize=(4, 3))
+plt.figure(figsize=(6,4))
 plt.boxplot([cv_scores_ova, cv_scores_ovo])
 plt.xticks([1, 2], ['One vs All', 'One vs One'])
 plt.title('Prediction: accuracy score')
@@ -98,19 +98,18 @@ plt.savefig("/projects/niblab/nilearn_projects/multi-class_strats_box_whisker_pl
 from sklearn.metrics import confusion_matrix
 from nilearn.plotting import plot_matrix
 
-svc_ovo.fit(X[session < 10], y[session < 10])
-y_pred_ovo = svc_ovo.predict(X[session >= 10])
+svc_ovo.fit(X[session < 1], y[session < 1])
+y_pred_ovo = svc_ovo.predict(X[session >= 1])
 
-plot_matrix(confusion_matrix(y_pred_ovo, y[session >= 10]),
-            labels=unique_conditions,
-            title='Confusion matrix: One vs One', cmap='hot_r')
-
-svc_ova.fit(X[session < 10], y[session < 10])
-y_pred_ova = svc_ova.predict(X[session >= 10])
-
-plot_matrix(confusion_matrix(y_pred_ova, y[session >= 10]),
-            labels=unique_conditions,
-            title='Confusion matrix: One vs All', cmap='hot_r')
-
+plot_matrix(confusion_matrix(y_pred_ovo, y[session >= 1]),labels=unique_conditions, cmap='plasma')
+plt.title('Confusion matrix: One vs One')
 plt.show()
-plt.savefig("/projects/niblab/nilearn_projects/multi-class_strats_confusion_matrix", bbox_inches = "tight" )
+plt.savefig("/projects/niblab/nilearn_projects/multi-class_strats_confusion_matrix_OvO", bbox_inches = "tight" )
+svc_ova.fit(X[session < 1], y[session < 1])
+y_pred_ova = svc_ova.predict(X[session >= 1])
+
+plot_matrix(confusion_matrix(y_pred_ova, y[session >= 1]),
+            labels=unique_conditions, cmap='plasma')
+plt.title('Confusion matrix: One vs All')
+plt.show()
+plt.savefig("/projects/niblab/nilearn_projects/multi-class_strats_confusion_matrix_OvA", bbox_inches = "tight" )
