@@ -2,10 +2,10 @@ import glob
 import os
 
 path="/projects/niblab/bids_projects/Experiments/BBx"
-outfile=os.path.join(path, "BBx_ses-1_QC_fmriprep.html")
+outfile=os.path.join(path, "BBx_ses-2_QC_fmriprep.html")
 os.remove(outfile)
 f = open(outfile, 'w')
-subjects = glob.glob(os.path.join(path, 'fmriprep', 'ses-1', 'sub-*'))
+subjects = glob.glob(os.path.join(path, 'fmriprep', 'ses-2', 'sub-*'))
 sub_dict = {}
 
 def make_dict(ID):
@@ -52,6 +52,7 @@ for sub in subjects:
 
 
 for sub in sorted(sub_dict):
+    f.write("<p><font size=12>fMRIprep Quality Check, BBx, Session 2</font><br>")
     f.write("<p><b><font size=10> %s </font></b><br>"%sub)
     print("---------------> WRITING ANATOMICAL FILES TO HTML ", sub)
     anat = sub_dict[sub]["T1w"]
