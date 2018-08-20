@@ -63,13 +63,12 @@ def set_paths():
 
 def set_dict(sub):
     main_dict[sub] = { }
-    for task in arglist["TASK"]:
-        main_dict[sub][task] = {}
+def fill_keys(task, sub):
+    main_dict[sub][task] = {}
 
 
 ############################################################################################################
 # CHECK REGISTRATION METHOD
-#
 ############################################################################################################.
 
 
@@ -87,57 +86,52 @@ def check_registartion(sub):
     else:
         print("skipping registration......")
         for sub in main_dict: #iterate through subjects
-            for task in arglist["TASK"]: #iterate through runs
-                if not main_dict[sub][task]:
-                    print("********************************EMPTY")
-                else:
-                    with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
-                        tempfsf=infile.read()
-                        out = main_dict[sub][task]["OUTPUT"]
-                        func = main_dict[sub][task]["FUNCRUN"]
-                        time = main_dict[sub][task]["NTIMEPOINT"]
-                        con = main_dict[sub][task]["CONFOUND"]
-                        anat = main_dict[sub]['ANAT']
+            for key in main_dict[sub]:
+                if key != "ANAT":
+                    task = key
+                    if not main_dict[sub][task]:
+                        print("********************************EMPTY")
+                    else:
+                        with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
+                            tempfsf=infile.read()
+                            out = main_dict[sub][task]["OUTPUT"]
+                            func = main_dict[sub][task]["FUNCRUN"]
+                            time = main_dict[sub][task]["NTIMEPOINT"]
+                            con = main_dict[sub][task]["CONFOUND"]
+                            anat = main_dict[sub]['ANAT']
 
-                        print("----------------------> TASK: ", task)
-                        print("----------------------> OUT: ", out)
-                        print("----------------------> FUNC: ", func)
-                        print("----------------------> TIME: ", time)
-                        print("----------------------> CONFOUND: ", con)
-
-
-                    """tempfsf = tempfsf.replace("OUTPUT", out)
-                    tempfsf = tempfsf.replace("FUNCRUN", func) #4D AVW DATA
-                    tempfsf = tempfsf.replace("NTPTS", time)
-                    tempfsf = tempfsf.replace("CONFOUND", con)"""
-
-                        for key in main_dict[sub][task]:
-                            if re.match(r'EV[0-9]', key):
-                                ev_title = key
-                                ev = main_dict[sub][task][key]
-                                print("----------------------> EVTITLE: ", ev_title)
+                            print("----------------------> TASK: ", task)
+                            print("----------------------> ANAT: ", anat)
+                            print("----------------------> OUT: ", out)
+                            print("----------------------> FUNC: ", func)
+                            print("----------------------> TIME: ", time)
+                            print("----------------------> CONFOUND: ", con)
+                            tempfsf = tempfsf.replace("OUTPUT", out)
+                            tempfsf = tempfsf.replace("FUNCRUN", func) #4D AVW DATA
+                            tempfsf = tempfsf.replace("NTPTS", time)
+                            tempfsf = tempfsf.replace("CONFOUND", con)
+                            tempfsf = tempfsf.replace("ANAT", anat)
+                            for i in range(8):
+                                ev = main_dict[sub][task]["EV%i"%(i+1)]
+                                n = i + 1
                                 print("-----------> %s"%ev)
-                            #tempfsf = tempfsf.replace("EV%sTITLE"%n, ev_title)
-                            #tempfsf = tempfsf.replace("EV%s"%n, ev)
+                                tempfsf = tempfsf.replace("EV%i"%n, ev)
 
                             for i in range(6):
                                 moco = main_dict[sub][task]["MOCO%i"%i]
-                #        tempfsf = tempfsf.replace("MOCO%i"%i, moco)
-                            print("----------------------> MOCO%i: "%i , main_dict[sub][task]["MOCO%i"%i])
+                                print("-------------------------> MOCO: ", moco)
+                                tempfsf = tempfsf.replace("MOCO%i"%i, moco)
                             outpath= os.path.join(outdir, sub, arglist["SESS"], 'func', 'Analysis')
                             print("----------------------> OUTPATH: ", outpath)
                             if not os.path.exists(outpath):
                                 os.makedirs(outpath)
 
-                                print("__________________________________________________________")
-                #    print(tempfsf)
-                        print("__________________________________________________________")
-
-                #print(main_dict[key])
-            #        with open(os.path.join(outpath,'%s_%s_task-%s_run-%s_no_reg.fsf'%(sub,arglist["SESS"],arglist['TASK'], run)),'w') as outfile:
-            #            outfile.write(tempfsf)
-            #        outfile.close()
-            #    infile.close()
+                        with open(os.path.join(outpath,'%s_%s_task-%s_no_reg.fsf'%(sub,arglist["SESS"],task)),'w') as outfile:
+                            outfile.write(tempfsf)
+                        outfile.close()
+                        infile.close()
+                else:
+                    pass
 
 
 
@@ -150,7 +144,7 @@ def check_registartion(sub):
 def fill_dict(subj):
     #print("SUBJ: ", subj)
     for sub in main_dict:
-        print("------------------------> SUBJECT: ",sub)
+        #print("------------------------> SUBJECT: ",sub)
             # -- OUTPUT -- directory where output will go
     # -- THE SUBEJCT
     #repl_dict.update({'SUB':sub})
@@ -159,7 +153,7 @@ def fill_dict(subj):
         data_dir = os.path.join(deriv_dir, sub, arglist["SESS"])
 
 
-        print("DATA DIRECTORY >>>>>> ", data_dir)
+        #print("DATA DIRECTORY >>>>>> ", data_dir)
         #only getting milkshakes
         curr_funcs = glob.glob(os.path.join(data_dir, 'func', '*milkshake*bold_brain.nii.gz'))
         f = open(os.path.join(deriv_dir, "feat1_error_ses-2.txt"), "w")
@@ -171,48 +165,48 @@ def fill_dict(subj):
             for word in words:
                 if 'task' in word:
                     task = word.split("-")[1]
-
-            print("TASK %s | SUB %s "%(task, sub))
+                    fill_keys(task, sub)
+            #print("TASK %s | SUB %s "%(task, sub))
 
             anat = os.path.join(data_dir, 'anat', 'highres001_BrainExtractionBrain.nii.gz')
-            main_dict[sub]['ANAT'] = anat
-            print("ANAT >>>>>>>>>>>>>>>>> ", anat)
+            main_dict[sub]['ANAT'] = anat.split('.')[0]
+            #print("ANAT >>>>>>>>>>>>>>>>> ", anat)
 
             output=os.path.join(data_dir, 'func', 'Analysis', 'feat1', 'task-%s'%task)
             main_dict[sub][task]['OUTPUT'] = output
 
-            print("OUTPUT >>>>>>>>>>>>>>>>>>> ", output)
+            #print("OUTPUT >>>>>>>>>>>>>>>>>>> ", output)
 
             #split the func (must remove "nii.gz")
             #adds to dictionary
             funcrun = func.split('.')[0]
             main_dict[sub][task]["FUNCRUN"] =  funcrun
-            print("FUNCRUN \t >>>>>>>>>>>>>>>>>>> ", funcrun)
+            #print("FUNCRUN \t >>>>>>>>>>>>>>>>>>> ", funcrun)
 
     # -- THE TIMEPOINTS -- found by running 'fslnvols' on our scan file
             ntmpts=check_output(['fslnvols', funcrun])
             ntmpts = ntmpts.decode('utf-8')
             ntmpts = ntmpts.strip('\n')
             main_dict[sub][task]['NTIMEPOINT'] = ntmpts
-            print("TIMEPOINT >>>>>>>>>>>>>>>>>>>", ntmpts)
+            #print("TIMEPOINT >>>>>>>>>>>>>>>>>>>", ntmpts)
 
     # -- CONFOUNDS
             confound=os.path.join(data_dir, 'func','motion_assessment','%s_%s_task-%s_bold_brain_confound.txt'%(sub,arglist["SESS"], task))
             main_dict[sub][task]['CONFOUND'] = confound
-            print("CONFOUNDS >>>>>>>>>>>>>>>>>>> ", confound)
+            #print("CONFOUNDS >>>>>>>>>>>>>>>>>>> ", confound)
 
     # -- MOTION CORRECTION
             for i in range(6):
                 motcor=os.path.join(data_dir, 'func','motion_assessment', 'motion_parameters','%s_%s_task-%s_moco%s.txt' %(sub,arglist["SESS"],task,i))
                 main_dict[sub][task]['MOCO%i'%i] = motcor
-                print("MOTCOR%i >>>>>>>>>>>>>>>>>>> %s "%(i,motcor))
+                #print("MOTCOR%i >>>>>>>>>>>>>>>>>>> %s "%(i,motcor))
 
 
     # -- EVS -- here we loop through the given EVs and add the corresponding file to the dictionary
 
             for ev_id in arglist['EV']:
             #print(item)
-                print("EV >>>>>>>>>> ", ev_id)
+                #print("EV >>>>>>>>>> ", ev_id)
                 mkID = task.split("e")[1]
 
                 """
@@ -229,37 +223,39 @@ def fill_dict(subj):
 
                 if ev_id == "h2O_receipt":
                     ev=os.path.join(data_dir,'func','onsets','mk%s_h20_receipt.ev'%mkID)
-                    print("EV FILE >>>>>>>>>>>>>>> ", ev)
+                    #print("EV FILE >>>>>>>>>>>>>>> ", ev)
                     main_dict[sub][task]['EV1'] = ev
                 elif ev_id == "HF_HS_receipt":
                     ev=os.path.join(data_dir,'func','onsets','mk%s_HF_HS_receipt.ev'%mkID)
-                    print("EV FILE >>>>>>>>>>>>>>> ", ev)
+                    #print("EV FILE >>>>>>>>>>>>>>> ", ev)
                     main_dict[sub][task]['EV2'] = ev
                 elif ev_id == "HF_LS_receipt":
                     ev=os.path.join(data_dir,'func','onsets','mk%s_HF_LS_receipt.ev'%mkID)
-                    print("EV FILE >>>>>>>>>>>>>>> ", ev)
+                    #print("EV FILE >>>>>>>>>>>>>>> ", ev)
                     main_dict[sub][task]['EV3'] = ev
                 if ev_id == "LF_HS_receipt":
                     ev=os.path.join(data_dir,'func','onsets','mk%s_LF_HS_receipt.ev'%mkID)
-                    print("EV FILE >>>>>>>>>>>>>>> ", ev)
+                    #print("EV FILE >>>>>>>>>>>>>>> ", ev)
                     main_dict[sub][task]['EV4'] = ev
                 if ev_id == "LF_LS_receipt":
                     ev=os.path.join(data_dir,'func','onsets','mk%s_LF_LS_receipt.ev'%mkID)
-                    print("EV FILE >>>>>>>>>>>>>>> ", ev)
+                    #print("EV FILE >>>>>>>>>>>>>>> ", ev)
                     main_dict[sub][task]['EV5'] = ev
                 if ev_id == "milkshake_pic":
                     ev=os.path.join(data_dir,'func','onsets','mk%s_milkshake_pic.ev'%mkID)
-                    print("EV FILE >>>>>>>>>>>>>>> ", ev)
+                    #print("EV FILE >>>>>>>>>>>>>>> ", ev)
                     main_dict[sub][task]['EV6'] = ev
                 if ev_id == "h2O_pic":
                     ev=os.path.join(data_dir,'func','onsets','mk%s_h20_pic.ev'%mkID)
-                    print("EV FILE >>>>>>>>>>>>>>> ", ev)
+                    #print("EV FILE >>>>>>>>>>>>>>> ", ev)
                     main_dict[sub][task]['EV7'] = ev
                 if ev_id == "rinse":
                     ev=os.path.join(data_dir,'func','onsets','mk%s_rinse.ev'%mkID)
-                    print("EV FILE >>>>>>>>>>>>>>> ", ev)
+                    #print("EV FILE >>>>>>>>>>>>>>> ", ev)
                     main_dict[sub][task]['EV8'] = ev
     f.close()
+
+
 
 ############################################################################################################
 # CREATE FSF FILE
@@ -274,9 +270,7 @@ def create_fsf():
         print("SUBJECT: ", sub)
         set_dict(sub)
         fill_dict(sub)
-        #print(main_dict)
-        #print(main_dict[sub]["4"])
-        #check_registartion(sub)
+        check_registartion(sub)
 
 ############################################################################################################
 # MAIN METHOD
@@ -293,5 +287,4 @@ def main():
         print("SETTING PATHS................")
         set_paths()
         create_fsf()
-        #print(main_dict["sub-001"]["1"])
 main()

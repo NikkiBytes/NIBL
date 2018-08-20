@@ -13,7 +13,7 @@ from multiprocessing import Pool
 
 
 basedir='/projects/niblab/bids_projects/Experiments/EricData/data'
-all_data=glob.glob(os.path.join(basedir, 'derivatives', 'sub*', 'ses-2', 'func', 'Analysis', 'sub*.fsf'))
+all_data=glob.glob(os.path.join(basedir, 'derivatives', 'sub*', 'ses-4', 'func', 'Analysis', 'sub*.fsf'))
 
 
 def split_list(a_list):
@@ -29,7 +29,7 @@ def run_level1(DATA):
             print('starting to run on %s'%item)
             os.system("feat %s"%item)
     except Exception:
-        with open(basedir+"/bad_files_ses-2_feat1.txt", 'a') as f:
+        with open(basedir+"/bad_files_ses-3_feat1.txt", 'a') as f:
             f.write("Bad file: ", item)
             f.close()
 
