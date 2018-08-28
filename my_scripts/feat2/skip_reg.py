@@ -6,7 +6,7 @@ import os
 import shutil
 subjects=glob.glob("/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-*")
 for sub in subjects:
-    REGSTD_DIR = os.path.join(sub, "ses-2/func/Analysis/feat1/run*.feat/reg_standard")
+    REGSTD_DIR = os.path.join(sub, "ses-2/func/Analysis/feat1/run*+.feat/reg_standard")
     regstandard_dirs = glob.glob(REGSTD_DIR)
     if not regstandard_dirs:
         pass

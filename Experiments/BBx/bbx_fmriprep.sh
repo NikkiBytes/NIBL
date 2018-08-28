@@ -28,7 +28,7 @@ fmriprep Experiments/BBx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
     --bold2t1w-dof 12 \
     --output-space template --template MNI152NLin2009cAsym \
     --debug  --ignore slicetiming \
-    -w Experiments/bbx/fmriprep/$i \
+    -w Experiments/bbx/fmriprep/ses-1/$i \
     --resource-monitor --write-graph --stop-on-first-crash
 
 echo ">>>>>>------------------------------------>FINISHING FMRIPREP FOR SUBJECT $i"
@@ -46,7 +46,7 @@ fmriprep Experiments/BBx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
     --bold2t1w-dof 12 \
     --output-space template --template MNI152NLin2009cAsym \
     --debug  --ignore slicetiming \
-    -w Experiments/bbx/fmriprep/$i \
+    -w Experiments/bbx/fmriprep/ses-1/$i \
     --resource-monitor --write-graph --stop-on-first-crash
 
 
@@ -65,7 +65,7 @@ fmriprep Experiments/BBx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
     --bold2t1w-dof 12 \
     --output-space template --template MNI152NLin2009cAsym \
     --debug  --ignore slicetiming \
-    -w Experiments/bbx/fmriprep/$i \
+    -w Experiments/bbx/fmriprep/ses-1/$i \
     --resource-monitor --write-graph --stop-on-first-crash
 
 
