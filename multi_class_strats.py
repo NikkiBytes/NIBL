@@ -45,7 +45,6 @@ stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_67_sub.
 orig_data = pd.read_csv(stim, sep=",")
 y = orig_data["labels"] #'labels' for half_func
 session = orig_data["subs"] #'subs' for half_func
-
 non_rest = (y != "rest")
 y = y[non_rest]
 non_trash = (y != "trash")
@@ -106,7 +105,7 @@ plt.title('Confusion matrix: One vs One')
 plt.show()
 plt.savefig("/projects/niblab/nilearn_projects/multi-class_strats_confusion_matrix_OvO", bbox_inches = "tight" )
 svc_ova.fit(X[session < 1], y[session < 1])
-y_pred_ova = svc_ova.predict(X[session >= 1])
+y_pred_ova = svc_ova.predilsct(X[session >= 1])
 
 plot_matrix(confusion_matrix(y_pred_ova, y[session >= 1]),
             labels=unique_conditions, cmap='plasma')
