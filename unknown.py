@@ -29,10 +29,6 @@ outpath = "/projects/niblab/nilearn_projects"
 all_func = glob.glob(os.path.join(basepath,'level1_grace_edit','cs*++.feat','filtered_func_data.nii.gz'))
 half_func = all_func[:67]
 
-# ---STEP 2---
-#load & prepare MRI data
-#load, fxnl, anatomical, & mask for plotting
-#fmri_subjs=os.path.join(outpath, 'concatenated_imagine_67.nii')
 fmri_subjs=os.path.join(outpath, 'concatenated_imagine_all.nii')
 average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
 imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
@@ -43,32 +39,21 @@ imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
 stim = os.path.join('/projects','niblab','scripts','nilean_stuff','label_all_sub.csv')
 
 orig_data = pd.read_csv(stim, sep=",")
-y = orig_data["label"] #'labels' for half_func
-session = orig_data["sub"] #'subs' for half_func
+conditions = orig_data["label"] #'labels' for half_func
 
-condition_mask = y.isin(['app', 'unapp', 'H2O', 'rest'])
-y = y[condition_mask]
-n_conditions = np.size(np.unique(y))
+condition_mask = orig_data['label'].isin(['unapp', 'app', 'rest', 'H2O'])
+conditions = conditions[condition_mask]
+
+print(conditions.unique())
+n_conditions = np.size(np.unique(conditions))
 print(n_conditions)
 
-nifti_masker = NiftiMasker(mask_img=imag_mask, sessions=session,smoothing_fwhm=4,standardize=True, memory_level=1)
-X = nifti_masker.fit_transform(fmri_subjs)
-print(X)
-X = X[condition_mask]
-session = session[condition_mask]
+session = orig_data[condition_mask].to_records(index=False)
+print(session.dtype.names)
 
-svc = SVC(kernel='linear',verbose=False)
+
+nifti_masker = NiftiMasker(mask_img=imag_mask,smoothing_fwhm=4,standardize=True, memory_level=1)
+X = nifti_masker.fit_transform(fmri_subjs)
 feature_selection = SelectKBest(f_classif, k=1500)
 anova_svc = Pipeline([('anova', feature_selection), ('svc', svc)])
 np.warnings.filterwarnings('ignore')
-k_range = [10, 15, 30, 50, 150, 300, 500, 1000, 1500, 3000, 5000]
-cv_scores = []
-scores_validation = []
-for k in k_range:
-    feature_selection.k = k
-    cv_scores.append(np.mean(cross_val_score(anova_svc, X[session < 1], y[session < 1])))
-    print("CV score: %.4f" % cv_scores[-1])
-    anova_svc.fit(X[session < 1], y[session < 1])
-    y_pred = anova_svc.predict(X[session == 1])
-    scores_validation.append(np.mean(y_pred == y[session == 1]))
-    print("score validation: %.4f" % scores_validation[-1])
