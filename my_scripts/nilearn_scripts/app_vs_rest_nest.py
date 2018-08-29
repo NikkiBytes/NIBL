@@ -65,7 +65,8 @@ print(n_conditions)
 print(y.unique())
 #session = func_df[condition_mask].to_records(index=False)
 #print(session.dtype.name)
-
+nifti_masker = NiftiMasker(mask_img=imag_mask, smoothing_fwhm=4,standardize=True, memory_level=0)
+fmri_trans = nifti_masker.fit_transform(fmri_subjs)
 print(fmri_trans)
 X = fmri_trans[condition_mask]
 subs = subs[condition_mask]
