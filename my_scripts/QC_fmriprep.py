@@ -1,9 +1,17 @@
+"""
+@author: Nicholletteacosta for NIBL uncc
+"""
+
 from bs4 import BeautifulSoup
 import glob
 import os
 from fpdf import FPDF
 
-fpath = "/projects/niblab/bids_projects/Experiments/BBx/fmriprep/ses-1/sub-*/fmriprep/sub*.html"
+
+
+#Get the fmriprep path of the subject we are quality checking, from this get the htmls
+FMRIPREP_PATH  = "/projects/niblab/bids_projects/Experiments/bbx/fmriprep/ses-1"
+fpath = os.path.join(FMRIPREP_PATH, "sub-*/fmriprep/sub*.html"
 htmls = glob.glob(fpath)
 
 

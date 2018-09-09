@@ -65,3 +65,8 @@ feature_selection = SelectKBest(f_classif, k=1000)
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
 y_pred = anova_svc.predict(X)
 cv = LeaveOneLabelOut()
+
+v = LeaveOneGroupOut()
+
+cv_scores = cross_val_score(anova_svc, X, conditions, cv=cv, groups=session)
+classification_accuracy = cv_scores.mean()
