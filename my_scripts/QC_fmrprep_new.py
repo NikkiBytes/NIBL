@@ -18,7 +18,7 @@ def make_dict(ID):
             }
 
 
-def make_run(sID, rID,svg):
+def make_run(sID, rID):
     sub_dict[sID][rID] = {
             "ROI" : None,
             "FLT" : None,
@@ -53,7 +53,7 @@ for sub in subjects:
                 print(" >>>>>>>>>>>> WRITING TRAINING FILES TO HTML")
                 print("RUN ID : ", runID)
 for sub in sorted(sub_dict):
-    f.write("<p><font size=12>fMRIprep Quality Check, BBx, Session 2</font><br>")
+    f.write("<p><font size=12>fMRIprep Quality Check, BBx, Session 1</font><br>")
     f.write("<p><b><font size=10> %s </font></b><br>"%sub)
     print("---------------> WRITING ANATOMICAL FILES TO HTML ", sub)
     for file in sub_dict[subID]["T1w"]:
@@ -91,11 +91,10 @@ for sub in sorted(sub_dict):
             roi = sub_dict[sub][run]["ROI"]
             epi2t1 = sub_dict[sub][run]["FLT"]
             carpet = sub_dict[subID][run]["CARPET"]
-            print(roi)
             f.write("<p><font size=5><b>%s</b></font><br><font size=5><b>ROIs in BOLD space </b></font> <br> \
             <font size=4>FILENAME: %s </font><br><br> <IMG SRC=\"%s\" WIDTH=1200><br> <b><font size=5> EPI to T1 registration </font> </b> <br> \
             <font size=4> FILENAME: %s </font><br> <br><IMG SRC=\"%s\" WIDTH=1200><br><br> <b><font size=5> BOLD Summary </font> </b> <br> \
-            <font size=4> FILENAME: %s </font><br> <br><IMG SRC=\"%s\" WIDTH=1200><br>"%(run,roi.split("/")[-1],roi,epi2t1.split("/")[-1], epi2t1, carpet.split("/"[-1], carpet)))
+            <font size=4> FILENAME: %s </font><br> <br><IMG SRC=\"%s\" WIDTH=1200><br>"%(run,roi.split("/")[-1],roi,epi2t1.split("/")[-1], epi2t1, carpet.split("/")[-1], carpet))
 
 
 f.close()

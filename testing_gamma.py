@@ -46,15 +46,17 @@ behavioral = pd.read_csv(stim, sep=",")
 conditions = behavioral["labels"]
 
 condition_mask = behavioral["labels"].isin(['app', 'unapp', 'H2O', 'rest'])
+condition_mask = behavioral["labels"].isin(['app', 'rest'])
+
 conditions = conditions[condition_mask]
 
 #check we have the correct unique conditions
-print(condition.unique())
+print(conditions.unique())
 
 session = behavioral[condition_mask].to_records(index=False)
 print(session.dtype.names)
 
-nifti_masker = NiftiMasker(mask_img=imag_mask, sessions=session,smoothing_fwhm=4,standardize=True, memory_level=1)
+nifti_masker = NiftiMasker(mask_img=imag_mask,smoothing_fwhm=4,standardize=True, memory_level=1)
 X = nifti_masker.fit_transform(fmri_subjs)
 
 X = X[condition_mask]
