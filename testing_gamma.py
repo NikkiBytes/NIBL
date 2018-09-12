@@ -61,7 +61,7 @@ X = nifti_masker.fit_transform(fmri_subjs)
 
 X = X[condition_mask]
 
-svc = SVC(gamma=1000)
+svc = SVC(gamma=10000)
 
 feature_selection = SelectKBest(f_classif, k=1000)
 anova_svc = Pipeline([('anova',feature_selection), ('svc',svc)])
