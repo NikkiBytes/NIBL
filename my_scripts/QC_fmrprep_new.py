@@ -50,8 +50,8 @@ for sub in subjects:
                     sub_dict[subID][runID]["FLT"] = svg
                 else:
                     sub_dict[subID][runID]["CARPET"] = svg
-                print(" >>>>>>>>>>>> WRITING TRAINING FILES TO HTML")
                 print("RUN ID : ", runID)
+
 for sub in sorted(sub_dict):
     for file in sub_dict[subID]["T1w"]:
         if "brainmask" in file:
@@ -66,51 +66,50 @@ for sub in sorted(sub_dict):
             REST_ROI_FILE = file
         elif "bold_flt_bbr" in file:
             REST_FLT_FILENAME = file.split("/")[-1]
-            REST_FLT_PATH =
+            REST_FLT_PATH =file
         else:
             REST_CARPET_FILENAME = file.split("/")[-1]
             REST_CARPET_PATH = file
-
     for key2 in sub_dict[sub]:
         if "run" in key2:
             run = key2
             if "1" in run:
                 ROIS_PATH_1 = sub_dict[sub][run]["ROI"]
                 FLT_PATH_1 = sub_dict[sub][run]["FLT"]
-                CARPET_PATH_1 = sub_dict[subID][run]["CARPET"]
+                CARPET_PATH_1 = sub_dict[sub][run]["CARPET"]
             elif "2" in run:
                 ROIS_PATH_2 = sub_dict[sub][run]["ROI"]
                 FLT_PATH_2 = sub_dict[sub][run]["FLT"]
-                CARPET_PATH_2 = sub_dict[subID][run]["CARPET"]
+                CARPET_PATH_2 = sub_dict[sub][run]["CARPET"]
             elif "3" in run:
-                BOLD_ROIS_PATH_3 = sub_dict[sub][run]["ROI"]
+                ROIS_PATH_3 = sub_dict[sub][run]["ROI"]
                 FLT_PATH_3 = sub_dict[sub][run]["FLT"]
-                CARPET_PATH_3 = sub_dict[subID][run]["CARPET"]
+                CARPET_PATH_3 = sub_dict[sub][run]["CARPET"]
             else:
                 ROIS_PATH_4 = sub_dict[sub][run]["ROI"]
                 FLT_PATH_4 = sub_dict[sub][run]["FLT"]
-                CARPET_PATH_4 = sub_dict[subID][run]["CARPET"]
-
+                CARPET_PATH_4 = sub_dict[sub][run]["CARPET"]
     TITLE = """<p><font size=12>fMRIprep Quality Check, BBx, Session 1</font><br>
     <p><b><font size=10> "{SUB}" </font></b><br>"""
+    CURR_TITLE = TITLE.format(SUB=sub)
+    f.write(CURR_TITLE)
     ANATOMICAL = """<p><b><font size=8>Anatomical</font></b><br>
     <p><font size=6>Brain mask and brain tissue segmentation of the T1w </font><br>
-    <font size=5>FILENAME: "{BRAINMASK_FILENAME}" </font><br><br>
     <IMG SRC=\"{BRAINMASK_PATH}\" WIDTH=1200> <br><br>
     <p><font size=6> T1 to MNI registration </font><br>
-    <font size=5>FILENAME: "{MNI_FILENAME}" </font><br><br>
     <IMG SRC=\"{MNI_PATH}\" WIDTH=1200> <br><br>"""
+    CURR_ANAT = ANATOMICAL.format(BRAINMASK_PATH=BRAINMASK_PATH, MNI_PATH=MNI_PATH)
+    f.write(CURR_ANAT)
     RESTING = """<p><b><font size=8>Functional</font></b><br>
     <font size=6>Task-Resting</font><br><br>
     <font size=6>ROIs in Bold Space</font><br>
-    <font size=5>FILENAME: "{REST_ROI_FILENAME}"" </font> <br><br>
     <IMG SRC=\"{REST_ROI_FILE}\" WIDTH=1200><br><br>
     <font size=6>EPI to T1 Registration</font><br>
-    <font size=5>FILENAME: "{REST_FLT_FILENAME"" </font> <br><br>
     <IMG SRC=\"{REST_FLT_PATH}\" WIDTH=1200><br><br>
     <font size=6>BOLD Summary</font><br>
-    <font size=5>FILENAME: "{REST_CARPET_FILENAME}"" </font> <br><br>
     <IMG SRC=\"{REST_CARPET_PATH}\" WIDTH=1200><br><br><br>"""
+    CURR_REST = RESTING.format(REST_ROI_FILE=REST_ROI_FILE, REST_FLT_PATH=REST_FLT_PATH, REST_CARPET_PATH=REST_CARPET_PATH)
+    f.write(CURR_REST)
     RUN1 = """<p><b><font size=6>Task-training-run-1 </font></b><br>")
     <font size=6>ROIs in Bold Space</font><br>
     <IMG SRC=\"{ROIS_PATH_1}\" WIDTH=1200><br><br>
@@ -118,6 +117,8 @@ for sub in sorted(sub_dict):
     <IMG SRC=\"{FLT_PATH_1}\" WIDTH=1200><br><br>
     <font size=6>BOLD Summary</font><br>
     <IMG SRC=\"{CARPET_PATH_1}\" WIDTH=1200><br><br><br>"""
+    CURR_RUN1 =RUN1.format(ROIS_PATH_1=ROIS_PATH_1, FLT_PATH_1=FLT_PATH_1, CARPET_PATH_1=CARPET_PATH_1)
+    f.write(CURR_RUN1)
     RUN2 = """<p><b><font size=6>Task-training-run-2 </font></b><br>")
     <font size=6>ROIs in Bold Space</font><br>
     <IMG SRC=\"{ROIS_PATH_2}\" WIDTH=1200><br><br>
@@ -125,6 +126,8 @@ for sub in sorted(sub_dict):
     <IMG SRC=\"{FLT_PATH_2}\" WIDTH=1200><br><br>
     <font size=6>BOLD Summary</font><br>
     <IMG SRC=\"{CARPET_PATH_2}\" WIDTH=1200><br><br><br>"""
+    CURR_RUN2 = RUN2.format(ROIS_PATH_2=ROIS_PATH_2, FLT_PATH_2=FLT_PATH_2, CARPET_PATH_2=CARPET_PATH_2)
+    f.write(CURR_RUN2)
     RUN3 = """<p><b><font size=6>Task-training-run-3 </font></b><br>")
     <font size=6>ROIs in Bold Space</font><br>
     <IMG SRC=\"{ROIS_PATH_3}\" WIDTH=1200><br><br>
@@ -132,6 +135,8 @@ for sub in sorted(sub_dict):
     <IMG SRC=\"{FLT_PATH_3}\" WIDTH=1200><br><br>
     <font size=6>BOLD Summary</font><br>
     <IMG SRC=\"{CARPET_PATH_3}\" WIDTH=1200><br><br><br>"""
+    CURR_RUN3 = RUN3.format(ROIS_PATH_3=ROIS_PATH_3, FLT_PATH_3=FLT_PATH_3, CARPET_PATH_3=CARPET_PATH_3)
+    f.write(CURR_RUN3)
     RUN4 = """<p><b><font size=6>Task-training-run-4 </font></b><br>")
     <font size=6>ROIs in Bold Space</font><br>
     <IMG SRC=\"{ROIS_PATH_4}\" WIDTH=1200><br><br>
@@ -139,4 +144,6 @@ for sub in sorted(sub_dict):
     <IMG SRC=\"{FLT_PATH_4}\" WIDTH=1200><br><br>
     <font size=6>BOLD Summary</font><br>
     <IMG SRC=\"{CARPET_PATH_4}\" WIDTH=1200><br><br><br>"""
+    CURR_RUN4 = RUN4.format(ROIS_PATH_4=ROIS_PATH_4, FLT_PATH_4=FLT_PATH_4, CARPET_PATH_4=CARPET_PATH_4)
+    f.write(CURR_RUN4)
 f.close()
