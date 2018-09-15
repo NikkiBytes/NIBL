@@ -50,12 +50,12 @@ def move_anats():
     print ("STARTING THE MOVE FILES PROCESS.........")
     for sub_file in subjects:
         sub = sub_file.split("/")[-1]
-        print("SUBJECT >>>> %s \nSUBJECT FILE >>>> %s" %(sub, sub_file))
-        #/EricData/data/fmriprep/sub-152/ses-2/fmriprep_wf
+        #print("SUBJECT >>>> %s \nSUBJECT FILE >>>> %s" %(sub, sub_file))
         #/single_subject_152_wf/anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip
-        fmriprep_path=os.path.join(sub_file, 'ses-2', 'fmriprep_wf/', 'single_subject_*','anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*nii.gz')
-        anat_output_path=os.path.join(deriv_path,sub, 'ses-2', 'anat')
+        fmriprep_path=os.path.join(sub_file, 'fmriprep_wf/', 'single_subject_*','anat_preproc_wf/skullstrip_ants_wf/t1_skull_strip/*BrainExtractionBrain*nii.gz')
+        anat_output_path=os.path.join(deriv_path,sub, 'ses-1', 'anat')
         #print("OUTPUT PATH: ", anat_output_path)
+        #print("FMRIPREP_PATH: ", fmriprep_path)
         for file in glob.glob(fmriprep_path):
             try:
                 #print("Moving file, %s , into directory located at, %s \n"%(file, anat_output_path))
@@ -69,10 +69,3 @@ def move_anats():
 
 set_paths()
 move_anats()
-
-
-
-# move relevant data
-#derivatives_dir = '/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives'
-#if not os.path.exists(os.path.join(derivatives_dir, sub, 'onsets')):
-#    os.makedirs(os.path.join(derivatives_dir, sub, onsets))
