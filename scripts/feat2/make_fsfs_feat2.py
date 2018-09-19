@@ -1,7 +1,7 @@
 import glob
 import os
-DER_DIR = "/projects/niblab/bids_projects/Experiments/BBx/derivatives"
-SUB_DIR = "/projects/niblab/bids_projects/Experiments/BBx/derivatives/sub-*"
+DER_DIR = "/projects/niblab/bids_projects/Experiments/bbx/derivatives"
+SUB_DIR = "/projects/niblab/bids_projects/Experiments/bbx/derivatives/sub-*"
 SUB_DIRS = glob.glob(SUB_DIR)
 
 for sub in SUB_DIRS:
@@ -38,7 +38,7 @@ for sub in SUB_DIRS:
                 tempfsf = tempfsf.replace(run, run_path)
         OUTFILE_PATH = os.path.join(FEAT2_DIR, "%s_design.fsf"%subject)
         print("OUTFILE ------------------------>>>> ", OUTFILE_PATH)
-        with open() as outfile:
+        with open(OUTFILE_PATH, "w") as outfile:
             outfile.write(tempfsf)
         outfile.close()
     infile.close()

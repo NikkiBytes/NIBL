@@ -29,7 +29,7 @@ for sub in subjects:
         print("--------------------------------------->>>> COPYING IDENTITY MATRIX")
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", copy_mat_cmd)
         os.system(copy_mat_cmd)
-    FEAT_PATH = os.path.join(sub, "ses-2/func/Analysis/feat1/*run*.feat")
+    FEAT_PATH = os.path.join(sub, "ses-2/func/Analysis/feat1/run*.feat")
     FEAT_PATHS = glob.glob(FEAT_PATH)
     for file in FEAT_PATHS:
         MEAN_PATH = os.path.join(file, "mean_func.nii.gz")
