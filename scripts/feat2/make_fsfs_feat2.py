@@ -17,28 +17,28 @@ for sub in SUB_DIRS:
     FEATS_PATH = os.path.join(sub, "ses-1/func/Analysis/feat1/*.feat")
     FEATS = glob.glob(FEATS_PATH)
     with open(os.path.join(DER_DIR, "design.fsf"), 'r') as infile:
-        #tempfsf=infile.read()
+        tempfsf=infile.read()
         # set outpath for fsf OUTPATH variable, by run
         outpath = os.path.join(sub, "ses-1/func/Analysis/feat2/%s"%sub)
         print(">>>>>>>>>>>>>>>>>SETTING DESIGN OUTPATH: ", outpath)
-        #tempfsf = tempfsf.replace("OUTPUT", outpath)
+        tempfsf = tempfsf.replace("OUTPUT", outpath)
         for run_path in FEATS:
             run = run_path.split("/")[-1].split(".")[0]
             if run == "run1":
                 print("> %s : %s"%(run, run_path))
-                #tempfsf = tempfsf.replace(run, run_path)
+                tempfsf = tempfsf.replace(run, run_path)
             elif run == "run2":
                 print("> %s : %s"%(run, run_path))
-                #tempfsf = tempfsf.replace(run, run_path)
+                tempfsf = tempfsf.replace(run, run_path)
             elif run == "run3":
                 print("> %s : %s"%(run, run_path))
-                #tempfsf = tempfsf.replace(run, run_path)
+                tempfsf = tempfsf.replace(run, run_path)
             else:
                 print("> %s : %s"%(run, run_path))
-                #tempfsf = tempfsf.replace(run, run_path)
+                tempfsf = tempfsf.replace(run, run_path)
         OUTFILE_PATH = os.path.join(FEAT2_DIR, "%s_design.fsf"%subject)
         print("OUTFILE ------------------------>>>> ", OUTFILE_PATH)
-        #with open() as outfile:
-        #    outfile.write(tempfsf)
-        #outfile.close()
-    #infile.close()
+        with open() as outfile:
+            outfile.write(tempfsf)
+        outfile.close()
+    infile.close()

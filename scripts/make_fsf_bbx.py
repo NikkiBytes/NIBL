@@ -51,7 +51,7 @@ def set_paths():
     global deriv_dir
     #basedir = input("Enter directory path of your data: ")
     #outdir = input("Enter directory path for your output: ")
-    basedir='/projects/niblab/bids_projects/Experiments/BBx'
+    basedir='/projects/niblab/bids_projects/Experiments/bbx'
     deriv_dir=os.path.join(basedir, 'derivatives')
     outdir=os.path.join(deriv_dir)
 
@@ -88,7 +88,7 @@ def check_registartion(sub):
         print("skipping registration......")
         for key in main_dict: #iterate through subjects
             for run in arglist["RUN"]: #iterate through runs
-                with open(os.path.join(deriv_dir,'bbx_design.fsf'),'r') as infile:
+                with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
                     tempfsf=infile.read()
                     num=int(run)
                     out = main_dict[key][run]["OUTPUT"]
