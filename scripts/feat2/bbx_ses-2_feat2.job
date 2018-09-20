@@ -10,4 +10,4 @@
 #SBATCH -o /projects/niblab/bids_projects/Experiments/BBx/feat2_%A_%a_ses-1_out.txt
 #SBATCH -e /projects/niblab/bids_projects/Experiments/BBx/feat2_%A_%a_ses-1_err.txt
 
-/projects/niblab/modules/software/fsl/5.0.10/bin/feat /projects/niblab/bids_projects/Experiments/bbx/derivatives/sub-0${SLURM_ARRAY_TASK_ID}/ses-2/func/Analysis/feat2/sub-0${SLURM_ARRAY_TASK_ID}*.fsf &
+/projects/niblab/modules/software/fsl/5.0.10/bin/feat /projects/niblab/bids_projects/Experiments/bbx/derivatives/sub-00${SLURM_ARRAY_TASK_ID}/ses-2/func/Analysis/feat2/sub-00${SLURM_ARRAY_TASK_ID}*.fsf
