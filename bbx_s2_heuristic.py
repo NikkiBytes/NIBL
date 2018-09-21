@@ -51,9 +51,9 @@ def infotodict(seqinfo):
             info[run03].append(s.series_id)  # append if multiple series meet criteria
         if  ('run04' in s.protocol_name) and ('training' in s.protocol_name) and (s.dim4 == 233):
             info[run04].append(s.series_id)
-        if  ('rl' in s.protocol_name) and ('run01' in s.protocol_name) and (s.dim4 == 212):
+        if  ('rl' in s.protocol_name) and ('run01' in s.protocol_name):
             info[run01_rl].append(s.series_id)
-        if  ('rl' in s.protocol_name) and ('run02' in s.protocol_name) and (s.dim4 == 212):
+        if  ('rl' in s.protocol_name) and ('run02' in s.protocol_name):
             info[run02_rl].append(s.series_id)
 
 
