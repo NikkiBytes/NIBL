@@ -35,7 +35,7 @@ def infotodict(seqinfo):
     info = {t1: [],  fmap_phase: [], rest: [], run01: [], run02: [], run03: [], run04: [], fmap_magnitude: [], run01_rl: [], run02_rl: []}
     for s in seqinfo:
         print(s)
-        if (s.dim3 == 192) and ('anat' in s.protocol_name):
+        if ('anat' in s.protocol_name):
             info[t1].append(s.series_id)  ## append if multiple series meet criteria
         if (s.dim3 == 72) and ('fmap' in s.protocol_name):
             info[fmap_magnitude].append(s.series_id)  ## append if multiple series meet criteria
