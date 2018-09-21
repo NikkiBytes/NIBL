@@ -1,7 +1,7 @@
 #/bin/bash
 
 # @Author: Nichollette Acosta
-# BIDS conversion automation scripts made for NIBL at Chapel Hill 
+# BIDS conversion automation scripts made for NIBL at Chapel Hill
 
 # get start variables
 get_start_variables () {
@@ -77,14 +77,14 @@ get_bids_variables () {
       DCMPATH="${DCMPATH//$STUDYNAME/$REPLACESUB}"
       REPLACESES='{session}'
       DCMPATH="${DCMPATH//$SESSION/$REPLACESES}"
-      #echo "DICOM PATH: ${DCMPATH}"
+      echo "DICOM PATH: ${DCMPATH}"
     else
    # if heuristic path exists get dicom path
       read -p "$(echo -e 'Please enter the dicom path \n***Enter sub* in placement of the sub-X and *dcm/*IMA for the raw data*** \nEnter Path: ' )"  DCMPATH
       # replace the subject name with the required subject expression for the heudiconv converter
       REPLACE='{subject}'
       DCMPATH=${DCMPATH//$STUDYNAME/$REPLACE}
-      #echo "DICOM PATH: ${DCMPATH}"
+      echo "DICOM PATH: ${DCMPATH}"
     fi
   fi
 }
@@ -101,6 +101,7 @@ bids_process () {
       DCMPATH=${DCMPATH//'sub*'/$sub1}
       echo "STARTING MULTI-SESS BIDS CONVERSION ON SUBJECT $sub1 ................................................................"
       echo "_____________________________________________________________________________________________________________________"
+      echo "${id}"
       id=$(echo $sub1 | cut -f2 -d-)
       export id
       heudiconv -b -d $DCMPATH -s $STUDYNAME -ss $SESSION -f $HEURISTICPATH \
