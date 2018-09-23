@@ -2,7 +2,7 @@
 
 
 
-cd Experiments/BevBits/data/BIDS/ses-1
+cd /home_dir/Experiments/bbx/BIDS/ses-1
 subjects=(sub*)
 arr_length=${#subjects[@]}
 let "x=$arr_length/3"
@@ -19,12 +19,12 @@ START=$(date)
 for i in ${subs1[@]}; do
 echo ">>>>>>------------------------------------>STARTING FMRIPREP ON SUBJECT $i"
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
+fmriprep /home_dir/Experiments/bbx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
     participant  \
-    --participant-label $i  \
+    --participant-label $id  \
     --fs-license-file freesurfer/license.txt \
     --fs-no-reconall \
-    --omp-nthreads 30 --n_cpus 6 \
+    --omp-nthreads 8 --n_cpus 16 \
     --bold2t1w-dof 12 \
     --output-space template --template MNI152NLin2009cAsym \
     --debug  --ignore slicetiming \
@@ -37,12 +37,12 @@ done &
 for i in ${subs2[@]}; do
 echo ">>>>>>------------------------------------>STARTING FMRIPREP ON SUBJECT $i"
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
+fmriprep /home_dir/Experiments/bbx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
     participant  \
-    --participant-label $i  \
+    --participant-label $id  \
     --fs-license-file freesurfer/license.txt \
     --fs-no-reconall \
-    --omp-nthreads 30 --n_cpus 6 \
+    --omp-nthreads 8 --n_cpus 16 \
     --bold2t1w-dof 12 \
     --output-space template --template MNI152NLin2009cAsym \
     --debug  --ignore slicetiming \
@@ -56,12 +56,12 @@ done &
 for i in ${subs3[@]}; do
 echo ">>>>>>------------------------------------>STARTING FMRIPREP ON SUBJECT $i"
 id=$(echo $i | cut -f2 -d-)
-fmriprep Experiments/BBx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
+fmriprep /home_dir/Experiments/bbx/BIDS/ses-1 Experiments/bbx/fmriprep/ses-1/$i \
     participant  \
-    --participant-label $i  \
+    --participant-label $id  \
     --fs-license-file freesurfer/license.txt \
     --fs-no-reconall \
-    --omp-nthreads 30 --n_cpus 6 \
+    --omp-nthreads 8 --n_cpus 16 \
     --bold2t1w-dof 12 \
     --output-space template --template MNI152NLin2009cAsym \
     --debug  --ignore slicetiming \

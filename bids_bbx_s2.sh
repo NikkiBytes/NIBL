@@ -1,5 +1,5 @@
 
-cd /test/raw_data/continuing_studies/BBx/session-1
+cd /test/raw_data/continuing_studies/BBx/session-2
 subjects=(sub*)
 
 subs1=${subjects[@]::$((${#subjects[@]} / 2 ))}
