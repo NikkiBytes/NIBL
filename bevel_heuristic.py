@@ -33,19 +33,19 @@ def infotodict(seqinfo):
         print(s)
         if (s.dim3 == 192) and ('anat' in s.protocol_name):
             info[t1].append(s.series_id)  ## append if multiple series meet criteria
-        if (s.dim3 == 72) and ('fmap' in s.protocol_name):
+        if (s.dim3 == 144) and ('fmap' in s.protocol_name):
             info[fmap_magnitude].append(s.series_id)  ## append if multiple series meet criteria
-        if (s.dim3 == 36) and ('fmap' in s.protocol_name):
+        if (s.dim3 == 72) and ('fmap' in s.protocol_name):
             info[fmap_phase].append(s.series_id)  # append if multiple series meet criteria
-        if  ('run01' in s.protocol_name):
+        if  ('run01_bold' in s.protocol_name):
             info[run01].append(s.series_id)  # append if multiple series meet criteria
-        if ('run02' in s.protocol_name):
+        if ('run02_bold' in s.protocol_name):
             info[run02].append(s.series_id)
-	if (s.dim4 == 150) and ('resting' in s.protocol_name):
+	    if (s.dim4 == 150) and ('resting' in s.protocol_name):
             info[rest].append(s.series_id)  # append if multiple series meet criteria
-        if ('run03' in s.protocol_name):
+        if ('run03_bold' in s.protocol_name):
             info[run03].append(s.series_id)  # append if multiple series meet criteria
-        if ('run04' in s.protocol_name):
+        if ('run04_bold' in s.protocol_name):
             info[run04].append(s.series_id)
 	##if (s.dim4 == 170) and ('bold' in s.protocol_name):
             #info[pictures].append(s.series_id)  # append if multiple series meet criteria

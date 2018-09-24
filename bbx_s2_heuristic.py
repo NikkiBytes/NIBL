@@ -37,9 +37,9 @@ def infotodict(seqinfo):
         print(s)
         if ('anat' in s.protocol_name):
             info[t1].append(s.series_id)  ## append if multiple series meet criteria
-        if (s.dim3 == 72) and ('fmap' in s.protocol_name):
+        if ('3-fmap' in s.protocol_name):
             info[fmap_magnitude].append(s.series_id)  ## append if multiple series meet criteria
-        if (s.dim3 == 36) and ('fmap' in s.protocol_name):
+        if ('4-fmap' in s.protocol_name):
             info[fmap_phase].append(s.series_id)  # append if multiple series meet criteria
         if  ('run01' in s.protocol_name) and ('training' in s.protocol_name):
             info[run01].append(s.series_id)  # append if multiple series meet criteria
