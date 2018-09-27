@@ -23,7 +23,7 @@ def infotodict(seqinfo):
 
     # fmap/
     fmap_phase = create_key('fmap/' + subject + '_ses-2_phasediff')
-    fmap_magnitude = create_key('fmap/sub-' + subject + '_ses-2_magnitude')
+    fmap_magnitude = create_key('fmap/' + subject + '_ses-2_magnitude')
 
 
     # func/
