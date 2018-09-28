@@ -3,12 +3,12 @@ import os
 
 # Get base path, and check for existing QC file.
 path="/projects/niblab/bids_projects/Experiments/bbx"
-outfile=os.path.join(path, "BBx_ses-1_QC_fmriprep.html")
+outfile=os.path.join(path, "bbx_ses-1_QA_fmriprep.html")
 os.remove(outfile)
 f = open(outfile, 'w')
-
+sess_id = "ses-1"
 #get fmriprep path of all subjects --here we have set it to ses-2 (**may have to customize)
-subjects = glob.glob(os.path.join(path, 'fmriprep', 'ses-1', 'sub-*'))
+subjects = glob.glob(os.path.join(path, 'fmriprep', 'sub-*'))
 sub_dict = {}
 
 def make_dict(ID):
@@ -30,7 +30,7 @@ for sub in subjects:
         print("SUBJECT ---------------------------> ", subID)
         make_dict(subID)
         #f.write("\nSUBJECT ID: %s \n"%subID)
-        svg_path = os.path.join(sub, 'fmriprep', 'sub-*', 'figures', '*svg')
+        svg_path = os.path.join(sub, sess_id, 'fmriprep', 'sub-*', 'figures', '*svg')
         svgs = glob.glob(svg_path)
         for svg in svgs:
             #print(svg)
@@ -90,17 +90,17 @@ for sub in sorted(sub_dict):
                 FLT_PATH_4 = sub_dict[sub][run]["FLT"]
                 CARPET_PATH_4 = sub_dict[sub][run]["CARPET"]
     TITLE = """<p><font size=12>fMRIprep Quality Check, BBx, Session 1</font><br>
-    <p><b><font size=10> "{SUB}" </font></b><br>"""
+    <p><font size=7>ID: {SUB} </font><br>"""
     CURR_TITLE = TITLE.format(SUB=sub)
     f.write(CURR_TITLE)
-    ANATOMICAL = """<p><b><font size=8>Anatomical</font></b><br>
+    ANATOMICAL = """<p><b><u><font size=6>Anatomical</font></u></b><br>
     <p><font size=6>Brain mask and brain tissue segmentation of the T1w </font><br>
     <IMG SRC=\"{BRAINMASK_PATH}\" WIDTH=1200> <br><br>
     <p><font size=6> T1 to MNI registration </font><br>
     <IMG SRC=\"{MNI_PATH}\" WIDTH=1200> <br><br>"""
     CURR_ANAT = ANATOMICAL.format(BRAINMASK_PATH=BRAINMASK_PATH, MNI_PATH=MNI_PATH)
     f.write(CURR_ANAT)
-    RESTING = """<p><b><font size=8>Functional</font></b><br>
+    RESTING = """<p><b><u><font size=6>Functional</u></font></b><br>
     <font size=6>Task-Resting</font><br><br>
     <font size=6>ROIs in Bold Space</font><br>
     <IMG SRC=\"{REST_ROI_FILE}\" WIDTH=1200><br><br>
