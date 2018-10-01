@@ -39,16 +39,14 @@ def get_subjects():
  and writes the data into a (.txt) file
 '''
 def write_files(task, run, moco_df, outputdir, sub):
-    # iterate through the motion correction data frame by columns,
-    # writing individual columns to individual files
+    # iterate through the motion correction data frame by columns, writing individual columns to individual files
     for col in moco_df.columns:
         if run != None:
-            filename = "%s_%s_%s_%s.txt"%(sub, task, run, col)
-            print("%s || %s || %s || %s"%(sub, task, run, col))
+            filename = "%s_%s_%s_%s_%s.txt"%(sub, "ses-1", task, run, col)
             print("WRITING TO FILE >>>>>>>>>>>>>>>>>>>>>>> %s"%filename)
         else:
             #filename = "%s_task-rest.txt"%(sub)
-            filename = "%s_%s_%s.txt"%(sub, task, col)
+            filename = "%s_%s_%s_%s.txt"%(sub, "ses-1", task, col)
             print("WRITING TO FILE >>>>>>>>>>>>>>>>>>>>>>> %s"%filename)
         output_path=os.path.join(outputdir, filename)
         print("Writing to file, ", output_path)
@@ -84,8 +82,8 @@ def get_data():
     for sub in subjects:
         try:
             print("--------------> GETTING MOCOS FOR SUBJECT: ", sub)
-            filepath=os.path.join(basedir, 'fmriprep', sub, 'fmriprep', sub, 'func')
-            outputdir=os.path.join(basedir, 'derivatives', sub, 'func', 'motion_assessment')
+            filepath=os.path.join(basedir, 'fmriprep', sub, "ses-1" ,'fmriprep', sub, "ses-1", 'func')
+            outputdir=os.path.join(basedir, 'derivatives', sub, "ses-1", 'func', 'motion_assessment')
             if not os.path.exists(os.path.join(outputdir, 'motion_parameters')):
                 os.makedirs(os.path.join(outputdir,  'motion_parameters'))
             outputdir=os.path.join(outputdir, 'motion_parameters')
@@ -105,7 +103,7 @@ def get_data():
                         task=word
                         print("TASK: ", task)
                         #run_id=None
-                        if task == "task-rest":
+                        if task == "task-resting":
                             run_id=None
                             write_files(task, run_id, moco_df, outputdir,sub)
                             print(">>>>>>>>RUN: %s"%run)
