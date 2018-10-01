@@ -775,7 +775,7 @@ set fmri(tempfilt_yn7) 1
 set fmri(deriv_yn7) 1
 
 # Custom EV file (EV 7)
-set fmri(custom7) "EV8"
+set fmri(custom7) "EV7"
 
 # Orthogonalise EV 7 wrt EV 0
 set fmri(ortho7.0) 0
