@@ -30,7 +30,7 @@ set fmri(featwatcher_yn) 1
 set fmri(sscleanup_yn) 0
 
 # Output directory
-set fmri(outputdir) "/projects/niblab/bids_projects/Experiments/bbx/derivatives/group_ana/cope1"
+set fmri(outputdir) "OUTPUT"
 
 # TR(s)
 set fmri(tr) 3
@@ -272,76 +272,72 @@ set fmri(ncopeinputs) 1
 set fmri(copeinput.1) 1
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(1) "INPUT1"
 
 # 4D AVW data or FEAT directory (2)
-set feat_files(2) "sub-003/ses-1/func/Analysis/feat2/sub-003_.gfeat/cope1.feat"
+set feat_files(2) "INPUT2"
 
 # 4D AVW data or FEAT directory (3)
-set feat_files(3) "sub-005/ses-1/func/Analysis/feat2/sub-005_.gfeat/cope1.feat"
+set feat_files(3) "INPUT3"
 
 # 4D AVW data or FEAT directory (4)
-set feat_files(4) "sub-005/ses-1/func/Analysis/feat2/sub-005_.gfeat/cope1.feat"
+set feat_files(4) "INPUT4"
 
 # 4D AVW data or FEAT directory (5)
-set feat_files(5) "sub-006/ses-1/func/Analysis/feat2/sub-006_.gfeat/cope1.feat"
+set feat_files(5) "INPUT5"
 
 # 4D AVW data or FEAT directory (6)
-set feat_files(6) "sub-007/ses-1/func/Analysis/feat2/sub-007_.gfeat/cope1.feat"
+set feat_files(6) "INPUT6"
 
 # 4D AVW data or FEAT directory (7)
-set feat_files(7) "sub-008/ses-1/func/Analysis/feat2/sub-008_.gfeat/cope1.feat"
+set feat_files(7) "INPUT7"
 
 # 4D AVW data or FEAT directory (8)
-set feat_files(8) "sub-010/ses-1/func/Analysis/feat2/sub-010_.gfeat/cope1.feat"
+set feat_files(8) "INPUT8"
 
 # 4D AVW data or FEAT directory (9)
-set feat_files(9) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(9) "INPUT9"
 
 # 4D AVW data or FEAT directory (10)
-set feat_files(10) "sub-011/ses-1/func/Analysis/feat2/sub-011_.gfeat/cope1.feat"
+set feat_files(10) "INPUT10"
 
 # 4D AVW data or FEAT directory (11)
-set feat_files(11) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(11) "INPUT11"
 
 # 4D AVW data or FEAT directory (12)
-set feat_files(12) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(12) "INPUT12"
 
 # 4D AVW data or FEAT directory (13)
-set feat_files(13) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(13) "INPUT13"
 
 # 4D AVW data or FEAT directory (14)
-set feat_files(14) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(14) "INPUT14"
 
 # 4D AVW data or FEAT directory (15)
-set feat_files(15) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(15) "INPUT15"
 
 # 4D AVW data or FEAT directory (16)
-set feat_files(16) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(16) "INPUT16"
 
 # 4D AVW data or FEAT directory (17)
-set feat_files(17) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(17) "INPUT17"
 
 # 4D AVW data or FEAT directory (18)
-set feat_files(18) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(18) "INPUT18"
 
 # 4D AVW data or FEAT directory (19)
-set feat_files(19) "sub-001/ses-1/func/Analysis/feat2/sub-001_.gfeat/cope1.feat"
+set feat_files(19) "INPUT19"
 
 # 4D AVW data or FEAT directory (20)
-set feat_files(20) "sub-021/ses-1/func/Analysis/feat2/sub-021_.gfeat/cope1.feat"
+set feat_files(20) "INPUT20"
 
 # 4D AVW data or FEAT directory (21)
-set feat_files(21) "sub-022/ses-1/func/Analysis/feat2/sub-022_.gfeat/cope1.feat"
+set feat_files(21) "INPUT21"
 
 # 4D AVW data or FEAT directory (22)
-set feat_files(22) "sub-023/ses-1/func/Analysis/feat2/sub-023_.gfeat/cope1.feat"
+set feat_files(22) "INPUT22"
 
-# 4D AVW data or FEAT directory (23)
-set feat_files(23) "sub-024/ses-1/func/Analysis/feat2/sub-024_.gfeat/cope1.feat"
 
-# 4D AVW data or FEAT directory (24)
-set feat_files(24) "sub-033/ses-1/func/Analysis/feat2/sub-033_.gfeat/cope1.feat"
 
 # Add confound EVs text file
 set fmri(confoundevs) 0
@@ -455,7 +451,12 @@ set fmri(evg22.1) 1.0
 # Higher-level EV value for EV 1 and input 23
 set fmri(evg23.1) 1.0
 
-# Higher-level EV value for EV 1 and input 24
+# Higher-level EV value for EV 1 and input 
+
+
+
+
+
 set fmri(evg24.1) 1.0
 
 # Group membership for input 1
