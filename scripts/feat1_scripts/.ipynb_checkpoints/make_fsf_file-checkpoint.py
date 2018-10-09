@@ -10,14 +10,13 @@ Created on Fri Jun 15 13:57:30 EDT 2018
 import glob
 import os
 from subprocess import check_output
-#import pdb
 import argparse
 import re
 
-############################################################################################################
+#########################################################################################################
 # SET PARSER
 #
-############################################################################################################.
+#########################################################################################################
 
 
 def set_parser():
@@ -33,17 +32,21 @@ def set_parser():
                         default=False, help='which run are we using?')
     parser.add_argument('-multisess',dest='MULTI_SESS', action='store_true',
                         default=False, help='Do you have multiple sessions? (True or False)')
-    parser.add_argument('-sessions ',dest='SESS',
+    parser.add_argument('-sess ',dest='SESS',
                         default=False, help='which ses are we using?')
+    parser.add_argument('-input_dir ',dest='INDIR',
+                        default=False, help='please enter your input directory')
+    parser.add_argument('-deriv_dir ',dest='DERIVDIR',
+                        default=False, help='please enter your derivatives directory')
     args = parser.parse_args()
     arglist={}
     for a in args._get_kwargs():
         arglist[a[0]]=a[1]
 
-############################################################################################################
+#########################################################################################################
 # GET DIRECTORY PATHS
 #
-############################################################################################################.
+#########################################################################################################
 
 def set_paths():
     global basedir
@@ -51,9 +54,8 @@ def set_paths():
     global deriv_dir
     #basedir = input("Enter directory path of your data: ")
     #outdir = input("Enter directory path for your output: ")
-    basedir='/projects/niblab/bids_projects/Experiments/EricData/data'
-    deriv_dir=os.path.join(basedir, 'derivatives')
-    outdir=os.path.join(deriv_dir)
+    input_dir = arglist["INDIR"]
+    deriv_dir=arglist["DERIVDIR"]
 
 ############################################################################################################
 # SET DICTIONARY METHOD

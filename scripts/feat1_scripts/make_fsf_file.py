@@ -13,10 +13,10 @@ from subprocess import check_output
 import argparse
 import re
 
-############################################################################################################
+#########################################################################################################
 # SET PARSER
 #
-############################################################################################################.
+#########################################################################################################
 
 
 def set_parser():
@@ -32,44 +32,48 @@ def set_parser():
                         default=False, help='which run are we using?')
     parser.add_argument('-multisess',dest='MULTI_SESS', action='store_true',
                         default=False, help='Do you have multiple sessions? (True or False)')
-    parser.add_argument('-sessions ',dest='SESS',
+    parser.add_argument('-sess ',dest='SESS',
                         default=False, help='which ses are we using?')
+    parser.add_argument('-input_dir ',dest='INDIR',
+                        default=False, help='please enter your input directory')
+    parser.add_argument('-deriv_dir ',dest='DERIVDIR',
+                        default=False, help='please enter your derivatives directory')
     args = parser.parse_args()
     arglist={}
     for a in args._get_kwargs():
         arglist[a[0]]=a[1]
 
-############################################################################################################
+#########################################################################################################
 # GET DIRECTORY PATHS
 #
-############################################################################################################.
+#########################################################################################################
 
 def set_paths():
-    global basedir
-    global outdir
+    global input_dir
     global deriv_dir
-    #basedir = input("Enter directory path of your data: ")
-    #outdir = input("Enter directory path for your output: ")
-    basedir='/projects/niblab/bids_projects/Experiments/EricData/data'
-    deriv_dir=os.path.join(basedir, 'derivatives')
-    outdir=os.path.join(deriv_dir)
+    input_dir = arglist["INDIR"]
+    deriv_dir=arglist["DERIVDIR"]
 
-############################################################################################################
+#########################################################################################################
 # SET DICTIONARY METHOD
 # here we are passed our subject parameter and we initialize our dictionary key, the subject,
 # and fill it with another dictionary set with starting values.
-############################################################################################################
+#########################################################################################################
 
 def set_dict(sub):
     main_dict[sub] = { }
-    for run in arglist["RUN"]:
-        main_dict[sub][run] = {}
+    if not arglist["RUN"]:
+        for run in arglist["RUN"]:
+            main_dict[sub][run] = {}
+    else:
+        pass
+        
 
 
-############################################################################################################
+#########################################################################################################
 # CHECK REGISTRATION METHOD
 #
-############################################################################################################.
+#########################################################################################################
 
 
 def check_registartion(sub):
@@ -136,19 +140,20 @@ def check_registartion(sub):
 
 
 
-############################################################################################################
+#########################################################################################################
 # FILL DICTIONARY METHOD
 # here we are updating our dictionary with relevant values
-############################################################################################################
+#########################################################################################################
 
 def fill_dict(subj):
     #print("SUBJ: ", subj)
     for sub in main_dict:
         print(sub)
-            # -- OUTPUT -- directory where output will go
+    # -- OUTPUT -- directory where output will go
     # -- THE SUBEJCT
     #repl_dict.update({'SUB':sub})
-        #deriv_dir = '/Users/nikkibytes/Documents/testing/derivatives'
+    # ASSUMPTIONS: 
+    ### data_dir format = ~/derivatives/sub-XX/ses-1/ or ~/derivatives/sub-XX
     # -- THE RUNS
         if arglist["MULTI_SESS"] == True:
             data_dir = os.path.join(deriv_dir, sub, arglist["SESS"])
@@ -175,14 +180,12 @@ def fill_dict(subj):
             funcrun=os.path.join(scan)
             main_dict[sub][run]['FUNCRUN%i'%x] = funcrun
             print("FUNCRUN: ", funcrun)
-
     # -- THE TIMEPOINTS -- found by running 'fslnvols' on our scan file
             ntmpts=check_output(['fslnvols', funcrun])
             ntmpts = ntmpts.decode('utf-8')
             ntmpts = ntmpts.strip('\n')
             main_dict[sub][run]['NTIMEPOINT%i'%x] = ntmpts
             print("TIMEPOINT: ", ntmpts)
-
     # -- CONFOUNDS
             main_dict[sub][run]['CONFOUND%i'%x] = confounds
             print("CONFOUNDS: ", confounds)
@@ -227,10 +230,9 @@ def fill_dict(subj):
 ############################################################################################################.
 
 def create_fsf():
-    os.chdir(deriv_dir)
     global main_dict
     main_dict= {}
-    for sub in glob.glob('sub-*'):
+    for sub in glob.glob(os.path.join(input_dir, 'sub-*')):
         set_dict(sub)
         fill_dict(sub)
         #print(main_dict[sub]["4"])
@@ -244,8 +246,6 @@ def create_fsf():
 
 def main():
     set_parser()
-    if not arglist["RUN"]:
-        print("RUN list is empty")
     else:
         set_paths()
         create_fsf()
