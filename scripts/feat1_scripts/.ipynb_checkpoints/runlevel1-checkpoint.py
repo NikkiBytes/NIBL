@@ -8,7 +8,6 @@ Created on Thu Jul  5 12:21:50 2018
 
 import os
 import glob
-import psutil 
 from multiprocessing import Pool
 
 
