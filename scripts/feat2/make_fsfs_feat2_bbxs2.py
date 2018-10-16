@@ -7,19 +7,19 @@ SUB_DIRS = glob.glob(SUB_DIR)
 for sub in SUB_DIRS:
     subject = sub.split("/")[-1]
     #check for existence of feat2 directory
-    FEAT2_DIR = os.path.join(sub, "ses-2/func/Analysis/feat2")
+    FEAT2_DIR = os.path.join(sub, "ses-1/func/Analysis/feat2")
     if os.path.exists(FEAT2_DIR):
         pass
     else:
         os.makedirs(FEAT2_DIR)
     print("> STARTING PROGRAM......")
     print("----------------------->>>>SUBJECT: ",sub)
-    FEATS_PATH = os.path.join(sub, "ses-2/func/Analysis/feat1/*.feat")
+    FEATS_PATH = os.path.join(sub, "ses-1/func/Analysis/feat1/*.feat")
     FEATS = glob.glob(FEATS_PATH)
-    with open(os.path.join(DER_DIR, "design.fsf"), 'r') as infile:
+    with open(os.path.join(DER_DIR, "design2.fsf"), 'r') as infile:
         tempfsf=infile.read()
         # set outpath for fsf OUTPATH variable, by run
-        outpath = os.path.join(sub, "ses-2/func/Analysis/feat2")
+        outpath = os.path.join(sub, "ses-1/func/Analysis/feat2")
         print(">>>>>>>>>>>>>>>>>SETTING DESIGN OUTPATH: ", outpath)
         tempfsf = tempfsf.replace("OUTPUT", outpath)
         for run_path in FEATS:
