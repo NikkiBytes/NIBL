@@ -1,12 +1,3 @@
-#!/usr/bin/env python
-
-"""
-Created on Fri Jun 15 13:57:30 EDT 2018
-
-@author: nikkibytes, extending from original by Dr. Grace Shearrer
-"""
-
-
 import glob
 import os
 from subprocess import check_output
@@ -42,7 +33,8 @@ def set_parser():
     arglist={}
     for a in args._get_kwargs():
         arglist[a[0]]=a[1]
-
+        
+        
 #########################################################################################################
 # GET DIRECTORY PATHS
 #
@@ -54,7 +46,8 @@ def set_paths():
     print(">>>----> SETTING PATHS")
     input_dir = arglist["INDIR"]
     deriv_dir=arglist["DERIVDIR"]
-
+    
+    
 #########################################################################################################
 # SET DICTIONARY METHOD
 # here we are passed our subject parameter and we initialize our dictionary key, the subject,
@@ -68,117 +61,77 @@ def set_dict(sub):
     else:
         for run in arglist["RUN"]:
             main_dict[sub][run] = {}
-        
+            
+def make_file(sub):
+    print("skipping registration")
+    for key in main_dict:
+        for run in arglist["RUN"]:
+            with open(os.path.join(deriv_dir,'design1.fsf'),'r') as infile:
+                tempfsf=infile.read()
 
+                num=int(run)
+                out = main_dict[key][run]["OUTPUT"]
+                func = main_dict[key][run]["FUNCRUN%i"%num]
+                time = main_dict[key][run]["NTIMEPOINT%i"%num]
+                con = main_dict[key][run]["CONFOUND%i"%num]
 
-#########################################################################################################
-# CHECK REGISTRATION METHOD
-#
-#########################################################################################################
+                tempfsf = tempfsf.replace("OUTPUT", out)
+                tempfsf = tempfsf.replace("FUNCRUN", func) #4D AVW DATA
+                tempfsf = tempfsf.replace("NTPTS", time)
+                tempfsf = tempfsf.replace("CONFOUND", con)
 
+                for key2 in main_dict[key][run]:
+                    if re.match(r'EV[0-9]TITLE', key2):
+                        ev_title = main_dict[key][run][key2]
+                        n = re.findall('\d+', key2)
+                        n = ''.join(str(x) for x in n)
+                        ev = main_dict[key][run]["EV%s"%n]
+                        print("EVTITLE: ", ev_title)
+                        print("EV%s"%n, ev)
+                        #tempfsf = tempfsf.replace("EV%sTITLE"%n, ev_title)
+                        tempfsf = tempfsf.replace("EV%s"%n, ev)
 
-def check_registartion(sub):
-    if arglist['NOREG']==False:
-        with open(os.path.join(deriv_dir,'reg_design.fsf'),'r') as infile:
-            tempfsf=infile.read()
-            for key in main_dict:
-                tempfsf = tempfsf.replace(key, main_dict[key])
-                with open(os.path.join(outdir,sub,'%s_%s.fsf'%(sub,arglist['TASK'])),'w') as outfile:
+                for i in range(6):
+                    moco = main_dict[key][run]["MOCO%i"%i]
+                    tempfsf = tempfsf.replace("MOCO%i"%i, moco)
+                    print("MOCO%i: "%i , main_dict[key][run]["MOCO%i"%i])
+                outpath= os.path.join(deriv_dir, sub, 'func', 'Analysis', "feat1")
+                #print(tempfsf)
+                if not os.path.exists(outpath):
+                    os.makedirs(outpath)
+                print("OUT PATH >>>>>>---------> ", outpath)
+                with open(os.path.join(outpath,'%s_task-%s_run-%s_no_reg.fsf'%(sub,arglist['TASK'], run)),'w') as outfile:
                     outfile.write(tempfsf)
                 outfile.close()
             infile.close()
-## **** START EDIT HERE
-    else:
-        print("skipping registration")
-        for key in main_dict:
-            for run in arglist["RUN"]:
-                with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
-                    tempfsf=infile.read()
-
-                    num=int(run)
-                    out = main_dict[key][run]["OUTPUT"]
-                    func = main_dict[key][run]["FUNCRUN%i"%num]
-                    time = main_dict[key][run]["NTIMEPOINT%i"%num]
-                    con = main_dict[key][run]["CONFOUND%i"%num]
-
-                    print("RUN: ", run)
-                    print("OUT: ", out)
-                    print("FUNC: ", func)
-                    print("TIME: ", time)
-                    print("CONFOUND: ", con)
-
-
-                    tempfsf = tempfsf.replace("OUTPUT", out)
-                    tempfsf = tempfsf.replace("FUNCRUN", func) #4D AVW DATA
-                    tempfsf = tempfsf.replace("NTPTS", time)
-                    tempfsf = tempfsf.replace("CONFOUND", con)
-
-                    for key2 in main_dict[key][run]:
-                        if re.match(r'EV[0-9]TITLE', key2):
-                            ev_title = main_dict[key][run][key2]
-                            n = re.findall('\d+', key2)
-                            n = ''.join(str(x) for x in n)
-                            ev = main_dict[key][run]["EV%s"%n]
-                            print("EVTITLE: ", ev_title)
-                            print("EV%s"%n, ev)
-                            #tempfsf = tempfsf.replace("EV%sTITLE"%n, ev_title)
-                            tempfsf = tempfsf.replace("EV%s"%n, ev)
-
-                    for i in range(6):
-                        moco = main_dict[key][run]["MOCO%i"%i]
-                        tempfsf = tempfsf.replace("MOCO%i"%i, moco)
-                        print("MOCO%i: "%i , main_dict[key][run]["MOCO%i"%i])
-                    outpath= os.path.join(outdir, sub, 'func', 'Analysis')
-                    #print(tempfsf)
-                    if not os.path.exists(outpath):
-                        os.makedirs(outpath)
-
-                #print(main_dict[key])
-                    with open(os.path.join(outpath,'%s_task-%s_run-%s_no_reg.fsf'%(sub,arglist['TASK'], run)),'w') as outfile:
-                        outfile.write(tempfsf)
-                    outfile.close()
-                infile.close()
-
-
-
-#########################################################################################################
-# FILL DICTIONARY METHOD
-# here we are updating our dictionary with relevant values
-#########################################################################################################
-
-def fill_dict(subj):
-    #print("SUBJ: ", subj)
+        
+def fill_dict(sub):
     for sub in main_dict:
         task = arglist['TASK']
-        print("SUBJECT: ", sub)
-        print("TASK: ", task)
-    # ASSUMPTIONS: 
-    ### data_dir format = ~/derivatives/sub-XX/ses-1/ or ~/derivatives/sub-XX
-    
+        print("SUBJECT: %s \t TASK: %s"%(sub, task))
+
     # -- THE RUNS
         data_dir = os.path.join(deriv_dir, sub)
-        print("DATA DIR", data_dir )
+        print("DATA DIR", data_dir)
+        
         for run in arglist['RUN']:
             x=int(run)
-
             output=os.path.join(data_dir, 'func', 'Analysis', 'feat1', 'task-%s_run%s'%(task,run))
             func = os.path.join(deriv_dir, sub, 'func', "%s_task-%s_run-%s_bold_brain.nii.gz"%(sub, task, run))
             confounds=os.path.join(deriv_dir, sub, 'func','motion_assessment','%s_task-%s_run-%s_bold_brain_confound.txt'%(sub,task,run))
+            
             main_dict[sub][run]['OUTPUT'] = output
             print("OUTPUT: ", output)
-
-            scan= func
-            scan = scan.split('.')[0]
-            print("FUNC ", func)
-             
+            print("FUNCTION: ", func)
+            
+            scan = func.split(".")[0]
             main_dict[sub][run]['FUNCRUN%i'%x] = scan
-    # -- THE TIMEPOINTS -- found by running 'fslnvols' on our scan file
             ntmpts=check_output(['fslnvols', scan])
             ntmpts = ntmpts.decode('utf-8')
             ntmpts = ntmpts.strip('\n')
             main_dict[sub][run]['NTIMEPOINT%i'%x] = ntmpts
             print("TIMEPOINT: ", ntmpts)
-    # -- CONFOUNDS
+                # -- CONFOUNDS
 
             main_dict[sub][run]['CONFOUND%i'%x] = confounds
             print("CONFOUNDS: ", confounds)
@@ -206,31 +159,22 @@ def fill_dict(subj):
             #print(item)
                 ctr=ctr+1
                 main_dict[sub][run]['EV%iTITLE'%ctr] = item
-                ev=os.path.join(data_dir,'func','onsets','%s_task-%s_run-0%s.txt'%(sub, item,run))
+                ev=os.path.join(data_dir,'func','onsets','%s_task-%s_run-%s.txt'%(sub, item,run))
 
 
                 #print("EV: ", ev)
                 main_dict[sub][run]['EV%i'%ctr] = ev
-
-############################################################################################################
-# CREATE FSF FILE
-#
-############################################################################################################.
-
+            
+            
+            
 def create_fsf():
     global main_dict
     main_dict= {}
-    for sub in glob.glob(os.path.join(deriv_dir, 'sub-*')):
+    for sub_path in glob.glob(os.path.join(deriv_dir, 'sub-*')):
+        sub=sub_path.split("/")[-1]
         set_dict(sub)
         fill_dict(sub)
-        #print(main_dict[sub]["4"])
-        #check_registartion(sub)
-
-############################################################################################################
-# MAIN METHOD
-#
-############################################################################################################.
-
+        make_file(sub)
 
 def main():
     set_parser()
