@@ -30,7 +30,7 @@ set fmri(featwatcher_yn) 0
 set fmri(sscleanup_yn) 0
 
 # Output directory
-set fmri(outputdir) "OUTPUT""
+set fmri(outputdir) "OUTPUT"
 
 # TR(s)
 set fmri(tr) 3
@@ -263,7 +263,7 @@ set fmri(regstandard_nonlinear_yn) 0
 set fmri(regstandard_nonlinear_warpres) 10
 
 # High pass filter cutoff
-set fmri(paradigm_hp) 60
+set fmri(paradigm_hp) 100
 
 # Number of lower-level copes feeding into higher-level analysis
 set fmri(ncopeinputs) 7
@@ -305,7 +305,7 @@ set feat_files(4) "run4"
 set fmri(confoundevs) 0
 
 # EV 1 title
-set fmri(evtitle1) ""
+set fmri(evtitle1) "mean"
 
 # Basic waveform shape (EV 1)
 # 0 : Square
@@ -348,10 +348,10 @@ set fmri(ortho1.1) 0
 set fmri(evg1.1) 1
 
 # Higher-level EV value for EV 1 and input 2
-set fmri(evg2.1) 1
+set fmri(evg2.1) 1.0
 
 # Higher-level EV value for EV 1 and input 3
-set fmri(evg3.1) 1
+set fmri(evg3.1) 1.0
 
 # Higher-level EV value for EV 1 and input 4
 set fmri(evg4.1) 1.0
@@ -378,7 +378,7 @@ set fmri(con_mode) real
 set fmri(conpic_real.1) 1
 
 # Title for contrast_real 1
-set fmri(conname_real.1) "group mean"
+set fmri(conname_real.1) "mean"
 
 # Real contrast_real vector 1 element 1
 set fmri(con_real1.1) 1

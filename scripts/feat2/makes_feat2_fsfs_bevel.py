@@ -1,7 +1,7 @@
 import glob
 import os
-DER_DIR = "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives"
-SUB_DIR = "/projects/niblab/bids_projects/Experiments/Bevel/data/derivatives/sub-*"
+DER_DIR = "/projects/niblab/bids_projects/Experiments/Bevel/derivatives"
+SUB_DIR = "/projects/niblab/bids_projects/Experiments/Bevel/derivatives/sub-*"
 SUB_DIRS = glob.glob(SUB_DIR)
 
 for sub in SUB_DIRS:
@@ -16,15 +16,16 @@ for sub in SUB_DIRS:
     print("----------------------->>>>SUBJECT: ",sub)
     FEATS_PATH = os.path.join(sub, "func/Analysis/feat1/*.feat")
     FEATS = glob.glob(FEATS_PATH)
-    with open(os.path.join(DER_DIR, "feat2_design_bevel.fsf"), 'r') as infile:
+    with open(os.path.join(DER_DIR, "design2.fsf"), 'r') as infile:
         tempfsf=infile.read()
         # set outpath for fsf OUTPATH variable, by run
-        outpath = os.path.join(sub, "func/Analysis/feat2")
+        subID =  sub.split("/")[-1]
+        outpath = os.path.join(sub, "func/Analysis/feat2", subID)
         print(">>>>>>>>>>>>>>>>>SETTING DESIGN OUTPATH: ", outpath)
         tempfsf = tempfsf.replace("OUTPUT", outpath)
         print(FEATS)
         for run_path in FEATS:
-            run = run_path.split("/")[-1].split(".")[0]
+            run = run_path.split("/")[-1].split(".")[0].split("_")[1]
             print(">>>>>------> RUN: ", run)
             if run == "run1":
                 print("> %s : %s"%(run, run_path))
