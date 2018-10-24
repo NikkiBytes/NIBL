@@ -45,7 +45,9 @@ def make_fsfs():
     # loop through copes and make design file for each
     for cope_num in range(1, num_of_copes+1):
         make_dict(cope_num)
-        OUTPUTDIR = os.path.join(deriv_dir, 'group_ana/cope%s_ses-1'%cope_num)
+        #OUTPUTDIR = os.path.join(deriv_dir, 'group_ana/cope%s_ses-1'%cope_num)
+        OUTPUTDIR = os.path.join(deriv_dir, 'group_ana/mean')
+
         print(">>>---> REPLACING 'OUTPUT' > %s"%OUTPUTDIR)
         if arglist["SES"] == False:
             print("NO SESSION")
@@ -71,7 +73,7 @@ def make_fsfs():
                 input_ = cope_dict[cope_num][input_title]
                 tempfsf = tempfsf.replace("%s"%input_title, input_)
             if arglist["SES"] == False:
-                OUTFILE_PATH = os.path.join(deriv_dir, 'group_ana/cope%s.fsf'%(cope_num))
+                OUTFILE_PATH = os.path.join(deriv_dir, 'group_ana/cope%s.fsf'%cope_num)
             else:
                 OUTFILE_PATH = os.path.join(deriv_dir, 'group_ana/cope%s_%s.fsf'%(cope_num, arglist["SES"]))
             #print(tempfsf)

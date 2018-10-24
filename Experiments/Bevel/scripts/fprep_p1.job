@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+#SBATCH --job-name=FPREP_BEVEL
+#SBATCH -N 1
+#SBATCH -c 1
+#SBATCH -t 10:00:00
+#SBATCH --mem-per-cpu 80000
+## %A == SLURM_ARRAY_JOB_ID
+## %a == SLURM_ARRAY_TASK_ID
+#SBATCH -o /projects/niblab/bids_projects/Experiments/Bevel/error_files/fprep_%A_%a_out.txt
+#SBATCH -e /projects/niblab/bids_projects/Experiments/Bevel/error_files/fprep_%A_%a_err.txt
+
+sub="sub-00${SLURM_ARRAY_TASK_ID}"
+
+singularity exec -B /projects/niblab/bids_projects:/home_dir /projects/niblab/bids_projects/Singularity_Containers/fmriprep.simg \
+fmriprep /home_dir/Experiments/Bevel/BIDS /home_dir/Experiments/Bevel/fmriprep_test/$sub \
+    participant  \
+    --participant-label $sub  \
+    --fs-license-file /home_dir/freesurfer/license.txt \
+    --fs-no-reconall \
+    --omp-nthreads 16 --n_cpus 32 \
+    --ignore slicetiming  \
+    --t2s-coreg --bold2t1w-dof 12 \
+    --output-space template --template MNI152NLin2009cAsym \
+    --template-resampling-grid /home_dir/Experiments/Bevel/derivatives/grace_test/mni_icbm152_nlin_asym_09c/mni_icbm152_t1_tal_nlin_asym_09c.nii \
+    --debug  \
+    -w /home_dir/Experiments/Bevel/fmriprep_test/$sub \
+    --resource-monitor --write-graph --stop-on-first-crash
