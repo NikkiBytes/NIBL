@@ -172,7 +172,7 @@ def fill_dict(subj):
         #sub-015_ses-1_task-training_run-1_bold_brain.nii.gz
         #sub-016_ses-1_task-training_run-2_bold_brain_confound.txt
             if arglist["MULTI_SESS"] == True:
-                func_scan = os.path.join(data_dir, 'func', "%s_%s_task-%s_run-%s_bold_brain.nii.gz')"%(sub,arglist['SESS'], arglist['TASK'], run))
+                func_scan = os.path.join(data_dir, 'func', "%s_%s_task-%s_run-%s_bold_space-MNI152NLin2009cAsym_preproc_brain.nii.gz.nii.gz')"%(sub,arglist['SESS'], arglist['TASK'], run))
                 confounds=os.path.join(data_dir, 'func','motion_assessment','%s_%s_task-%s_run-%s_bold_brain_confound.txt'%(sub,arglist["SESS"],arglist['TASK'], run))
             else:
                 func_scan = os.path.join(data_dir,'func', "%s_task-%s_run-%s_bold_brain.nii.gz')"%(sub,arglist['TASK'], run))
