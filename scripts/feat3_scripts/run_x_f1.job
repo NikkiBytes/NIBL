@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+#SBATCH --job-name=BBx
+#SBATCH -N 1
+#SBATCH -c 1
+#SBATCH -t 1:30:00
+#SBATCH --mem-per-cpu 80000
+## %A == SLURM_ARRAY_JOB_ID
+## %a == SLURM_ARRAY_TASK_ID
+#SBATCH -o /projects/niblab/bids_projects/Experiments/bbx/error_files/feat_level1_bbx_%a_%A_out.txt
+#SBATCH -e /projects/niblab/bids_projects/Experiments/bbx/error_files/feat_level1_bbx_%a_%A_err.txt
+
+sub="sub-0${SLURM_ARRAY_TASK_ID}"
+/projects/niblab/modules/software/fsl/5.0.10/bin/feat /projects/niblab/bids_projects/Experiments/bbx/${sub}/ses-1/func/Analysis/feat1/${sub}_ses-1_task-training_run-4_no_reg.fsf
