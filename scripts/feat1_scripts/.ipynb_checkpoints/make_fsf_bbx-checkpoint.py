@@ -88,7 +88,7 @@ def check_registartion(sub):
         print("skipping registration......")
         for key in main_dict: #iterate through subjects
             for run in arglist["RUN"]: #iterate through runs
-                with open(os.path.join(deriv_dir,'design.fsf'),'r') as infile:
+                with open(os.path.join(deriv_dir,'design_files/design1.fsf'),'r') as infile:
                     tempfsf=infile.read()
                     num=int(run)
                     out = main_dict[key][run]["OUTPUT"]
@@ -129,7 +129,7 @@ def check_registartion(sub):
                         os.makedirs(outpath)
 
                     print("__________________________________________________________")
-                    print(tempfsf)
+                    #print(tempfsf)
                     print("__________________________________________________________")
 
                 #print(main_dict[key])
@@ -172,11 +172,11 @@ def fill_dict(subj):
         #sub-015_ses-1_task-training_run-1_bold_brain.nii.gz
         #sub-016_ses-1_task-training_run-2_bold_brain_confound.txt
             if arglist["MULTI_SESS"] == True:
-                func_scan = os.path.join(data_dir, 'func', "%s_%s_task-%s_run-%s_bold_brain.nii.gz')"%(sub,arglist['SESS'], arglist['TASK'], run))
-                confounds=os.path.join(data_dir, 'func','motion_assessment','%s_%s_task-%s_run-%s_bold_brain_confound.txt'%(sub,arglist["SESS"],arglist['TASK'], run))
+                func_scan = os.path.join(data_dir, 'func', "%s_%s_task-%s_run-%s_bold_space-MNI152NLin2009cAsym_preproc_brain.nii.gz.nii.gz')"%(sub,arglist['SESS'], arglist['TASK'], run))
+                confounds=os.path.join(data_dir, 'func','motion_assessment','%s_%s_task-%s_run-%s_bold_space-MNI152NLin2009cAsym_preproc_brain_confound.txt'%(sub,arglist["SESS"],arglist['TASK'], run))
             else:
                 func_scan = os.path.join(data_dir,'func', "%s_task-%s_run-%s_bold_brain.nii.gz')"%(sub,arglist['TASK'], run))
-                confounds=os.path.join(data_dir,'func','motion_assessment','%s_task-%s_run-%s_bold_brain_confound.txt'%(sub,arglist['TASK'],x))
+                confounds=os.path.join(data_dir,'func','motion_assessment','%s_task-%s_run-%s_bold_space-MNI152NLin2009cAsym_preproc_brain_confound.txt'%(sub,arglist['TASK'],x))
             scan= func_scan
             funcrun = scan.split('.')[0]
             funcrun=os.path.join(funcrun)
