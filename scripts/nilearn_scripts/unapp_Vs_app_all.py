@@ -100,7 +100,7 @@ subs = subs[condition_mask] # equivalent to 'session'
 # We have our classifier (SVC), our feature selection (SelectKBest), and now,
 # we can plug them together in a *pipeline* that performs the two operations successively:
 """
-svc = SVC()
+svc = SVC(kernel="rbf", gamma='scale')
 print(svc)
 
 feature_selection = SelectPercentile(f_classif, percentile=5)
