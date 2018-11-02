@@ -114,7 +114,8 @@ def output_files():
     else:
         outhtml = os.path.join(derivatives_dir,'%s_bold_motion_QA_%s.html'%(arglist["SES"],datestamp))
         out_bad_bold_list = os.path.join(derivatives_dir,'%s_TEST_%s.txt'%(arglist["SES"], datestamp))
-    outfile = open(outhtml, 'a')
+    if arglist["MOCO"] != False:
+        outfile = open(outhtml, 'a')
 
 
 

@@ -51,8 +51,6 @@ outfile=os.path.join(outpath,'concatenated_imagine_all.nii')
 #write the file
 ni2_concat.to_filename(outfile)
 """
-
-
 fmri_subjs=os.path.join(outpath, 'concatenated_imagine_all.nii')
 average_ana=os.path.join(outpath,'CS_avg_mprage_image.nii.gz')
 imag_mask=os.path.join(outpath,'power_roimask_4bi.nii.gz')
@@ -79,11 +77,6 @@ n_conditions = np.size(np.unique(y))
 print(n_conditions)
 #n_conditions = np.size(np.unique(y))
 print(y.unique())
-
-session = func_df[condition_mask].to_records(index=False)
-print(session.dtype.names)
-
-
 nifti_masker = NiftiMasker(mask_img=imag_mask, smoothing_fwhm=4,standardize=True)
 fmri_trans = nifti_masker.fit_transform(fmri_subjs)
 print(fmri_trans)

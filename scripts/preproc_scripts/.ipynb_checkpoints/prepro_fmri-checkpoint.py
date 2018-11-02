@@ -61,10 +61,10 @@ def set_paths(sub):
 
     if arglist["SES"] == False:
         out_dir = os.path.join(derivatives_dir, sub)
+        func_input_path=os.path.join(input_dir,sub,"fmriprep", sub, "func")
     else:
         out_dir = os.path.join(derivatives_dir, sub, arglist["SES"])
-
-    func_input_path=os.path.join(input_dir,sub,'func')
+        func_input_path=os.path.join(input_dir,sub,arglist["SES"], "fmriprep", sub,arglist["SES"], "func")
     anat_output_path=os.path.join(out_dir, 'anat')
     func_output_path=os.path.join(out_dir,'func')
     motion_assessment_path=os.path.join(out_dir,'func','motion_assessment')
@@ -114,7 +114,8 @@ def output_files():
     else:
         outhtml = os.path.join(derivatives_dir,'%s_bold_motion_QA_%s.html'%(arglist["SES"],datestamp))
         out_bad_bold_list = os.path.join(derivatives_dir,'%s_TEST_%s.txt'%(arglist["SES"], datestamp))
-    outfile = open(outhtml, 'a')
+    if arglist["MOCO"] != False:
+        outfile = open(outhtml, 'a')
 
 
 
@@ -146,14 +147,14 @@ def set_parser():
 def skull_strip(sub):
     print(">>>>----------------> starting bet on ", sub )
     try:
-        for nifti in glob.glob(os.path.join(func_input_path, '*bold.nii.gz')):
+        for nifti in glob.glob(os.path.join(func_input_path, '*bold_space-MNI152NLin2009cAsym_preproc.nii*')):
             # make our variables
             filename = nifti.split("/")[-1].split(".")[0]
             print("FILENAME ", filename)
             bet_name=filename+'_brain'
             # check if data exists already
             bet_output = os.path.join(func_output_path, bet_name)
-            if os.path.exists(bet_output + '.nii.gz'):
+            if os.path.exists(bet_output + '.nii'):
                 print(bet_output + ' exists, skipping \n')
             else:
                 print("Running bet on ", nifti)
@@ -243,7 +244,7 @@ def main():
     subjects = []
     set_parser()
     base_path = arglist["BASEDIR"]
-    input_dir = os.path.join(base_path, 'BIDS')
+    input_dir = os.path.join(base_path, 'fmriprep' )
     derivatives_dir = os.path.join(base_path, 'derivatives')
     if not os.path.exists(os.path.join(derivatives_dir)):
         os.makedirs(os.path.join(derivatives_dir))
