@@ -1,4 +1,4 @@
- b#
+#
 #this imports all the commands needed for the script to work#
 import os
 import numpy as np
