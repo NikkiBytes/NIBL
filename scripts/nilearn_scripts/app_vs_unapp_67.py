@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+/Users/nikkibytes/Documents/testing/ChocoDataimport matplotlib.pyplot as plt
 import os
 import numpy as np
 import nilearn
