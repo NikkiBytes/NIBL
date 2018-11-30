@@ -6,9 +6,6 @@ Created on Thu May 31 20:38:28 2018
 @author: nikkibytes, extending from original by Dr. Grace Shearrer
 """
 from multiprocessing import Pool
-#import pandas as pd
-#import numpy as np
-#import matplotlib.pyplot as plt
 import glob
 import argparse
 import os
@@ -86,13 +83,7 @@ def get_subjects():
     for path in sub_dir:
         sub = path.split("/")[-1]
         subjects.append(sub)
-    
-    for sub in sorted(subjects):
-        set_paths(sub)
-        if args.STRIP == True:
-            skull_strip(sub)
-        if args.MOCO == True:
-            fd_check(sub)
+
 
 
 
@@ -237,6 +228,18 @@ def fd_check(sub):
 
 #________________________________________________________________________________________
 
+def start_process(subjects):
+    for sub in sorted(subjects):
+        set_paths(sub)
+        if args.STRIP == True:
+            skull_strip(sub)
+        if args.MOCO == True:
+            fd_check(sub)
+
+def split_list(a_list):
+    half = int(len(a_list)/2)
+    return a_list[:half], a_list[half:]
+
 def main():
     global input_dir
     global derivatives_dir
@@ -252,7 +255,9 @@ def main():
 
         
     get_subjects()
-
+    B, C = split_list(subjects)
+    pool = Pool(processes=2)
+    pool.map(start_process, [B,C])
 
 #________________________________________________________________________________________
 
