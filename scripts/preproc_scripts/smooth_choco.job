@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+#SBATCH --job-name=choco_smooth
+#SBATCH -N 1
+#SBATCH -c 1
+#SBATCH -t 12:00:00
+#SBATCH --mem-per-cpu 50000
+#SBATCH -o /projects/niblab/bids_projects/Experiments/ChocoData/error_files/smoothing_out.txt
+#SBATCH -e /projects/niblab/bids_projects/Experiments/ChocoData/error_files/smoothin_err.txt
+
+/usr/bin/python /projects/niblab/bids_projects/Experiments/ChocoData/scripts/smoothing_choco.py

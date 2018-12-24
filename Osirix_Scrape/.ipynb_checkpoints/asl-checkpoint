@@ -1,0 +1,7 @@
+-#U*7SJGbj6Q
+
+heudiconv -b -d Raw_Data/{subject}/{session}/dicoms/${f}/*dcm -s Eric_Data -ss wave4 -f Heuristic_Files/eric_data_conversion.py \
+-c dcm2niix -b  -o Experiments/EricData/EricData/EricData/test/sub-${f}
+
+heudiconv -b -d Raw_Data/{subject}/{session}/sub-001/raw/BF*/*/*dcm -s BFClub -ss sess-v1 -f Heuristic_Files/convertall.py \
+-c dcm2niix -b  -o Experiments/BFClub/etc

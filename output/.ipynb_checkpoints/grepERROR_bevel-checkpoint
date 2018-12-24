@@ -1,0 +1,19 @@
+[nbytes@ht3 derivatives]$ grep 'ERROR' sub*/func/Analysis/feat1/run*/report_log.html
+sub-005/func/Analysis/feat1/run4.feat/report_log.html:FATAL ERROR ENCOUNTERED:
+sub-005/func/Analysis/feat1/run4.feat/report_log.html:ERROR MESSAGE:
+sub-005/func/Analysis/feat1/run4.feat/report_log.html:END OF ERROR MESSAGE
+sub-016/func/Analysis/feat1/run2.feat/report_log.html:FATAL ERROR ENCOUNTERED:
+sub-016/func/Analysis/feat1/run2.feat/report_log.html:ERROR MESSAGE:
+sub-016/func/Analysis/feat1/run2.feat/report_log.html:END OF ERROR MESSAGE
+sub-023/func/Analysis/feat1/run3.feat/report_log.html:FATAL ERROR ENCOUNTERED:
+sub-023/func/Analysis/feat1/run3.feat/report_log.html:ERROR MESSAGE:
+sub-023/func/Analysis/feat1/run3.feat/report_log.html:END OF ERROR MESSAGE
+sub-023/func/Analysis/feat1/run4.feat/report_log.html:FATAL ERROR ENCOUNTERED:
+sub-023/func/Analysis/feat1/run4.feat/report_log.html:ERROR MESSAGE:
+sub-023/func/Analysis/feat1/run4.feat/report_log.html:END OF ERROR MESSAGE
+[nbytes@ht3 derivatives]$ 
+
+
+
+
+
