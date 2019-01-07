@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+#SBATCH --job-name=BIDS_bevA
+#SBATCH -N 2
+#SBATCH -c 1
+#SBATCH -t 2:00:00
+#SBATCH --mem-per-cpu 75000
+## %A == SLURM_ARRAY_JOB_ID
+## %a == SLURM_ARRAY_TASK_ID
+#SBATCH -o /projects/niblab/bids_projects/Experiments/bbx/errors/bids_%A_%a_ses-1_out.txt
+#SBATCH -e /projects/niblab/bids_projects/Experiments/bbx/errors/bids_%A_%a_ses-1_out.txt
+
+id="sub-00${SLURM_ARRAY_TASK_ID}"
+export id
+heudiconv -b -d /test/raw_data/continuing_studies/{subject}/session-1/${id}/*.dcm -s BBx -f /test/Heuristic_Files/bbx_converter_ses1.py \
+-c dcm2niix -b -o /test/Experiments/bbx/BIDS/${id}
