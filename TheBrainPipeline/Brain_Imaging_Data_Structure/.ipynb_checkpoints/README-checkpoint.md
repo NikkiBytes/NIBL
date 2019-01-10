@@ -24,9 +24,14 @@ For our processes the Singularity container has already been built and we will u
   
   
 ### Rename Directories  
-One of the specifications of BIDS is the naming scheme. While this can be meticulous it allows for a standardized format that can be understood. To avoid complex programming down the line I found it was easiest to name our directories into the BIDS format before our conversion. BIDS expects to find, `sub-XXX`, where `XXX` can be any identifier. In many cases this is straight forward, however every dataset is different and there can be nuances that make it difficult to make an all encompassing script for renaming. However the script [Rename_Folders.ipynb](https://github.com/NikkiBytes/NIBL/blob/master/TheBrainPipeline/Brain_Imaging_Data_Structure/Rename_Folders.ipynb) is flexible enough and should be able to guide you through renaming your directories!  
+One of the specifications of BIDS is the naming scheme. While this can be meticulous it allows for a standardized format that can be understood. To avoid complex programming down the line I found it was easiest to name our directories into the BIDS format before our conversion. BIDS expects to find, `sub-XXX`, where `XXX` can be any identifier. In many cases this is straight forward, however every dataset is different and there can be nuances that make it difficult to make an all encompassing script for renaming. However the script [Rename_Folders.ipynb](ADD_LINK_HERE) is flexible enough and should be able to guide you through renaming your directories!  
   
   
 ### Setting up the Heuristic File  
 A great explanation is found here: [Using Heudiconv](http://nipy.org/heudiconv/#21)  
-Then you can modify the template we have here: [Heuristic File template](https://github.com/NikkiBytes/NIBL/blob/master/TheBrainPipeline/Brain_Imaging_Data_Structure/heuristic_file.py)
+Then you can modify the template we have here: [Heuristic File template](ADD_LINK_HERE)  
+
+  
+### Setup batch script & run 
+Here we are going to go over the batch script and setting it up.  
+Reference the batch script here for reference: [Batch script](ADD_LINK_HERE)
