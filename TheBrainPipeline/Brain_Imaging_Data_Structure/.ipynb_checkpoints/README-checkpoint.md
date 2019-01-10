@@ -28,4 +28,4 @@ One of the specifications of BIDS is the naming scheme. While this can be meticu
   
   
 ### Setting up the Heuristic File  
-A great explanation is found here: (Using Heudiconv)[http://nipy.org/heudiconv/#21]
+A great explanation is found here: [Using Heudiconv](http://nipy.org/heudiconv/#21)
