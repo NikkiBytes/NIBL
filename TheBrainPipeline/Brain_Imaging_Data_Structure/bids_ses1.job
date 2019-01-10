@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+#SBATCH --job-name=S1_BIDS_BBX
+#SBATCH -N 1
+#SBATCH -c 1
+#SBATCH -t 2:00:00
+#SBATCH --mem-per-cpu 80000
+## %A == SLURM_ARRAY_JOB_ID
+## %a == SLURM_ARRAY_TASK_ID
+#SBATCH -o /projects/niblab/bids_projects/Experiments/bbx/error_files/bids_error_ses-1_%a_out.txt
+#SBATCH -e /projects/niblab/bids_projects/Experiments/bbx/error_files/bids_error_ses-1_%a_err.txt
+
+if [ ${SLURM_ARRAY_TASK_ID} -lt 10 ]; then
+    id="sub-00${SLURM_ARRAY_TASK_ID}"
+else
+    id="sub-0${SLURM_ARRAY_TASK_ID}"
+fi
+
+export id
+
+singularity exec -B /:/test /projects/niblab/bids_projects/Singularity_Containers/heudiconv.simg heudiconv \ 
+-b -d /test/projects/niblab/bids_projects/raw_data/continuing_studies/{subject}/ses-{session}/${id}/*dcm \
+-s BBx \ 
+-ss 1 \ 
+-f /test/projects/niblab/bids_projects/Heuristic_Files/bbx_s1_heuristic.py \ 
+-c dcm2niix -o /test/projects/niblab/bids_projects/Experiments/bbx/BIDS/ses-1/${id}
