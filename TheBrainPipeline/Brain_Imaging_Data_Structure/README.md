@@ -29,4 +29,9 @@ One of the specifications of BIDS is the naming scheme. While this can be meticu
   
 ### Setting up the Heuristic File  
 A great explanation is found here: [Using Heudiconv](http://nipy.org/heudiconv/#21)  
-Then you can modify the template we have here: [Heuristic File template](https://github.com/NikkiBytes/NIBL/blob/master/TheBrainPipeline/Brain_Imaging_Data_Structure/heuristic_file.py)
+Then you can modify the template we have here: [Heuristic File template](https://github.com/NikkiBytes/NIBL/blob/master/TheBrainPipeline/Brain_Imaging_Data_Structure/heuristic_file.py)  
+
+  
+### Setup batch script & run 
+Here we are going to go over the batch script and setting it up.  
+Reference the batch script here for reference: [Batch script]
