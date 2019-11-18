@@ -1,15 +1,6 @@
 import glob
 import os
 
-# Get base path, and check for existing QC file.
-path="/projects/niblab/bids_projects/Experiments/bbx"
-outfile=os.path.join(path, "bbx_ses-1_QA_fmriprep.html")
-os.remove(outfile)
-f = open(outfile, 'w')
-sess_id = "ses-1"
-#get fmriprep path of all subjects --here we have set it to ses-2 (**may have to customize)
-subjects = glob.glob(os.path.join(path, 'fmriprep', 'sub-*'))
-sub_dict = {}
 
 def make_dict(ID):
     sub_dict[ID] = {
@@ -147,3 +138,22 @@ for sub in sorted(sub_dict):
     CURR_RUN4 = RUN4.format(ROIS_PATH_4=ROIS_PATH_4, FLT_PATH_4=FLT_PATH_4, CARPET_PATH_4=CARPET_PATH_4)
     f.write(CURR_RUN4)
 f.close()
+
+
+
+def main():
+    # Get base path, and check for existing QC file.
+    #study_path = "/projects/niblab/bids_projects/Experiments/bbx"
+    study_path = "Users/nikkibytes/Documents/data/bbx"
+    # outfile=os.path.join(path, "bids/derivatives/bbx_ses-1_QA_fmriprep.html")
+    # os.remove(outfile)
+    # f = open(outfile, 'w')
+    sess_id = "ses-1"
+    # get fmriprep path of all subjects --here we have set it to ses-2 (**may have to customize)
+    subjects = glob.glob(os.path.join(study_path, 'bids/derivatives/fmriprep', 'sub-*'))
+    sub_dict = {}
+    print(subjects)
+
+
+if __name__ == "__main__":
+    main()
