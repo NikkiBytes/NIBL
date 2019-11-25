@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="data" />
     <orderEntry type="module" module-name="qc_generator" />
+    <orderEntry type="module" module-name="fmri_qc" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />
